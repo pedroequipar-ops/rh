@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rh-backend
+  namespace: hml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rh-backend
+  template:
+    metadata:
+      labels:
+        app: rh-backend
+    spec:
+      containers:
+        - name: rh-backend
+          image: registry.example.com/rh-backend:hml
+          command: ["daphne", "-b", "0.0.0.0", "-p", "8000", "config.asgi:application"]
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: rh-backend-env
+          readinessProbe:
+            httpGet:
+              path: /docs/
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /docs/
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rh-backend
+  namespace: hml
+spec:
+  selector:
+    app: rh-backend
+  ports:
+    - port: 80
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rh-frontend
+  namespace: hml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rh-frontend
+  template:
+    metadata:
+      labels:
+        app: rh-frontend
+    spec:
+      containers:
+        - name: rh-frontend
+          image: registry.example.com/rh-frontend:hml
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rh-frontend
+  namespace: hml
+spec:
+  selector:
+    app: rh-frontend
+  ports:
+    - port: 80
+      targetPort: 80
