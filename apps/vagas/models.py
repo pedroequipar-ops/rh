@@ -36,3 +36,16 @@ class Vaga(TimeStampedModel):
 
     def __str__(self):
         return self.titulo
+
+
+class VagaNotificacao(TimeStampedModel):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="vaga_notificacoes")
+    destinatario = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="vaga_notificacoes"
+    )
+    vaga = models.ForeignKey(Vaga, on_delete=models.CASCADE, related_name="notificacoes")
+    mensagem = models.CharField(max_length=255)
+    lida = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created_at"]

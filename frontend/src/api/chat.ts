@@ -19,3 +19,23 @@ export async function listMensagens(candidatoId: string, page = 1): Promise<Mens
     proximaPagina: page + 1,
   }
 }
+
+export async function marcarMensagensComoLidas(candidatoId: string): Promise<void> {
+  await apiClient.post(`/candidatos/${candidatoId}/mensagens/marcar-lida/`)
+}
+
+export interface CandidatoNaoLidas {
+  candidato_id: string
+  candidato_nome: string
+  quantidade: number
+}
+
+export interface NaoLidasResumo {
+  total: number
+  candidatos: CandidatoNaoLidas[]
+}
+
+export async function getNaoLidas(): Promise<NaoLidasResumo> {
+  const { data } = await apiClient.get<NaoLidasResumo>('/chat/nao-lidas/')
+  return data
+}

@@ -5,6 +5,15 @@ export interface Setor {
   nome: string
 }
 
+export interface Usuario {
+  id: string
+  username: string
+  first_name: string
+  last_name: string
+  role: Role
+  setor: Setor | null
+}
+
 export interface Me {
   id: string
   username: string
@@ -35,7 +44,9 @@ export interface Vaga {
 
 export interface Candidato {
   id: string
+  vaga_id: string
   vaga_titulo: string
+  vaga_setor: string
   etapa_atual: EtapaKanban
   ordem: number
   nome: string
@@ -43,7 +54,10 @@ export interface Candidato {
   telefone: string
   cpf: string
   linkedin_url?: string | null
-  resumo_perfil?: string
+  perfil_formacao?: string
+  perfil_experiencia?: string
+  perfil_habilidades?: string
+  perfil_certificacoes?: string
   curriculo_key: string
   curriculo_content_type?: string
   created_at?: string
@@ -57,7 +71,10 @@ export interface CandidatoExtraido {
   linkedin_url: string | null
   vaga_sugerida_id: string | null
   justificativa: string
-  resumo_perfil: string
+  perfil_formacao: string
+  perfil_experiencia: string
+  perfil_habilidades: string
+  perfil_certificacoes: string
   erro: boolean
 }
 

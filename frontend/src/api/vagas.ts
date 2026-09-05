@@ -43,3 +43,20 @@ export async function listCandidatosDaVaga(id: string): Promise<Candidato[]> {
   const { data } = await apiClient.get(`/vagas/${id}/candidatos/`)
   return unwrapList<Candidato>(data)
 }
+
+export interface VagaNotificacaoNova {
+  id: string
+  vaga_id: string
+  vaga_titulo: string
+  mensagem: string
+  created_at: string
+}
+
+export async function getVagaNotificacoes(): Promise<VagaNotificacaoNova[]> {
+  const { data } = await apiClient.get<VagaNotificacaoNova[]>('/vagas-notificacoes/')
+  return data
+}
+
+export async function marcarVagaNotificacoesComoLidas(): Promise<void> {
+  await apiClient.post('/vagas-notificacoes/marcar-lidas/')
+}

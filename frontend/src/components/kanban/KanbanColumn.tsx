@@ -40,7 +40,7 @@ export function KanbanColumn({ etapa, candidatos, draggable, candidatoModalBase 
           {candidatos.length}
         </span>
       </div>
-      <div data-kanban-scrollable className="flex-1 overflow-y-auto p-2">
+      <div data-kanban-scrollable className="scrollbar-thin flex-1 overflow-y-auto p-2">
         {candidatos.map((candidato) => (
           <CandidatoCard
             key={candidato.id}

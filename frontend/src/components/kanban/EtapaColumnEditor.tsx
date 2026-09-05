@@ -17,6 +17,7 @@ import { CSS } from '@dnd-kit/utilities'
 import clsx from 'clsx'
 import { GripVertical, Plus, Trash2, X } from 'lucide-react'
 import { createEtapa, deleteEtapa, reordenarEtapas, updateEtapa } from '../../api/etapas'
+import { useToast } from '../../context/ToastContext'
 import type { EtapaKanban } from '../../types'
 import { ConfirmDialog } from '../common/ConfirmDialog'
 
@@ -78,6 +79,7 @@ function SortableEtapaItem({
 }
 
 export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEditorProps) {
+  const { showToast } = useToast()
   const [novoNome, setNovoNome] = useState('')
   const [saving, setSaving] = useState(false)
   const [etapaParaExcluir, setEtapaParaExcluir] = useState<EtapaKanban | null>(null)
@@ -92,6 +94,9 @@ export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEdit
       await createEtapa({ nome: novoNome.trim(), ordem: ordenadas.length })
       setNovoNome('')
       onChange()
+      showToast('Etapa criada com sucesso')
+    } catch {
+      showToast('Não foi possível criar a etapa', 'error')
     } finally {
       setSaving(false)
     }
@@ -99,15 +104,26 @@ export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEdit
 
   async function handleRename(etapa: EtapaKanban, nome: string) {
     if (!nome.trim() || nome === etapa.nome) return
-    await updateEtapa(etapa.id, { nome: nome.trim() })
-    onChange()
+    try {
+      await updateEtapa(etapa.id, { nome: nome.trim() })
+      onChange()
+      showToast('Etapa salva com sucesso')
+    } catch {
+      showToast('Não foi possível salvar a etapa', 'error')
+    }
   }
 
   async function handleConfirmDelete() {
     if (!etapaParaExcluir) return
-    await deleteEtapa(etapaParaExcluir.id)
-    setEtapaParaExcluir(null)
-    onChange()
+    try {
+      await deleteEtapa(etapaParaExcluir.id)
+      setEtapaParaExcluir(null)
+      onChange()
+      showToast('Etapa excluída com sucesso')
+    } catch {
+      setEtapaParaExcluir(null)
+      showToast('Não foi possível excluir a etapa', 'error')
+    }
   }
 
   async function handleDragEnd(event: DragEndEvent) {

@@ -1,15 +1,22 @@
-from rest_framework import status, viewsets
+from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from apps.accounts.models import User
 from apps.core.permissions import HasFunctionPermission
 from utils.utils import capture_company_id
 
-from .models import EtapaKanban, Vaga
+from .models import EtapaKanban, Vaga, VagaNotificacao
 from .repositories.etapa_repository import EtapaRepository
 from .repositories.vaga_repository import VagaRepository
-from .serializers import EtapaKanbanReordenarSerializer, EtapaKanbanSerializer, VagaSerializer
+from .serializers import (
+    EtapaKanbanReordenarSerializer,
+    EtapaKanbanSerializer,
+    VagaNotificacaoSerializer,
+    VagaSerializer,
+)
 
 
 class EtapaKanbanViewSet(viewsets.ModelViewSet):
@@ -87,7 +94,15 @@ class VagaViewSet(viewsets.ModelViewSet):
         if user.role == "SETOR":
             extra["setor_id"] = user.setor_id
 
-        serializer.save(**extra)
+        vaga = serializer.save(**extra)
+
+        if user.role == "SETOR":
+            _notificar_vaga_criada(vaga, company_id)
+
+    def perform_update(self, serializer):
+        if self.request.user.role == "SETOR":
+            serializer.validated_data.pop("setor", None)
+        serializer.save()
 
     @action(detail=True, methods=["get"], url_path="candidatos")
     def candidatos(self, request, pk=None):
@@ -104,4 +119,39 @@ class VagaViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.soft_delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def _notificar_vaga_criada(vaga, company_id):
+    destinatarios = User.objects.filter(company_id=company_id, role="RH", is_active=True)
+    mensagem = f'Setor "{vaga.setor.nome}" adicionou a vaga "{vaga.titulo}"'
+    VagaNotificacao.objects.bulk_create(
+        [
+            VagaNotificacao(
+                company_id=company_id,
+                destinatario=user,
+                vaga=vaga,
+                mensagem=mensagem,
+            )
+            for user in destinatarios
+        ]
+    )
+
+
+class VagaNotificacaoListView(generics.ListAPIView):
+    serializer_class = VagaNotificacaoSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+    def get_queryset(self):
+        return VagaNotificacao.objects.filter(
+            destinatario=self.request.user, lida=False
+        ).select_related("vaga")[:20]
+
+
+class VagaNotificacaoMarcarLidasView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        VagaNotificacao.objects.filter(destinatario=request.user, lida=False).update(lida=True)
         return Response(status=status.HTTP_204_NO_CONTENT)

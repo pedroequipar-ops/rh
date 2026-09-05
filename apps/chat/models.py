@@ -19,3 +19,18 @@ class ChatMensagem(TimeStampedModel):
 
     def __str__(self):
         return f"{self.autor_id}: {self.texto[:30]}"
+
+
+class ChatLeitura(TimeStampedModel):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="chat_leituras")
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="chat_leituras"
+    )
+    candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE, related_name="leituras")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario", "candidato"], name="unique_leitura_usuario_candidato"
+            )
+        ]

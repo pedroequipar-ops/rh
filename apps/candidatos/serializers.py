@@ -5,14 +5,13 @@ from rest_framework import serializers
 from apps.vagas.models import EtapaKanban, Vaga
 from apps.vagas.serializers import EtapaAtualSerializer
 
-from .models import Candidato
+from .models import Candidato, CandidatoNotificacao
 
 
 class CandidatoSerializer(serializers.ModelSerializer):
-    vaga_id = serializers.PrimaryKeyRelatedField(
-        source="vaga", queryset=Vaga.objects.all(), write_only=True
-    )
+    vaga_id = serializers.PrimaryKeyRelatedField(source="vaga", queryset=Vaga.objects.all())
     vaga_titulo = serializers.CharField(source="vaga.titulo", read_only=True)
+    vaga_setor = serializers.CharField(source="vaga.setor.nome", read_only=True)
     etapa_atual = EtapaAtualSerializer(read_only=True)
     etapa_atual_id = serializers.PrimaryKeyRelatedField(
         source="etapa_atual",
@@ -42,9 +41,13 @@ class CandidatoSerializer(serializers.ModelSerializer):
             "telefone",
             "cpf",
             "linkedin_url",
-            "resumo_perfil",
+            "perfil_formacao",
+            "perfil_experiencia",
+            "perfil_habilidades",
+            "perfil_certificacoes",
             "vaga_id",
             "vaga_titulo",
+            "vaga_setor",
             "etapa_atual",
             "etapa_atual_id",
             "ordem",
@@ -82,9 +85,22 @@ class AnalisarCurriculoResponseSerializer(serializers.Serializer):
     linkedin_url = serializers.CharField(allow_blank=True)
     vaga_sugerida_id = serializers.CharField(allow_null=True)
     justificativa = serializers.CharField(allow_blank=True)
-    resumo_perfil = serializers.CharField(allow_blank=True)
+    perfil_formacao = serializers.CharField(allow_blank=True)
+    perfil_experiencia = serializers.CharField(allow_blank=True)
+    perfil_habilidades = serializers.CharField(allow_blank=True)
+    perfil_certificacoes = serializers.CharField(allow_blank=True)
     erro = serializers.BooleanField(default=False)
 
 
 class CurriculoUrlResponseSerializer(serializers.Serializer):
     curriculo_url = serializers.CharField()
+
+
+class CandidatoNotificacaoSerializer(serializers.ModelSerializer):
+    candidato_id = serializers.UUIDField(source="candidato.id", read_only=True)
+    candidato_nome = serializers.CharField(source="candidato.nome", read_only=True)
+
+    class Meta:
+        model = CandidatoNotificacao
+        fields = ["id", "candidato_id", "candidato_nome", "mensagem", "created_at"]
+        read_only_fields = fields

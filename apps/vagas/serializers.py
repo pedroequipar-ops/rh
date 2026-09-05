@@ -3,7 +3,7 @@ from rest_framework import serializers
 from apps.accounts.models import Setor
 from apps.accounts.serializers import SetorSerializer
 
-from .models import EtapaKanban, Vaga
+from .models import EtapaKanban, Vaga, VagaNotificacao
 
 
 class EtapaKanbanSerializer(serializers.ModelSerializer):
@@ -46,3 +46,13 @@ class VagaSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = ["id", "criado_por", "created_at", "updated_at"]
+
+
+class VagaNotificacaoSerializer(serializers.ModelSerializer):
+    vaga_id = serializers.UUIDField(source="vaga.id", read_only=True)
+    vaga_titulo = serializers.CharField(source="vaga.titulo", read_only=True)
+
+    class Meta:
+        model = VagaNotificacao
+        fields = ["id", "vaga_id", "vaga_titulo", "mensagem", "created_at"]
+        read_only_fields = fields

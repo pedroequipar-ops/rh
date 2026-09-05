@@ -49,7 +49,7 @@ export function CandidatoModal() {
           <X size={18} />
         </button>
 
-        <div className="flex h-[80vh] w-full overflow-hidden rounded-lg bg-white shadow-2xl">
+        <div className="flex h-[85vh] w-full flex-col overflow-hidden rounded-lg bg-white shadow-2xl md:h-[80vh] md:flex-row">
           {error && (
             <div className="flex flex-1 items-center justify-center text-sm text-red-500">
               Não foi possível carregar este candidato.
@@ -64,10 +64,10 @@ export function CandidatoModal() {
 
           {!error && candidato && (
             <>
-              <div className="w-3/5 border-r border-slate-200">
+              <div className="h-1/2 w-full overflow-hidden border-b border-slate-200 md:h-full md:w-3/5 md:border-b-0 md:border-r">
                 <CandidatoInfoPanel candidato={candidato} />
               </div>
-              <div className="w-2/5">
+              <div className="h-1/2 w-full md:h-full md:w-2/5">
                 <ChatPanel candidatoId={candidato.id} />
               </div>
             </>

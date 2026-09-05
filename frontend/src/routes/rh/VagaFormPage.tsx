@@ -2,10 +2,12 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createVaga, listSetores } from '../../api/vagas'
 import { useAuth } from '../../context/AuthContext'
+import { useToast } from '../../context/ToastContext'
 import type { Setor } from '../../types'
 
 export function VagaFormPage() {
   const { me } = useAuth()
+  const { showToast } = useToast()
   const navigate = useNavigate()
   const isRh = me?.role === 'RH'
 
@@ -39,6 +41,7 @@ export function VagaFormPage() {
         salario: salario || null,
         ...(isRh ? { setor_id: setorId } : {}),
       })
+      showToast('Vaga criada com sucesso')
       navigate(isRh ? '/rh/kanban' : '/setor/kanban')
     } catch {
       setError('Não foi possível criar a vaga. Confira os campos e tente novamente.')
@@ -80,7 +83,7 @@ export function VagaFormPage() {
             rows={3}
             value={requisitos}
             onChange={(e) => setRequisitos(e.target.value)}
-            className="min-h-[4.5rem] max-h-[16rem] w-full resize-y rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            className="min-h-[6rem] max-h-[16rem] w-full resize-y rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
           />
         </div>
 

@@ -1,12 +1,14 @@
 from uuid import uuid4
 
 from django.conf import settings
-from rest_framework import status, viewsets
+from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from apps.accounts.models import User
 from apps.core.permissions import HasFunctionPermission
 from apps.vagas.models import EtapaKanban
 from apps.vagas.repositories.etapa_repository import EtapaRepository
@@ -15,12 +17,13 @@ from utils.storage import MinioStorage
 from utils.utils import capture_company_id
 
 from . import services
-from .models import Candidato
+from .models import Candidato, CandidatoNotificacao
 from .repositories.candidato_repository import CandidatoRepository
 from .serializers import (
     AnalisarCurriculoRequestSerializer,
     AnalisarCurriculoResponseSerializer,
     CandidatoMoverEtapaSerializer,
+    CandidatoNotificacaoSerializer,
     CandidatoSerializer,
     CurriculoUrlResponseSerializer,
     UploadUrlRequestSerializer,
@@ -68,6 +71,8 @@ class CandidatoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         company_id = capture_company_id(self.request)
+        if self.action == "list":
+            services.excluir_reprovados_vencidos(company_id)
         user = self.request.user
         if user.role == "SETOR":
             return self.repo.list_by_setor(company_id, user.setor_id)
@@ -75,9 +80,7 @@ class CandidatoViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         curriculo_key = request.data.get("curriculo_key")
-        if not curriculo_key:
-            raise ValidationError({"curriculo_key": "Obrigatório."})
-        if not MinioStorage().head_object(_bucket(), curriculo_key):
+        if curriculo_key and not MinioStorage().head_object(_bucket(), curriculo_key):
             raise ValidationError({"curriculo_key": "Currículo não encontrado no storage."})
         return super().create(request, *args, **kwargs)
 
@@ -136,7 +139,10 @@ class CandidatoViewSet(viewsets.ModelViewSet):
                 "linkedin_url": "",
                 "vaga_sugerida_id": None,
                 "justificativa": "",
-                "resumo_perfil": "",
+                "perfil_formacao": "",
+                "perfil_experiencia": "",
+                "perfil_habilidades": "",
+                "perfil_certificacoes": "",
                 "erro": True,
             }
         else:
@@ -148,7 +154,10 @@ class CandidatoViewSet(viewsets.ModelViewSet):
                 "linkedin_url": dto.linkedin_url,
                 "vaga_sugerida_id": dto.vaga_sugerida_id,
                 "justificativa": dto.justificativa,
-                "resumo_perfil": dto.resumo_perfil,
+                "perfil_formacao": dto.perfil_formacao,
+                "perfil_experiencia": dto.perfil_experiencia,
+                "perfil_habilidades": dto.perfil_habilidades,
+                "perfil_certificacoes": dto.perfil_certificacoes,
                 "erro": False,
             }
         return Response(AnalisarCurriculoResponseSerializer(dto_data).data)
@@ -156,6 +165,8 @@ class CandidatoViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="curriculo-url")
     def curriculo_url(self, request, pk=None):
         candidato = self.get_object()
+        if not candidato.curriculo_key:
+            raise NotFound("Este candidato não tem currículo cadastrado.")
         url = MinioStorage().presigned_url(_bucket(), candidato.curriculo_key, expires=3600)
         return Response(CurriculoUrlResponseSerializer({"curriculo_url": url}).data)
 
@@ -173,4 +184,47 @@ class CandidatoViewSet(viewsets.ModelViewSet):
             raise NotFound("Etapa não encontrada.")
 
         candidato = self.repo.mover_etapa(candidato, etapa)
+        _notificar_mudanca_etapa(candidato, etapa, company_id)
         return Response(CandidatoSerializer(candidato).data)
+
+
+def _notificar_mudanca_etapa(candidato, etapa, company_id):
+    setor_id = candidato.vaga.setor_id
+    if not setor_id:
+        return
+    destinatarios = User.objects.filter(
+        company_id=company_id, role="SETOR", setor_id=setor_id, is_active=True
+    )
+    mensagem = f'"{candidato.nome}" mudou para a etapa "{etapa.nome}"'
+    CandidatoNotificacao.objects.bulk_create(
+        [
+            CandidatoNotificacao(
+                company_id=company_id,
+                destinatario=user,
+                candidato=candidato,
+                mensagem=mensagem,
+            )
+            for user in destinatarios
+        ]
+    )
+
+
+class CandidatoNotificacaoListView(generics.ListAPIView):
+    serializer_class = CandidatoNotificacaoSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+    def get_queryset(self):
+        return CandidatoNotificacao.objects.filter(
+            destinatario=self.request.user, lida=False
+        ).select_related("candidato")[:20]
+
+
+class CandidatoNotificacaoMarcarLidasView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        CandidatoNotificacao.objects.filter(destinatario=request.user, lida=False).update(
+            lida=True
+        )
+        return Response(status=status.HTTP_204_NO_CONTENT)

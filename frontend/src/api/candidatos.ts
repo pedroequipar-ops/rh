@@ -35,7 +35,10 @@ export interface CandidatoInput {
   telefone: string
   cpf: string
   linkedin_url?: string | null
-  resumo_perfil?: string
+  perfil_formacao?: string
+  perfil_experiencia?: string
+  perfil_habilidades?: string
+  perfil_certificacoes?: string
   curriculo_key: string
   vaga_id: string
 }
@@ -47,6 +50,11 @@ export async function createCandidato(input: CandidatoInput): Promise<Candidato>
 
 export async function getCandidato(id: string): Promise<Candidato> {
   const { data } = await apiClient.get<Candidato>(`/candidatos/${id}/`)
+  return data
+}
+
+export async function updateCandidato(id: string, input: Partial<CandidatoInput>): Promise<Candidato> {
+  const { data } = await apiClient.patch<Candidato>(`/candidatos/${id}/`, input)
   return data
 }
 
@@ -65,4 +73,25 @@ export async function moverEtapa(id: string, etapaId: string): Promise<Candidato
     etapa_id: etapaId,
   })
   return data
+}
+
+export async function deleteCandidato(id: string): Promise<void> {
+  await apiClient.delete(`/candidatos/${id}/`)
+}
+
+export interface CandidatoNotificacaoEtapa {
+  id: string
+  candidato_id: string
+  candidato_nome: string
+  mensagem: string
+  created_at: string
+}
+
+export async function getNotificacoesEtapa(): Promise<CandidatoNotificacaoEtapa[]> {
+  const { data } = await apiClient.get<CandidatoNotificacaoEtapa[]>('/candidatos-notificacoes/')
+  return data
+}
+
+export async function marcarNotificacoesEtapaComoLidas(): Promise<void> {
+  await apiClient.post('/candidatos-notificacoes/marcar-lidas/')
 }

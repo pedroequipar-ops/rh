@@ -71,7 +71,7 @@ export function KanbanBoard({
   }
 
   const board = (
-    <div className="flex h-full gap-4 overflow-x-auto p-4" onWheel={handleWheel}>
+    <div className="scrollbar-thin flex h-full gap-4 overflow-x-auto p-4" onWheel={handleWheel}>
       {sortedEtapas.map((etapa) => (
         <KanbanColumn
           key={etapa.id}

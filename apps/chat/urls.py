@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import ChatMensagemListView
+from .views import ChatMarcarLidaView, ChatMensagemListView, ChatNaoLidasView
 
 urlpatterns = [
     path(
@@ -8,4 +8,10 @@ urlpatterns = [
         ChatMensagemListView.as_view(),
         name="candidato-mensagens",
     ),
+    path(
+        "candidatos/<uuid:candidato_id>/mensagens/marcar-lida/",
+        ChatMarcarLidaView.as_view(),
+        name="candidato-mensagens-marcar-lida",
+    ),
+    path("chat/nao-lidas/", ChatNaoLidasView.as_view(), name="chat-nao-lidas"),
 ]

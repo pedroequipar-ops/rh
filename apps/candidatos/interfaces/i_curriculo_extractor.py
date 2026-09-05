@@ -12,7 +12,10 @@ class CandidatoExtraidoDTO:
     linkedin_url: str = ""
     vaga_sugerida_id: Optional[str] = None
     justificativa: str = ""
-    resumo_perfil: str = ""
+    perfil_formacao: str = ""
+    perfil_experiencia: str = ""
+    perfil_habilidades: str = ""
+    perfil_certificacoes: str = ""
 
 
 class ICurriculoExtractor(ABC):

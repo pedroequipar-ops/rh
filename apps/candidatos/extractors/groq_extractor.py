@@ -14,15 +14,17 @@ SYSTEM_PROMPT = (
     "sugere, entre as vagas abertas fornecidas, a que melhor combina com o perfil. "
     "Responda SOMENTE com um JSON válido no formato: "
     '{"nome": str, "email": str, "telefone": str, "cpf": str, "linkedin_url": str, '
-    '"vaga_sugerida_id": str ou null, "justificativa": str, "resumo_perfil": str}. '
+    '"vaga_sugerida_id": str ou null, "justificativa": str, "perfil_formacao": str, '
+    '"perfil_experiencia": str, "perfil_habilidades": str, "perfil_certificacoes": str}. '
     "Use string vazia quando um campo não for encontrado no currículo. "
     "Só sugira vaga_sugerida_id se houver correspondência clara com alguma das vagas "
     "informadas; caso contrário, use null. "
-    "Em resumo_perfil, escreva um resumo curto e objetivo (poucas frases ou tópicos) "
-    "com as informações mais relevantes do currículo que não estejam nos outros campos: "
-    "formação acadêmica e cursos, experiências profissionais relevantes, principais "
-    "habilidades e qualquer outra informação pessoal ou profissional que se destaque. "
-    "Seja conciso — não copie o currículo inteiro."
+    "Nos campos de perfil, seja conciso (poucas frases ou tópicos), sem copiar o "
+    "currículo inteiro: "
+    "perfil_formacao — formação acadêmica e cursos; "
+    "perfil_experiencia — experiências profissionais relevantes; "
+    "perfil_habilidades — principais habilidades técnicas e ferramentas; "
+    "perfil_certificacoes — certificações obtidas."
 )
 
 
@@ -75,5 +77,8 @@ class GroqCurriculoExtractor(ICurriculoExtractor):
             linkedin_url=data.get("linkedin_url") or "",
             vaga_sugerida_id=data.get("vaga_sugerida_id") or None,
             justificativa=data.get("justificativa") or "",
-            resumo_perfil=data.get("resumo_perfil") or "",
+            perfil_formacao=data.get("perfil_formacao") or "",
+            perfil_experiencia=data.get("perfil_experiencia") or "",
+            perfil_habilidades=data.get("perfil_habilidades") or "",
+            perfil_certificacoes=data.get("perfil_certificacoes") or "",
         )

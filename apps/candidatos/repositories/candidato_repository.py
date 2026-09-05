@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from ..interfaces.i_candidato_repository import ICandidatoRepository
 from ..models import Candidato
 
@@ -31,5 +33,6 @@ class CandidatoRepository(ICandidatoRepository):
 
     def mover_etapa(self, candidato, etapa):
         candidato.etapa_atual = etapa
-        candidato.save(update_fields=["etapa_atual", "updated_at"])
+        candidato.reprovado_em = timezone.now() if etapa.is_saida_negativa else None
+        candidato.save(update_fields=["etapa_atual", "reprovado_em", "updated_at"])
         return candidato

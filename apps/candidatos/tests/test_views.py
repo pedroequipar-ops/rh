@@ -1,6 +1,8 @@
+from datetime import timedelta
 from unittest.mock import patch
 
 import pytest
+from django.utils import timezone
 from rest_framework.test import APIClient
 
 from apps.accounts.models import User
@@ -8,7 +10,7 @@ from apps.candidatos.interfaces.i_curriculo_extractor import (
     CandidatoExtraidoDTO,
     ICurriculoExtractor,
 )
-from apps.candidatos.models import Candidato
+from apps.candidatos.models import Candidato, CandidatoNotificacao
 
 
 def _client_for(user, company):
@@ -76,6 +78,45 @@ def test_rh_cria_candidato_apos_upload_url(
 
 
 @pytest.mark.django_db
+@patch("apps.candidatos.views.MinioStorage")
+@patch("apps.candidatos.views.QueueEngine")
+def test_rh_cria_candidato_sem_curriculo(
+    mock_queue,
+    mock_storage,
+    company_factory,
+    setor_factory,
+    user_factory,
+    etapa_factory,
+    vaga_factory,
+):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    etapa_factory(company=company)
+    vaga = vaga_factory(company=company, setor=setor)
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    response = client.post(
+        "/v1/candidatos/",
+        {
+            "nome": "Sem Curriculo",
+            "email": "semcurriculo@example.com",
+            "telefone": "11999999999",
+            "vaga_id": str(vaga.id),
+            "curriculo_key": "",
+        },
+    )
+
+    assert response.status_code == 201
+    assert response.data["curriculo_key"] == ""
+    mock_storage.return_value.head_object.assert_not_called()
+
+    candidato_id = response.data["id"]
+    curriculo_url = client.get(f"/v1/candidatos/{candidato_id}/curriculo-url/")
+    assert curriculo_url.status_code == 404
+
+
+@pytest.mark.django_db
 def test_setor_nao_pode_criar_candidato(
     company_factory, setor_factory, user_factory, etapa_factory, vaga_factory
 ):
@@ -139,6 +180,95 @@ def test_setor_nao_pode_mover_candidato_de_etapa(
     )
 
     assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_mover_etapa_notifica_usuarios_do_setor(
+    company_factory, setor_factory, user_factory, etapa_factory, candidato_factory
+):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    outro_setor = setor_factory(company=company)
+    etapa_destino = etapa_factory(company=company, nome="Primeira Entrevista", ordem=1)
+    candidato = candidato_factory(company=company)
+    candidato.vaga.setor = setor
+    candidato.vaga.save()
+
+    rh = user_factory(company=company, role=User.Role.RH)
+    setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
+    outro_setor_user = user_factory(company=company, role=User.Role.SETOR, setor=outro_setor)
+    client = _client_for(rh, company)
+
+    response = client.patch(
+        f"/v1/candidatos/{candidato.id}/mover-etapa/", {"etapa_id": str(etapa_destino.id)}
+    )
+
+    assert response.status_code == 200
+    notificacoes = CandidatoNotificacao.objects.filter(candidato=candidato)
+    destinatarios = {n.destinatario_id for n in notificacoes}
+    assert destinatarios == {setor_user.id}
+    assert outro_setor_user.id not in destinatarios
+    assert etapa_destino.nome in notificacoes.first().mensagem
+
+    setor_client = _client_for(setor_user, company)
+    listagem = setor_client.get("/v1/candidatos-notificacoes/")
+    assert listagem.status_code == 200
+    assert len(listagem.data) == 1
+
+    marcar = setor_client.post("/v1/candidatos-notificacoes/marcar-lidas/")
+    assert marcar.status_code == 204
+
+    listagem_apos = setor_client.get("/v1/candidatos-notificacoes/")
+    assert len(listagem_apos.data) == 0
+
+
+@pytest.mark.django_db
+def test_mover_para_reprovado_marca_reprovado_em(
+    company_factory, user_factory, etapa_factory, candidato_factory
+):
+    company = company_factory()
+    etapa_reprovado = etapa_factory(company=company, nome="Reprovado", is_saida_negativa=True)
+    candidato = candidato_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    response = client.patch(
+        f"/v1/candidatos/{candidato.id}/mover-etapa/", {"etapa_id": str(etapa_reprovado.id)}
+    )
+
+    assert response.status_code == 200
+    candidato.refresh_from_db()
+    assert candidato.reprovado_em is not None
+
+
+@pytest.mark.django_db
+def test_reprovado_ha_mais_de_30_dias_e_excluido_ao_listar(
+    company_factory, user_factory, etapa_factory, candidato_factory
+):
+    company = company_factory()
+    etapa_reprovado = etapa_factory(company=company, nome="Reprovado", is_saida_negativa=True)
+    candidato_vencido = candidato_factory(
+        company=company,
+        etapa_atual=etapa_reprovado,
+        reprovado_em=timezone.now() - timedelta(days=31),
+    )
+    candidato_recente = candidato_factory(
+        company=company,
+        etapa_atual=etapa_reprovado,
+        reprovado_em=timezone.now() - timedelta(days=5),
+    )
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    response = client.get("/v1/candidatos/")
+
+    assert response.status_code == 200
+    ids = [item["id"] for item in response.data["results"]]
+    assert str(candidato_vencido.id) not in ids
+    assert str(candidato_recente.id) in ids
+
+    candidato_vencido.refresh_from_db()
+    assert candidato_vencido.active is False
 
 
 @pytest.mark.django_db
@@ -270,3 +400,22 @@ def test_falha_da_ia_nao_impede_cadastro_manual(
         )
     assert cadastro_response.status_code == 201
     assert Candidato.objects.filter(nome="Preenchido manualmente").exists()
+
+
+@pytest.mark.django_db
+def test_rh_edita_candidato(company_factory, user_factory, candidato_factory):
+    company = company_factory()
+    candidato = candidato_factory(company=company, nome="Nome Antigo")
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    response = client.patch(
+        f"/v1/candidatos/{candidato.id}/",
+        {"nome": "Nome Novo", "telefone": "11900001111"},
+    )
+
+    assert response.status_code == 200
+    assert response.data["nome"] == "Nome Novo"
+    assert str(response.data["vaga_id"]) == str(candidato.vaga_id)
+    candidato.refresh_from_db()
+    assert candidato.telefone == "11900001111"

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Send } from 'lucide-react'
 import clsx from 'clsx'
-import { listMensagens } from '../../api/chat'
+import { listMensagens, marcarMensagensComoLidas } from '../../api/chat'
 import { tokenStorage } from '../../api/client'
 import { useAuth } from '../../context/AuthContext'
 import { ChatSocket, type ChatSocketStatus } from '../../ws/chatSocket'
@@ -49,6 +49,7 @@ export function ChatPanel({ candidatoId }: ChatPanelProps) {
         const msg = data as ChatMensagem
         if (msg?.id && msg?.texto) {
           setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]))
+          marcarMensagensComoLidas(candidatoId).catch(() => {})
         }
       },
     })

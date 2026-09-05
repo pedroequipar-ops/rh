@@ -52,3 +52,43 @@ def test_historico_rest_404_para_setor_alheio(
     response = client.get(f"/v1/candidatos/{candidato.id}/mensagens/")
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_nao_lidas_soma_mensagens_de_outros_autores(
+    company_factory, candidato_factory, user_factory, chat_mensagem_factory
+):
+    company = company_factory()
+    candidato = candidato_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    outro = user_factory(company=company, role=User.Role.RH)
+
+    chat_mensagem_factory(company=company, candidato=candidato, autor=outro, texto="oi")
+    chat_mensagem_factory(company=company, candidato=candidato, autor=outro, texto="tudo bem?")
+    chat_mensagem_factory(company=company, candidato=candidato, autor=rh, texto="minha propria")
+
+    client = _client_for(rh, company)
+    response = client.get("/v1/chat/nao-lidas/")
+
+    assert response.status_code == 200
+    assert response.data["total"] == 2
+    assert response.data["candidatos"][0]["candidato_id"] == str(candidato.id)
+    assert response.data["candidatos"][0]["quantidade"] == 2
+
+
+@pytest.mark.django_db
+def test_abrir_mensagens_marca_como_lida(
+    company_factory, candidato_factory, user_factory, chat_mensagem_factory
+):
+    company = company_factory()
+    candidato = candidato_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    outro = user_factory(company=company, role=User.Role.RH)
+    chat_mensagem_factory(company=company, candidato=candidato, autor=outro, texto="oi")
+
+    client = _client_for(rh, company)
+    client.get(f"/v1/candidatos/{candidato.id}/mensagens/")
+    response = client.get("/v1/chat/nao-lidas/")
+
+    assert response.status_code == 200
+    assert response.data["total"] == 0
