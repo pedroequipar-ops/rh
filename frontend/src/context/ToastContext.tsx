@@ -3,31 +3,46 @@ import { CheckCircle2, XCircle } from 'lucide-react'
 
 type ToastVariant = 'success' | 'error'
 
+interface ToastActionConfig {
+  actionLabel: string
+  onAction: () => void
+}
+
 interface ToastItem {
   id: number
   message: string
   variant: ToastVariant
+  action?: ToastActionConfig
 }
 
 interface ToastContextValue {
-  showToast: (message: string, variant?: ToastVariant) => void
+  showToast: (message: string, variant?: ToastVariant, action?: ToastActionConfig) => void
 }
 
 const ToastContext = createContext<ToastContextValue | undefined>(undefined)
 
 const TOAST_DURATION_MS = 3000
+const TOAST_DURATION_WITH_ACTION_MS = 6000
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([])
   const nextId = useRef(0)
 
-  const showToast = useCallback((message: string, variant: ToastVariant = 'success') => {
-    const id = nextId.current++
-    setToasts((prev) => [...prev, { id, message, variant }])
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id))
-    }, TOAST_DURATION_MS)
+  const dismiss = useCallback((id: number) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id))
   }, [])
+
+  const showToast = useCallback(
+    (message: string, variant: ToastVariant = 'success', action?: ToastActionConfig) => {
+      const id = nextId.current++
+      setToasts((prev) => [...prev, { id, message, variant, action }])
+      setTimeout(
+        () => dismiss(id),
+        action ? TOAST_DURATION_WITH_ACTION_MS : TOAST_DURATION_MS,
+      )
+    },
+    [dismiss],
+  )
 
   return (
     <ToastContext.Provider value={{ showToast }}>
@@ -48,7 +63,19 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             ) : (
               <XCircle size={16} className="shrink-0 text-red-500" />
             )}
-            {toast.message}
+            <span>{toast.message}</span>
+            {toast.action ? (
+              <button
+                type="button"
+                onClick={() => {
+                  toast.action?.onAction()
+                  dismiss(toast.id)
+                }}
+                className="ml-1 shrink-0 rounded px-1.5 py-0.5 text-xs font-semibold underline hover:bg-black/5"
+              >
+                {toast.action.actionLabel}
+              </button>
+            ) : null}
           </div>
         ))}
       </div>
