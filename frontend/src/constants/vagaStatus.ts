@@ -70,17 +70,17 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
 export const FLUXO_STATUSES: VagaStatus[] = [
   'RASCUNHO',
   'SOLICITADA',
+  'RECUSADA',
   'APROVADA',
   'PUBLICADA',
   'RECEBENDO',
   'ENCERRADA',
+  'CONGELADA',
 ]
 
-/** Status de vaga que já saíram do fluxo pré-triagem (não viram coluna). */
+/** Status de vaga que saíram do fluxo pré-triagem (não viram coluna). */
 export const STATUS_FORA_DO_FLUXO: VagaStatus[] = [
   'EM_TRIAGEM',
-  'RECUSADA',
-  'CONGELADA',
   'CANCELADA',
   'PREENCHIDA',
 ]
