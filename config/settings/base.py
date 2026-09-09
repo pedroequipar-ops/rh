@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "apps.vagas",
     "apps.candidatos",
     "apps.chat",
+    "apps.busca",
 ]
 
 MIDDLEWARE = [

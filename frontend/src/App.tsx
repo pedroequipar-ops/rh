@@ -1,5 +1,5 @@
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
-import { Navbar } from './components/common/Navbar'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppShell } from './components/common/AppShell'
 import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { LoginPage } from './routes/LoginPage'
 import { ListagemPage } from './routes/ListagemPage'
@@ -11,22 +11,13 @@ import { VagaFormPage as SetorVagaFormPage } from './routes/setor/VagaFormPage'
 import { CandidatoModal } from './components/candidato/CandidatoModal'
 import { VagaDetalheModal } from './components/vaga/VagaDetalheModal'
 
-function AppLayout() {
-  return (
-    <div className="min-h-screen bg-slate-50">
-      <Navbar />
-      <Outlet />
-    </div>
-  )
-}
-
 export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
 
       <Route element={<ProtectedRoute />}>
-        <Route element={<AppLayout />}>
+        <Route element={<AppShell />}>
           <Route element={<ProtectedRoute allowedRoles={['RH']} />}>
             <Route path="/rh/kanban" element={<KanbanPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />

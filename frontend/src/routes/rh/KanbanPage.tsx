@@ -50,7 +50,7 @@ export function KanbanPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-57px)] flex-col">
+    <div className="flex h-full flex-col">
       <div className="flex items-center justify-between px-4 pt-4">
         <h1 className="text-lg font-semibold text-slate-800">Fluxo de vagas e candidatos</h1>
         <div className="flex items-center gap-2">

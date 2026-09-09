@@ -14,7 +14,7 @@ export function KanbanReadOnlyPage() {
   const loading = etapasQuery.isLoading || candidatosQuery.isLoading || vagasQuery.isLoading
 
   return (
-    <div className="flex h-[calc(100vh-57px)] flex-col">
+    <div className="flex h-full flex-col">
       <div className="px-4 pt-4">
         <h1 className="text-lg font-semibold text-slate-800">Fluxo das minhas vagas</h1>
       </div>

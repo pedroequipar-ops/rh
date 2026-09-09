@@ -291,7 +291,7 @@ export function ListagemPage() {
   ]
 
   return (
-    <div className="flex h-[calc(100vh-57px)] flex-col gap-4 p-4 sm:flex-row sm:p-6">
+    <div className="flex h-full flex-col gap-4 p-4 sm:flex-row sm:p-6">
       <nav className="flex shrink-0 gap-1 overflow-x-auto sm:w-56 sm:flex-col sm:overflow-visible">
         {abas.map((item) => (
           <button
