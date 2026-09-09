@@ -3,6 +3,8 @@ from rest_framework import serializers
 
 from apps.accounts.models import Setor
 from apps.accounts.serializers import SetorSerializer
+from apps.tags.serializers import TagsField
+from apps.tags.services import get_or_create_tags, registrar_mudanca_tags
 
 from . import services
 from .models import EtapaKanban, Vaga, VagaHistoricoStatus, VagaNotificacao
@@ -53,6 +55,7 @@ class VagaSerializer(serializers.ModelSerializer):
     total_candidatos = serializers.SerializerMethodField()
     total_por_etapa = serializers.SerializerMethodField()
     transicoes_disponiveis = serializers.SerializerMethodField()
+    tags = TagsField(required=False)
 
     class Meta:
         model = Vaga
@@ -93,6 +96,7 @@ class VagaSerializer(serializers.ModelSerializer):
             "total_candidatos",
             "total_por_etapa",
             "transicoes_disponiveis",
+            "tags",
             "created_at",
             "updated_at",
         ]
@@ -153,6 +157,29 @@ class VagaSerializer(serializers.ModelSerializer):
         if request is None:
             return []
         return services.transicoes_disponiveis(obj, request.user)
+
+    def _usuario(self):
+        request = self.context.get("request")
+        return request.user if request else None
+
+    def create(self, validated_data):
+        nomes = validated_data.pop("tags", None)
+        instance = super().create(validated_data)
+        if nomes is not None:
+            tags = get_or_create_tags(instance.company_id, nomes)
+            instance.tags.set(tags)
+            registrar_mudanca_tags(self._usuario(), instance, set(), {t.nome for t in tags})
+        return instance
+
+    def update(self, instance, validated_data):
+        nomes = validated_data.pop("tags", None)
+        antes = set(instance.tags.values_list("nome", flat=True)) if nomes is not None else None
+        instance = super().update(instance, validated_data)
+        if nomes is not None:
+            tags = get_or_create_tags(instance.company_id, nomes)
+            instance.tags.set(tags)
+            registrar_mudanca_tags(self._usuario(), instance, antes, {t.nome for t in tags})
+        return instance
 
 
 class VagaResumoSerializer(serializers.ModelSerializer):

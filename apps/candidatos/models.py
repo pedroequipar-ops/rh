@@ -28,6 +28,7 @@ class Candidato(TimeStampedModel):
     cadastrado_por = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="candidatos_cadastrados"
     )
+    tags = models.ManyToManyField("tags.Tag", blank=True, related_name="candidatos")
 
     class Meta:
         ordering = ["ordem", "-created_at"]

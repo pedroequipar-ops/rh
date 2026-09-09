@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.module_loading import import_string
 from pypdf import PdfReader
 
+from apps.atividade import services as atividade_services
 from apps.core.logger import LoggerEngine
 from apps.vagas.repositories.vaga_repository import VagaRepository
 from utils.storage import MinioStorage
@@ -23,6 +24,20 @@ def can_access_candidato(user, candidato) -> bool:
     if user.role == "SETOR":
         return str(candidato.vaga.setor_id) == str(user.setor_id)
     return False
+
+
+def registrar_cadastro(candidato, user):
+    atividade_services.registrar(user, "cadastrou", candidato, resumo=f"cadastrou {candidato.nome}")
+
+
+def registrar_edicao(candidato, user):
+    atividade_services.registrar(user, "editou", candidato, resumo="editou os dados do candidato")
+
+
+def registrar_mudanca_etapa(candidato, etapa, user):
+    atividade_services.registrar(
+        user, "moveu_etapa", candidato, resumo=f'moveu para a etapa "{etapa.nome}"'
+    )
 
 
 def excluir_reprovados_vencidos(company_id) -> int:

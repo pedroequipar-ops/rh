@@ -2,6 +2,8 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import URLValidator
 from rest_framework import serializers
 
+from apps.tags.serializers import TagsField
+from apps.tags.services import get_or_create_tags, registrar_mudanca_tags
 from apps.vagas.models import EtapaKanban, Vaga
 from apps.vagas.serializers import EtapaAtualSerializer, VagaResumoSerializer
 
@@ -22,6 +24,30 @@ class CandidatoSerializer(serializers.ModelSerializer):
     )
     cadastrado_por = serializers.CharField(source="cadastrado_por.username", read_only=True)
     linkedin_url = serializers.CharField(required=False, allow_blank=True)
+    tags = TagsField(required=False)
+
+    def _usuario(self):
+        request = self.context.get("request")
+        return request.user if request else None
+
+    def create(self, validated_data):
+        nomes = validated_data.pop("tags", None)
+        instance = super().create(validated_data)
+        if nomes is not None:
+            tags = get_or_create_tags(instance.company_id, nomes)
+            instance.tags.set(tags)
+            registrar_mudanca_tags(self._usuario(), instance, set(), {t.nome for t in tags})
+        return instance
+
+    def update(self, instance, validated_data):
+        nomes = validated_data.pop("tags", None)
+        antes = set(instance.tags.values_list("nome", flat=True)) if nomes is not None else None
+        instance = super().update(instance, validated_data)
+        if nomes is not None:
+            tags = get_or_create_tags(instance.company_id, nomes)
+            instance.tags.set(tags)
+            registrar_mudanca_tags(self._usuario(), instance, antes, {t.nome for t in tags})
+        return instance
 
     def validate_linkedin_url(self, value):
         if not value:
@@ -56,6 +82,7 @@ class CandidatoSerializer(serializers.ModelSerializer):
             "curriculo_key",
             "curriculo_content_type",
             "cadastrado_por",
+            "tags",
             "created_at",
             "updated_at",
         ]

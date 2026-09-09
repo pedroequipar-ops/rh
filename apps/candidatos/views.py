@@ -111,6 +111,7 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         if "etapa_atual" not in serializer.validated_data:
             extra["etapa_atual"] = _etapa_inicial(company_id)
         candidato = serializer.save(**extra)
+        services.registrar_cadastro(candidato, self.request.user)
         if vaga.status in _VAGA_ABRE_TRIAGEM:
             vagas_services.aplicar_transicao(
                 vaga,
@@ -128,6 +129,13 @@ class CandidatoViewSet(viewsets.ModelViewSet):
                 "company_id": str(company_id),
             },
         )
+
+    def perform_update(self, serializer):
+        candidato = serializer.save()
+        # "tags" já loga sua própria entrada (adicionou_tag/removeu_tag) — só
+        # registra "editou" genérico se sobrou algum outro campo no PATCH.
+        if set(serializer.validated_data) - {"tags"}:
+            services.registrar_edicao(candidato, self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -214,6 +222,7 @@ class CandidatoViewSet(viewsets.ModelViewSet):
 
         candidato = self.repo.mover_etapa(candidato, etapa)
         _notificar_mudanca_etapa(candidato, etapa, company_id)
+        services.registrar_mudanca_etapa(candidato, etapa, request.user)
         return Response(CandidatoSerializer(candidato).data)
 
 

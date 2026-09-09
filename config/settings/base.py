@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "apps.candidatos",
     "apps.chat",
     "apps.busca",
+    "apps.tags",
+    "apps.atividade",
 ]
 
 MIDDLEWARE = [

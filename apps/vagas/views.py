@@ -139,6 +139,10 @@ class VagaViewSet(viewsets.ModelViewSet):
             serializer.validated_data.pop("setor", None)
         vaga = serializer.save()
         services.limpar_alerta_prazo_se_futuro(vaga)
+        # "tags" já loga sua própria entrada (adicionou_tag/removeu_tag) — só
+        # registra "editou" genérico se sobrou algum outro campo no PATCH.
+        if set(serializer.validated_data) - {"tags"}:
+            services.registrar_edicao(vaga, self.request.user)
 
     @action(detail=True, methods=["get"], url_path="candidatos")
     def candidatos(self, request, pk=None):

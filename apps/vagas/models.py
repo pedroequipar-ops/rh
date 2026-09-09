@@ -109,6 +109,8 @@ class Vaga(TimeStampedModel):
     # Prazo (preenchimento / início previsto): carimbo do aviso já disparado
     prazo_alertado_em = models.DateTimeField(null=True, blank=True)
 
+    tags = models.ManyToManyField("tags.Tag", blank=True, related_name="vagas")
+
     class Meta:
         ordering = ["-created_at"]
 

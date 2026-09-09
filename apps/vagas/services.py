@@ -9,6 +9,7 @@ from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied, ValidationError
 
 from apps.accounts.models import User
+from apps.atividade import services as atividade_services
 
 from .models import EtapaKanban, Vaga, VagaCobranca, VagaHistoricoStatus, VagaNotificacao
 
@@ -183,7 +184,15 @@ def mover_vaga_etapa(vaga, etapa, user):
     registrar_historico(
         vaga, "", S.EM_TRIAGEM, user, f"card da vaga movido para {etapa.nome}"
     )
+    atividade_services.registrar(
+        user, "moveu_etapa_triagem", vaga, resumo=f'moveu o card para "{etapa.nome}"'
+    )
     return vaga
+
+
+def registrar_edicao(vaga, user):
+    """Chamado pela view depois de um PATCH de campo (fora de transição)."""
+    atividade_services.registrar(user, "editou", vaga, resumo="editou os dados da vaga")
 
 
 def registrar_historico(vaga, de_status, para_status, user, observacao=""):
@@ -219,6 +228,9 @@ def registrar_candidaturas_recebidas(vaga, quantidade, user):
     if delta > 0:
         obs += f" (+{delta})"
     registrar_historico(vaga, "", S.PUBLICADA, user, obs)
+    atividade_services.registrar(
+        user, "registrou_candidaturas", vaga, resumo=f"registrou {quantidade} candidatura(s) recebida(s)"
+    )
     return vaga
 
 
@@ -278,6 +290,9 @@ def aplicar_transicao(vaga, para, user, observacao="", *, extra_fields=None, che
     vaga.save(update_fields=list(campos.keys()))
 
     registrar_historico(vaga, de, para, user, observacao)
+    atividade_services.registrar(
+        user, "mudou_status", vaga, resumo=f'mudou o status para "{vaga.get_status_display()}"'
+    )
 
     if para == S.SOLICITADA:
         notificar_vaga_criada(vaga, vaga.company_id)
@@ -341,4 +356,7 @@ def cobrar_vaga(vaga, autor, mensagem=""):
     vaga.cobrada_em = now
     vaga.total_cobrancas = (vaga.total_cobrancas or 0) + len(alvos)
     vaga.save(update_fields=["cobrada_em", "total_cobrancas", "updated_at"])
+    atividade_services.registrar(
+        autor, "cobrou_responsavel", vaga, resumo=f"cobrou o responsável ({len(alvos)} pessoa(s))"
+    )
     return len(alvos)
