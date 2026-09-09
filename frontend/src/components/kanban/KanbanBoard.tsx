@@ -9,7 +9,7 @@ import {
   type DragStartEvent,
 } from '@dnd-kit/core'
 import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
-import { FLUXO_STATUSES } from '../../constants/vagaStatus'
+import { COLUNAS_OCULTAS_SE_VAZIAS, FLUXO_STATUSES } from '../../constants/vagaStatus'
 import { CandidatoCardContent } from './CandidatoCard'
 import { KanbanColumn } from './KanbanColumn'
 import { VagaKanbanCardContent } from './VagaKanbanCard'
@@ -101,7 +101,11 @@ export function KanbanBoard({
     <div className="scrollbar-thin flex h-full gap-4 overflow-x-auto p-4" onWheel={handleWheel}>
       {vagas &&
         vagaModalBase &&
-        FLUXO_STATUSES.map((status) => (
+        FLUXO_STATUSES.filter((status) => {
+          if (!COLUNAS_OCULTAS_SE_VAZIAS.includes(status)) return true
+          if (vagas.some((v) => v.status === status)) return true
+          return !!activeVaga && activeVaga.transicoes_disponiveis.includes(status)
+        }).map((status) => (
           <VagaKanbanColumn
             key={status}
             status={status}

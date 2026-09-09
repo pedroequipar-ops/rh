@@ -81,6 +81,9 @@ export const FLUXO_STATUSES: VagaStatus[] = [
 /** Status de vaga que não viram coluna (terminais). */
 export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['CANCELADA', 'PREENCHIDA']
 
+/** Colunas de exceção: só aparecem quando têm vaga (ou são destino de um arraste). */
+export const COLUNAS_OCULTAS_SE_VAZIAS: VagaStatus[] = ['RECUSADA', 'CONGELADA']
+
 export function statusLabel(status: VagaStatus): string {
   return VAGA_STATUS_META[status]?.label ?? status
 }
