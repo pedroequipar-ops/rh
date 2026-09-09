@@ -30,6 +30,28 @@ export interface EtapaKanban {
   cor?: string | null
 }
 
+export type VagaStatus =
+  | 'RASCUNHO'
+  | 'SOLICITADA'
+  | 'RECUSADA'
+  | 'APROVADA'
+  | 'PUBLICADA'
+  | 'RECEBENDO'
+  | 'ENCERRADA'
+  | 'EM_TRIAGEM'
+  | 'CONGELADA'
+  | 'CANCELADA'
+  | 'PREENCHIDA'
+
+export type VagaPrioridade = 1 | 2 | 3
+
+export interface VagaTotalPorEtapa {
+  etapa_id: string
+  nome: string
+  ordem: number
+  total: number
+}
+
 export interface Vaga {
   id: string
   titulo: string
@@ -40,6 +62,44 @@ export interface Vaga {
   setor: Setor
   criado_por?: string
   created_at?: string
+
+  status: VagaStatus
+  status_display: string
+  status_pre_congelamento: string
+  prioridade: VagaPrioridade
+  prioridade_display: string
+  urgente: boolean
+  motivo_solicitacao: string
+  motivo_recusa: string
+  data_inicio_prevista: string | null
+  data_alvo_preenchimento: string | null
+  solicitada_em: string | null
+  aprovada_em: string | null
+  recusada_em: string | null
+  publicada_em: string | null
+  encerrada_em: string | null
+  triagem_iniciada_em: string | null
+  fechada_em: string | null
+  aprovada_por: string | null
+  cobrada_em: string | null
+  total_cobrancas: number
+  atrasada: boolean
+  total_candidatos: number
+  total_por_etapa: VagaTotalPorEtapa[] | null
+  transicoes_disponiveis: VagaStatus[]
+}
+
+export interface VagaHistorico {
+  id: string
+  de_status: string
+  para_status: string
+  por: string | null
+  observacao: string
+  created_at: string
+}
+
+export interface CompanyConfig {
+  exige_aprovacao_vaga: boolean
 }
 
 export interface Candidato {

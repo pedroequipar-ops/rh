@@ -7,7 +7,9 @@ import { listUsuarios, deleteUsuario, deleteSetor, updateSetor, updateUsuario } 
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { ConfirmDialog } from '../components/common/ConfirmDialog'
+import { PRIORIDADE_META, VAGA_STATUS_META } from '../constants/vagaStatus'
 import type { Candidato, Setor, Usuario, Vaga } from '../types'
+import clsx from 'clsx'
 
 function SetorEditModal({
   setor,
@@ -357,6 +359,7 @@ export function ListagemPage() {
                 <tr>
                   <th className="px-4 py-2">Título</th>
                   <th className="px-4 py-2">Setor</th>
+                  <th className="px-4 py-2">Etapa</th>
                   <th className="px-4 py-2">Vagas</th>
                   <th className="px-4 py-2 text-right">Ações</th>
                 </tr>
@@ -371,8 +374,33 @@ export function ListagemPage() {
                       >
                         {vaga.titulo}
                       </Link>
+                      {vaga.urgente && (
+                        <span className="ml-2 rounded border border-red-200 bg-red-50 px-1.5 py-0.5 text-[11px] font-medium text-red-700">
+                          Urgente
+                        </span>
+                      )}
+                      {!vaga.urgente && vaga.prioridade === 3 && (
+                        <span
+                          className={clsx(
+                            'ml-2 rounded border px-1.5 py-0.5 text-[11px] font-medium',
+                            PRIORIDADE_META[3].badge,
+                          )}
+                        >
+                          Alta
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-2.5 text-slate-600">{vaga.setor.nome}</td>
+                    <td className="px-4 py-2.5">
+                      <span
+                        className={clsx(
+                          'rounded border px-2 py-0.5 text-xs font-medium',
+                          VAGA_STATUS_META[vaga.status]?.badge,
+                        )}
+                      >
+                        {VAGA_STATUS_META[vaga.status]?.label ?? vaga.status}
+                      </span>
+                    </td>
                     <td className="px-4 py-2.5 text-slate-600">{vaga.quantidade_vagas}</td>
                     <td className="whitespace-nowrap px-4 py-2.5 text-right">
                       <Link

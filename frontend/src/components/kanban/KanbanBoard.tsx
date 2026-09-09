@@ -8,9 +8,12 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
-import type { Candidato, EtapaKanban } from '../../types'
+import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
+import { FLUXO_STATUSES } from '../../constants/vagaStatus'
 import { CandidatoCardContent } from './CandidatoCard'
 import { KanbanColumn } from './KanbanColumn'
+import { VagaKanbanCardContent } from './VagaKanbanCard'
+import { VagaKanbanColumn } from './VagaKanbanColumn'
 
 interface KanbanBoardProps {
   etapas: EtapaKanban[]
@@ -18,6 +21,10 @@ interface KanbanBoardProps {
   draggable: boolean
   candidatoModalBase: string
   onMoveCandidato?: (candidatoId: string, etapaId: string) => void
+  /** quando presente, o board mostra as colunas de fluxo de vaga antes da triagem */
+  vagas?: Vaga[]
+  vagaModalBase?: string
+  onMoveVaga?: (vagaId: string, status: VagaStatus) => void
 }
 
 export function KanbanBoard({
@@ -26,6 +33,9 @@ export function KanbanBoard({
   draggable,
   candidatoModalBase,
   onMoveCandidato,
+  vagas,
+  vagaModalBase,
+  onMoveVaga,
 }: KanbanBoardProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -35,7 +45,10 @@ export function KanbanBoard({
     return a.ordem - b.ordem
   })
 
-  const activeCandidato = activeId ? candidatos.find((c) => c.id === activeId) ?? null : null
+  const activeVagaId = activeId?.startsWith('vaga:') ? activeId.slice(5) : null
+  const activeVaga = activeVagaId ? vagas?.find((v) => v.id === activeVagaId) ?? null : null
+  const activeCandidato =
+    activeId && !activeVagaId ? candidatos.find((c) => c.id === activeId) ?? null : null
 
   function handleDragStart(event: DragStartEvent) {
     setActiveId(String(event.active.id))
@@ -45,9 +58,24 @@ export function KanbanBoard({
     const { active, over } = event
     setActiveId(null)
     if (!over) return
+    const activeIdStr = String(active.id)
+    const overIdStr = String(over.id)
+
+    if (activeIdStr.startsWith('vaga:')) {
+      if (!overIdStr.startsWith('status:')) return
+      const vagaId = activeIdStr.slice(5)
+      const destino = overIdStr.slice(7) as VagaStatus
+      const vaga = vagas?.find((v) => v.id === vagaId)
+      if (!vaga || vaga.status === destino) return
+      if (!vaga.transicoes_disponiveis.includes(destino)) return
+      onMoveVaga?.(vagaId, destino)
+      return
+    }
+
+    if (overIdStr.startsWith('status:')) return
     const candidato = candidatos.find((c) => c.id === active.id)
     if (!candidato || candidato.etapa_atual.id === over.id) return
-    onMoveCandidato?.(String(active.id), String(over.id))
+    onMoveCandidato?.(activeIdStr, overIdStr)
   }
 
   function handleWheel(event: WheelEvent<HTMLDivElement>) {
@@ -61,7 +89,6 @@ export function KanbanBoard({
       const podeDescer = event.deltaY > 0 && scrollTop + clientHeight < scrollHeight - 1
       const podeSubir = event.deltaY < 0 && scrollTop > 0
       if (podeDescer || podeSubir) {
-        // a coluna ainda tem espaço pra rolar verticalmente: deixa o scroll nativo agir nela
         return
       }
     }
@@ -72,6 +99,23 @@ export function KanbanBoard({
 
   const board = (
     <div className="scrollbar-thin flex h-full gap-4 overflow-x-auto p-4" onWheel={handleWheel}>
+      {vagas &&
+        vagaModalBase &&
+        FLUXO_STATUSES.map((status) => (
+          <VagaKanbanColumn
+            key={status}
+            status={status}
+            vagas={vagas.filter((v) => v.status === status)}
+            draggable={draggable && !!onMoveVaga}
+            vagaModalBase={vagaModalBase}
+            aceitaDrop={!!activeVaga && activeVaga.transicoes_disponiveis.includes(status)}
+            dropInvalido={
+              !!activeVaga &&
+              !activeVaga.transicoes_disponiveis.includes(status) &&
+              activeVaga.status !== status
+            }
+          />
+        ))}
       {sortedEtapas.map((etapa) => (
         <KanbanColumn
           key={etapa.id}
@@ -97,6 +141,11 @@ export function KanbanBoard({
     >
       {board}
       <DragOverlay dropAnimation={{ duration: 200, easing: 'ease-out' }}>
+        {activeVaga && (
+          <div className="w-72 scale-[1.02] rounded-md border border-slate-200 bg-white p-3 opacity-95 shadow-md">
+            <VagaKanbanCardContent vaga={activeVaga} />
+          </div>
+        )}
         {activeCandidato && (
           <div className="w-72 scale-[1.02] rounded-md border border-slate-200 bg-white p-3 opacity-95 shadow-md">
             <CandidatoCardContent candidato={activeCandidato} />

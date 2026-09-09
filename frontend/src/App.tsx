@@ -30,6 +30,7 @@ export default function App() {
           <Route element={<ProtectedRoute allowedRoles={['RH']} />}>
             <Route path="/rh/kanban" element={<KanbanPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
+              <Route path="vaga/:id" element={<VagaDetalheModal />} />
             </Route>
             <Route path="/rh/vagas/nova" element={<RhVagaFormPage />} />
             <Route path="/rh/candidatos/novo" element={<CandidatoFormPage />} />
@@ -43,6 +44,7 @@ export default function App() {
           <Route element={<ProtectedRoute allowedRoles={['SETOR']} />}>
             <Route path="/setor/kanban" element={<KanbanReadOnlyPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
+              <Route path="vaga/:id" element={<VagaDetalheModal />} />
             </Route>
             <Route path="/setor/vagas/nova" element={<SetorVagaFormPage />} />
             <Route path="/setor/listagem" element={<ListagemPage />}>

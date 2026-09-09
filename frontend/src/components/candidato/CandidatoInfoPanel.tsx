@@ -9,7 +9,13 @@ interface CandidatoInfoPanelProps {
   candidato: Candidato
 }
 
-const SECOES_PERFIL: { campo: keyof Candidato; titulo: string }[] = [
+type CampoPerfil =
+  | 'perfil_formacao'
+  | 'perfil_experiencia'
+  | 'perfil_habilidades'
+  | 'perfil_certificacoes'
+
+const SECOES_PERFIL: { campo: CampoPerfil; titulo: string }[] = [
   { campo: 'perfil_formacao', titulo: 'Formação' },
   { campo: 'perfil_experiencia', titulo: 'Experiência' },
   { campo: 'perfil_habilidades', titulo: 'Habilidades' },

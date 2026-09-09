@@ -34,7 +34,7 @@ class VagaSerializer(serializers.ModelSerializer):
         source="setor", queryset=Setor.objects.all(), write_only=True, required=False
     )
     criado_por = serializers.CharField(source="criado_por.username", read_only=True)
-    aprovada_por = serializers.CharField(source="aprovada_por.username", read_only=True)
+    aprovada_por = serializers.SerializerMethodField()
     status_display = serializers.CharField(source="get_status_display", read_only=True)
     prioridade_display = serializers.CharField(source="get_prioridade_display", read_only=True)
     atrasada = serializers.SerializerMethodField()
@@ -100,6 +100,9 @@ class VagaSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+    def get_aprovada_por(self, obj):
+        return obj.aprovada_por.username if obj.aprovada_por_id else None
 
     def get_atrasada(self, obj):
         if not obj.data_alvo_preenchimento or obj.status in _STATUS_SEM_ATRASO:

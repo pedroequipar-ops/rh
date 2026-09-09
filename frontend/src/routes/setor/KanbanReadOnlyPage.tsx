@@ -1,28 +1,36 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { listEtapas } from '../../api/etapas'
 import { listCandidatos } from '../../api/candidatos'
+import { listVagas } from '../../api/vagas'
 import { KanbanBoard } from '../../components/kanban/KanbanBoard'
-import type { Candidato, EtapaKanban } from '../../types'
+import type { Candidato, EtapaKanban, Vaga } from '../../types'
 
 export function KanbanReadOnlyPage() {
   const [etapas, setEtapas] = useState<EtapaKanban[]>([])
   const [candidatos, setCandidatos] = useState<Candidato[]>([])
+  const [vagas, setVagas] = useState<Vaga[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    Promise.all([listEtapas(), listCandidatos()])
-      .then(([etapasData, candidatosData]) => {
-        setEtapas(etapasData)
-        setCandidatos(candidatosData)
-      })
-      .finally(() => setLoading(false))
+  const load = useCallback(async () => {
+    const [etapasData, candidatosData, vagasData] = await Promise.all([
+      listEtapas(),
+      listCandidatos(),
+      listVagas(),
+    ])
+    setEtapas(etapasData)
+    setCandidatos(candidatosData)
+    setVagas(vagasData)
   }, [])
+
+  useEffect(() => {
+    load().finally(() => setLoading(false))
+  }, [load])
 
   return (
     <div className="flex h-[calc(100vh-57px)] flex-col">
       <div className="px-4 pt-4">
-        <h1 className="text-lg font-semibold text-slate-800">Candidatos das minhas vagas</h1>
+        <h1 className="text-lg font-semibold text-slate-800">Fluxo das minhas vagas</h1>
       </div>
 
       {loading ? (
@@ -34,11 +42,13 @@ export function KanbanReadOnlyPage() {
             candidatos={candidatos}
             draggable={false}
             candidatoModalBase="/setor/kanban/candidato"
+            vagas={vagas}
+            vagaModalBase="/setor/kanban/vaga"
           />
         </div>
       )}
 
-      <Outlet />
+      <Outlet context={{ onVagaChange: load }} />
     </div>
   )
 }
