@@ -1,0 +1,25 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { criarComentario, getAtividadeFeed, type AtividadeAlvoTipo } from '../atividade'
+import { useToast } from '../../context/ToastContext'
+
+function feedKey(alvoTipo: AtividadeAlvoTipo, alvoId: string) {
+  return ['atividade', alvoTipo, alvoId] as const
+}
+
+export function useAtividadeFeed(alvoTipo: AtividadeAlvoTipo, alvoId: string | undefined) {
+  return useQuery({
+    queryKey: feedKey(alvoTipo, alvoId ?? ''),
+    queryFn: () => getAtividadeFeed(alvoTipo, alvoId as string),
+    enabled: Boolean(alvoId),
+  })
+}
+
+export function useCriarComentario(alvoTipo: AtividadeAlvoTipo, alvoId: string) {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: (texto: string) => criarComentario({ alvo_tipo: alvoTipo, alvo_id: alvoId, texto }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: feedKey(alvoTipo, alvoId) }),
+    onError: () => showToast('Não foi possível comentar', 'error'),
+  })
+}

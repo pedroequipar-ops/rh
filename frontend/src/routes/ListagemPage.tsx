@@ -356,7 +356,7 @@ export function ListagemPage() {
                     {isRh && (
                       <td className="whitespace-nowrap px-4 py-2.5 text-right">
                         <Link
-                          to={`/rh/candidatos/${candidato.id}/editar`}
+                          to={`${location.pathname}/candidato/${candidato.id}`}
                           className="inline-flex rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                           aria-label="Editar candidato"
                         >
@@ -451,7 +451,7 @@ export function ListagemPage() {
                     <td className="px-4 py-2.5 text-slate-600">{vaga.quantidade_vagas}</td>
                     <td className="whitespace-nowrap px-4 py-2.5 text-right">
                       <Link
-                        to={`${location.pathname}/vaga/${vaga.id}?editar=1`}
+                        to={`${location.pathname}/vaga/${vaga.id}`}
                         className="inline-flex rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                         aria-label="Editar vaga"
                       >

@@ -30,6 +30,7 @@ export interface VagaInput {
   data_inicio_prevista?: string | null
   data_alvo_preenchimento?: string | null
   qtd_pessoas_fase?: number
+  tags?: string[]
 }
 
 export async function createVaga(input: VagaInput): Promise<Vaga> {

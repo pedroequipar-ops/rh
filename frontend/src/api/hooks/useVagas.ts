@@ -5,13 +5,20 @@ import {
   type QueryClient,
 } from '@tanstack/react-query'
 import {
+  aprovarVaga,
+  cobrarVaga,
   deleteVaga,
   getVaga,
   getVagaHistorico,
   listCandidatosDaVaga,
   listVagas,
   moverVagaEtapa,
+  recusarVaga,
+  registrarCandidaturas,
   transicionarVaga,
+  updateVaga,
+  type AprovarVagaInput,
+  type VagaInput,
 } from '../vagas'
 import { statusLabel } from '../../constants/vagaStatus'
 import { useToast } from '../../context/ToastContext'
@@ -129,6 +136,92 @@ export function useMoverVagaEtapa() {
     onSettled: (_data, _err, { id }) => {
       qc.invalidateQueries({ queryKey: queryKeys.vagasList })
       qc.invalidateQueries({ queryKey: queryKeys.vaga(id) })
+    },
+  })
+}
+
+export function useUpdateVaga() {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: Partial<VagaInput> }) =>
+      updateVaga(id, input),
+    onError: () => showToast('Não foi possível salvar', 'error'),
+    onSuccess: (atualizada) => aplicarVagaNoCache(qc, atualizada),
+    onSettled: (_data, _err, { id }) => {
+      qc.invalidateQueries({ queryKey: queryKeys.vaga(id) })
+      qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+    },
+  })
+}
+
+export function useAprovarVaga() {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input?: AprovarVagaInput }) =>
+      aprovarVaga(id, input),
+    onError: () => showToast('Não foi possível aprovar', 'error'),
+    onSuccess: (atualizada) => {
+      aplicarVagaNoCache(qc, atualizada)
+      showToast('Vaga aprovada')
+    },
+    onSettled: (_data, _err, { id }) => {
+      qc.invalidateQueries({ queryKey: queryKeys.vaga(id) })
+      qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+      qc.invalidateQueries({ queryKey: queryKeys.vagaHistorico(id) })
+    },
+  })
+}
+
+export function useRecusarVaga() {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: ({ id, motivo }: { id: string; motivo: string }) => recusarVaga(id, motivo),
+    onError: () => showToast('Não foi possível recusar', 'error'),
+    onSuccess: (atualizada) => {
+      aplicarVagaNoCache(qc, atualizada)
+      showToast('Vaga recusada')
+    },
+    onSettled: (_data, _err, { id }) => {
+      qc.invalidateQueries({ queryKey: queryKeys.vaga(id) })
+      qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+      qc.invalidateQueries({ queryKey: queryKeys.vagaHistorico(id) })
+    },
+  })
+}
+
+export function useRegistrarCandidaturas() {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: ({ id, quantidade }: { id: string; quantidade: number }) =>
+      registrarCandidaturas(id, quantidade),
+    onError: () => showToast('Não foi possível registrar', 'error'),
+    onSuccess: (atualizada) => {
+      aplicarVagaNoCache(qc, atualizada)
+      showToast('Candidaturas registradas no histórico')
+    },
+    onSettled: (_data, _err, { id }) => {
+      qc.invalidateQueries({ queryKey: queryKeys.vaga(id) })
+      qc.invalidateQueries({ queryKey: queryKeys.vagaHistorico(id) })
+    },
+  })
+}
+
+export function useCobrarVaga() {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: ({ id, mensagem }: { id: string; mensagem?: string }) => cobrarVaga(id, mensagem),
+    onError: () =>
+      showToast('Não foi possível cobrar (você pode ser o responsável desta etapa)', 'error'),
+    onSuccess: (enviadas) => showToast(`Cobrança enviada para ${enviadas} pessoa(s)`),
+    onSettled: (_data, _err, { id }) => {
+      qc.invalidateQueries({ queryKey: queryKeys.vaga(id) })
+      qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+      qc.invalidateQueries({ queryKey: queryKeys.vagaHistorico(id) })
     },
   })
 }

@@ -1,8 +1,28 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteCandidato, getCandidato, listCandidatos, moverEtapa } from '../candidatos'
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from '@tanstack/react-query'
+import {
+  deleteCandidato,
+  getCandidato,
+  listCandidatos,
+  moverEtapa,
+  updateCandidato,
+  type CandidatoInput,
+} from '../candidatos'
 import { useToast } from '../../context/ToastContext'
 import type { Candidato, EtapaKanban } from '../../types'
 import { queryKeys } from '../queryKeys'
+
+/** Grava um candidato atualizado no cache da lista e do detalhe. */
+function aplicarCandidatoNoCache(qc: QueryClient, candidato: Candidato) {
+  qc.setQueryData<Candidato[]>(queryKeys.candidatosList, (old) =>
+    old?.map((c) => (c.id === candidato.id ? candidato : c)),
+  )
+  qc.setQueryData(queryKeys.candidato(candidato.id), candidato)
+}
 
 // --- queries -------------------------------------------------------------
 
@@ -57,6 +77,21 @@ export function useMoverEtapaCandidato() {
       qc.invalidateQueries({ queryKey: queryKeys.candidatosList })
       qc.invalidateQueries({ queryKey: queryKeys.candidato(id) })
       qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+    },
+  })
+}
+
+export function useUpdateCandidato() {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: ({ id, input }: { id: string; input: Partial<CandidatoInput> }) =>
+      updateCandidato(id, input),
+    onError: () => showToast('Não foi possível salvar', 'error'),
+    onSuccess: (atualizado) => aplicarCandidatoNoCache(qc, atualizado),
+    onSettled: (_data, _err, { id }) => {
+      qc.invalidateQueries({ queryKey: queryKeys.candidato(id) })
+      qc.invalidateQueries({ queryKey: queryKeys.candidatosList })
     },
   })
 }

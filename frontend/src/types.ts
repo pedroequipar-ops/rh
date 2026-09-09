@@ -5,6 +5,12 @@ export interface Setor {
   nome: string
 }
 
+export interface Tag {
+  id: string
+  nome: string
+  cor: string | null
+}
+
 export interface Usuario {
   id: string
   username: string
@@ -90,6 +96,7 @@ export interface Vaga {
   total_candidatos: number
   total_por_etapa: VagaTotalPorEtapa[] | null
   transicoes_disponiveis: VagaStatus[]
+  tags: Tag[]
 }
 
 export interface VagaHistorico {
@@ -146,6 +153,7 @@ export interface Candidato {
   perfil_certificacoes?: string
   curriculo_key: string
   curriculo_content_type?: string
+  tags: Tag[]
   created_at?: string
 }
 

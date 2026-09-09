@@ -25,7 +25,6 @@ export default function App() {
             </Route>
             <Route path="/rh/vagas/nova" element={<RhVagaFormPage />} />
             <Route path="/rh/candidatos/novo" element={<CandidatoFormPage />} />
-            <Route path="/rh/candidatos/:id/editar" element={<CandidatoFormPage />} />
             <Route path="/rh/listagem" element={<ListagemPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />

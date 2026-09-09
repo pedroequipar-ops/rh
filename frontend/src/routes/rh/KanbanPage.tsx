@@ -64,24 +64,30 @@ export function KanbanPage() {
         </div>
       </div>
 
-      {loading ? (
-        <div className="flex flex-1 items-center justify-center text-sm text-slate-400">Carregando...</div>
-      ) : (
-        <div className="flex-1 overflow-hidden">
-          <KanbanBoard
-            etapas={etapas}
-            candidatos={candidatos}
-            draggable
-            candidatoModalBase="/rh/kanban/candidato"
-            onMoveCandidato={handleMoveCandidato}
-            vagas={vagas}
-            vagaModalBase="/rh/kanban/vaga"
-            onMoveVaga={handleMoveVaga}
-            onMoveVagaEtapa={handleMoveVagaEtapa}
-            onRegistrarCandidato={handleRegistrarCandidato}
-          />
-        </div>
-      )}
+      <div className="flex min-h-0 flex-1">
+        {loading ? (
+          <div className="flex flex-1 items-center justify-center text-sm text-slate-400">
+            Carregando...
+          </div>
+        ) : (
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <KanbanBoard
+              etapas={etapas}
+              candidatos={candidatos}
+              draggable
+              candidatoModalBase="/rh/kanban/candidato"
+              onMoveCandidato={handleMoveCandidato}
+              vagas={vagas}
+              vagaModalBase="/rh/kanban/vaga"
+              onMoveVaga={handleMoveVaga}
+              onMoveVagaEtapa={handleMoveVagaEtapa}
+              onRegistrarCandidato={handleRegistrarCandidato}
+            />
+          </div>
+        )}
+
+        <Outlet />
+      </div>
 
       {editorOpen && (
         <EtapaColumnEditor
@@ -90,8 +96,6 @@ export function KanbanPage() {
           onChange={handleEtapasChange}
         />
       )}
-
-      <Outlet />
     </div>
   )
 }

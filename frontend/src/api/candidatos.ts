@@ -42,6 +42,7 @@ export interface CandidatoInput {
   curriculo_key: string
   vaga_id: string
   etapa_atual_id?: string
+  tags?: string[]
 }
 
 export async function createCandidato(input: CandidatoInput): Promise<Candidato> {
