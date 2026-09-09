@@ -28,6 +28,7 @@ export interface EtapaKanban {
   ordem: number
   is_saida_negativa: boolean
   cor?: string | null
+  exige_cadastro_completo: boolean
 }
 
 export type VagaStatus =
@@ -66,6 +67,8 @@ export interface Vaga {
   status: VagaStatus
   status_display: string
   status_pre_congelamento: string
+  etapa_atual: EtapaKanban | null
+  qtd_pessoas_fase: number
   prioridade: VagaPrioridade
   prioridade_display: string
   urgente: boolean

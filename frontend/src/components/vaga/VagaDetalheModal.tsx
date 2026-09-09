@@ -83,6 +83,7 @@ export function VagaDetalheModal() {
   const [motivoSolicitacao, setMotivoSolicitacao] = useState('')
   const [dataInicio, setDataInicio] = useState('')
   const [dataAlvo, setDataAlvo] = useState('')
+  const [qtdPessoasFase, setQtdPessoasFase] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [erroSalvar, setErroSalvar] = useState<string | null>(null)
 
@@ -142,6 +143,7 @@ export function VagaDetalheModal() {
     setMotivoSolicitacao(vaga.motivo_solicitacao)
     setDataInicio(vaga.data_inicio_prevista ?? '')
     setDataAlvo(vaga.data_alvo_preenchimento ?? '')
+    setQtdPessoasFase(vaga.qtd_pessoas_fase)
     setErroSalvar(null)
     if (isRh && setores.length === 0) {
       listSetores().then(setSetores).catch(() => setSetores([]))
@@ -173,6 +175,7 @@ export function VagaDetalheModal() {
         motivo_solicitacao: motivoSolicitacao,
         data_inicio_prevista: dataInicio || null,
         data_alvo_preenchimento: dataAlvo || null,
+        ...(vaga?.status === 'EM_TRIAGEM' ? { qtd_pessoas_fase: qtdPessoasFase } : {}),
         ...(isRh ? { setor_id: setorId } : {}),
       })
       recarregar(atualizada)
@@ -336,6 +339,11 @@ export function VagaDetalheModal() {
                   <span>{vaga.salario ? `R$ ${vaga.salario}` : 'Salário não informado'}</span>
                   <span>Início previsto: {fmtData(vaga.data_inicio_prevista)}</span>
                   <span>Prazo p/ preencher: {fmtData(vaga.data_alvo_preenchimento)}</span>
+                  {vaga.status === 'EM_TRIAGEM' && (
+                    <span>
+                      {vaga.etapa_atual?.nome ?? 'Triagem'}: {vaga.qtd_pessoas_fase} pessoa(s)
+                    </span>
+                  )}
                 </div>
 
                 {vaga.status === 'RECUSADA' && vaga.motivo_recusa && (
@@ -654,6 +662,21 @@ export function VagaDetalheModal() {
                   />
                 </div>
               </div>
+
+              {vaga.status === 'EM_TRIAGEM' && (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-600">
+                    Pessoas nesta fase
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={qtdPessoasFase}
+                    onChange={(e) => setQtdPessoasFase(Number(e.target.value))}
+                    className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                  />
+                </div>
+              )}
 
               {isRh && (
                 <div>

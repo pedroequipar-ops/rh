@@ -11,6 +11,9 @@ class EtapaKanban(TimeStampedModel):
     ordem = models.PositiveIntegerField(default=0)
     is_saida_negativa = models.BooleanField(default=False)
     cor = models.CharField(max_length=20, blank=True, default="")
+    # A partir desta etapa, cada pessoa precisa de cadastro completo (vira Candidato).
+    # Antes dela, a própria vaga circula pelas colunas com um contador manual.
+    exige_cadastro_completo = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["ordem"]
@@ -51,6 +54,17 @@ class Vaga(TimeStampedModel):
     quantidade_vagas = models.PositiveIntegerField(default=1)
     salario = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     setor = models.ForeignKey(Setor, on_delete=models.CASCADE, related_name="vagas")
+
+    # Enquanto status=EM_TRIAGEM: em qual etapa (pré-cadastro) o card da vaga está,
+    # e quantas pessoas o RH diz estar nessa fase.
+    etapa_atual = models.ForeignKey(
+        EtapaKanban,
+        on_delete=models.SET_NULL,
+        related_name="vagas_na_etapa",
+        null=True,
+        blank=True,
+    )
+    qtd_pessoas_fase = models.PositiveIntegerField(default=0)
     criado_por = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="vagas_criadas"
     )

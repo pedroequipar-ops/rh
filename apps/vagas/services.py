@@ -10,7 +10,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 
 from apps.accounts.models import User
 
-from .models import Vaga, VagaCobranca, VagaHistoricoStatus, VagaNotificacao
+from .models import EtapaKanban, Vaga, VagaCobranca, VagaHistoricoStatus, VagaNotificacao
 
 S = Vaga.Status
 
@@ -95,6 +95,39 @@ def notificar_vaga_criada(vaga, company_id):
     )
 
 
+def etapa_triagem_inicial(company_id):
+    """Primeira etapa do kanban que ainda não exige cadastro completo."""
+    return (
+        EtapaKanban.objects.filter(
+            company_id=company_id, is_saida_negativa=False, exige_cadastro_completo=False
+        )
+        .order_by("ordem")
+        .first()
+    )
+
+
+def mover_vaga_etapa(vaga, etapa, user):
+    """Move o card da vaga entre etapas de triagem (pré-cadastro).
+
+    Só vale enquanto a vaga está em EM_TRIAGEM e para etapas que ainda não
+    exigem cadastro completo — a partir dessas, quem circula é o Candidato.
+    """
+    if vaga.status != Vaga.Status.EM_TRIAGEM:
+        raise ValidationError({"detail": "A vaga não está em triagem."})
+    if etapa.company_id != vaga.company_id:
+        raise ValidationError({"detail": "Etapa de outra empresa."})
+    if etapa.exige_cadastro_completo:
+        raise ValidationError(
+            {"detail": "Essa etapa exige cadastrar a pessoa; use o cadastro de candidato."}
+        )
+    vaga.etapa_atual = etapa
+    vaga.save(update_fields=["etapa_atual", "updated_at"])
+    registrar_historico(
+        vaga, "", S.EM_TRIAGEM, user, f"card da vaga movido para {etapa.nome}"
+    )
+    return vaga
+
+
 def registrar_historico(vaga, de_status, para_status, user, observacao=""):
     VagaHistoricoStatus.objects.create(
         company_id=vaga.company_id,
@@ -142,6 +175,11 @@ def aplicar_transicao(vaga, para, user, observacao="", *, extra_fields=None, che
     if stamp and getattr(vaga, stamp) is None:
         setattr(vaga, stamp, now)
         campos[stamp] = now
+    if para == S.EM_TRIAGEM and vaga.etapa_atual_id is None:
+        etapa = etapa_triagem_inicial(vaga.company_id)
+        if etapa is not None:
+            vaga.etapa_atual = etapa
+            campos["etapa_atual"] = etapa
     if para in FECHAMENTO and vaga.fechada_em is None:
         vaga.fechada_em = now
         campos["fechada_em"] = now

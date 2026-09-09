@@ -14,7 +14,16 @@ _STATUS_SEM_ATRASO = {Vaga.Status.EM_TRIAGEM, Vaga.Status.PREENCHIDA, Vaga.Statu
 class EtapaKanbanSerializer(serializers.ModelSerializer):
     class Meta:
         model = EtapaKanban
-        fields = ["id", "nome", "ordem", "is_saida_negativa", "cor", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "nome",
+            "ordem",
+            "is_saida_negativa",
+            "cor",
+            "exige_cadastro_completo",
+            "created_at",
+            "updated_at",
+        ]
         read_only_fields = ["id", "created_at", "updated_at"]
 
 
@@ -25,7 +34,7 @@ class EtapaKanbanReordenarSerializer(serializers.Serializer):
 class EtapaAtualSerializer(serializers.ModelSerializer):
     class Meta:
         model = EtapaKanban
-        fields = ["id", "nome", "ordem", "is_saida_negativa", "cor"]
+        fields = ["id", "nome", "ordem", "is_saida_negativa", "cor", "exige_cadastro_completo"]
 
 
 class VagaSerializer(serializers.ModelSerializer):
@@ -35,6 +44,7 @@ class VagaSerializer(serializers.ModelSerializer):
     )
     criado_por = serializers.CharField(source="criado_por.username", read_only=True)
     aprovada_por = serializers.SerializerMethodField()
+    etapa_atual = EtapaAtualSerializer(read_only=True)
     status_display = serializers.CharField(source="get_status_display", read_only=True)
     prioridade_display = serializers.CharField(source="get_prioridade_display", read_only=True)
     atrasada = serializers.SerializerMethodField()
@@ -57,6 +67,8 @@ class VagaSerializer(serializers.ModelSerializer):
             "status",
             "status_display",
             "status_pre_congelamento",
+            "etapa_atual",
+            "qtd_pessoas_fase",
             "prioridade",
             "prioridade_display",
             "urgente",

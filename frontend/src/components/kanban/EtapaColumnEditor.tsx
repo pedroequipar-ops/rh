@@ -31,10 +31,12 @@ function SortableEtapaItem({
   etapa,
   onRename,
   onDelete,
+  onToggleCadastro,
 }: {
   etapa: EtapaKanban
   onRename: (etapa: EtapaKanban, nome: string) => void
   onDelete: (etapa: EtapaKanban) => void
+  onToggleCadastro: (etapa: EtapaKanban, valor: boolean) => void
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: etapa.id,
@@ -50,30 +52,40 @@ function SortableEtapaItem({
       ref={setNodeRef}
       style={style}
       className={clsx(
-        'flex items-center gap-2 rounded border border-slate-200 bg-white px-2 py-1.5',
+        'rounded border border-slate-200 bg-white px-2 py-1.5',
         isDragging && 'opacity-60 shadow-md',
       )}
     >
-      <button
-        {...attributes}
-        {...listeners}
-        className="cursor-grab touch-none text-slate-300 hover:text-slate-500 active:cursor-grabbing"
-      >
-        <GripVertical size={16} />
-      </button>
-      <input
-        defaultValue={etapa.nome}
-        onBlur={(e) => onRename(etapa, e.target.value)}
-        className="min-w-0 flex-1 rounded border border-transparent px-1.5 py-1 text-sm hover:border-slate-200 focus:border-slate-400 focus:outline-none"
-      />
-      {etapa.is_saida_negativa && (
-        <span className="rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-600">
-          saída
-        </span>
-      )}
-      <button onClick={() => onDelete(etapa)} className="text-slate-300 hover:text-red-600">
-        <Trash2 size={14} />
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          {...attributes}
+          {...listeners}
+          className="cursor-grab touch-none text-slate-300 hover:text-slate-500 active:cursor-grabbing"
+        >
+          <GripVertical size={16} />
+        </button>
+        <input
+          defaultValue={etapa.nome}
+          onBlur={(e) => onRename(etapa, e.target.value)}
+          className="min-w-0 flex-1 rounded border border-transparent px-1.5 py-1 text-sm hover:border-slate-200 focus:border-slate-400 focus:outline-none"
+        />
+        {etapa.is_saida_negativa && (
+          <span className="rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-600">
+            saída
+          </span>
+        )}
+        <button onClick={() => onDelete(etapa)} className="text-slate-300 hover:text-red-600">
+          <Trash2 size={14} />
+        </button>
+      </div>
+      <label className="mt-1 flex items-center gap-1.5 pl-6 text-[11px] text-slate-500">
+        <input
+          type="checkbox"
+          checked={etapa.exige_cadastro_completo}
+          onChange={(e) => onToggleCadastro(etapa, e.target.checked)}
+        />
+        Exige cadastro completo da pessoa
+      </label>
     </li>
   )
 }
@@ -106,6 +118,16 @@ export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEdit
     if (!nome.trim() || nome === etapa.nome) return
     try {
       await updateEtapa(etapa.id, { nome: nome.trim() })
+      onChange()
+      showToast('Etapa salva com sucesso')
+    } catch {
+      showToast('Não foi possível salvar a etapa', 'error')
+    }
+  }
+
+  async function handleToggleCadastro(etapa: EtapaKanban, valor: boolean) {
+    try {
+      await updateEtapa(etapa.id, { exige_cadastro_completo: valor })
       onChange()
       showToast('Etapa salva com sucesso')
     } catch {
@@ -160,6 +182,7 @@ export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEdit
                     etapa={etapa}
                     onRename={handleRename}
                     onDelete={setEtapaParaExcluir}
+                    onToggleCadastro={handleToggleCadastro}
                   />
                 ))}
               </ul>

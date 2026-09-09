@@ -66,7 +66,11 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
   },
 }
 
-/** Colunas de vaga no kanban, na ordem do fluxo (antes das colunas de candidato). */
+/**
+ * Colunas de status de vaga, na ordem do fluxo (antes das colunas de etapa).
+ * EM_TRIAGEM não entra aqui: nesse status o card da vaga vive nas colunas de
+ * etapa de triagem (Triagem, Primeira Entrevista) via `vaga.etapa_atual`.
+ */
 export const FLUXO_STATUSES: VagaStatus[] = [
   'SOLICITADA',
   'RECUSADA',
@@ -75,11 +79,10 @@ export const FLUXO_STATUSES: VagaStatus[] = [
   'RECEBENDO',
   'ENCERRADA',
   'CONGELADA',
-  'EM_TRIAGEM',
 ]
 
-/** Status de vaga que não viram coluna (terminais). */
-export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['CANCELADA', 'PREENCHIDA']
+/** Status de vaga que não viram coluna de status (terminais ou geridos por etapa). */
+export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['EM_TRIAGEM', 'CANCELADA', 'PREENCHIDA']
 
 /** Colunas de exceção: só aparecem quando têm vaga (ou são destino de um arraste). */
 export const COLUNAS_OCULTAS_SE_VAZIAS: VagaStatus[] = ['RECUSADA', 'CONGELADA']

@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -83,6 +83,7 @@ class VagaViewSet(viewsets.ModelViewSet):
         "candidatos": "vagas.candidatos",
         "historico": "vagas.view",
         "transicionar": "vagas.transicionar",
+        "mover_etapa": "vagas.transicionar",
         "aprovar": "vagas.aprovar",
         "recusar": "vagas.aprovar",
         "cobrar": "vagas.cobrar",
@@ -204,6 +205,17 @@ class VagaViewSet(viewsets.ModelViewSet):
             request.user,
             extra_fields={"motivo_recusa": ser.validated_data["motivo"]},
         )
+        return Response(VagaSerializer(vaga, context=self.get_serializer_context()).data)
+
+    @action(detail=True, methods=["post"], url_path="mover-etapa")
+    def mover_etapa(self, request, pk=None):
+        vaga = self.get_object()
+        etapa_id = request.data.get("etapa_id")
+        try:
+            etapa = EtapaKanban.objects.get(id=etapa_id, company_id=vaga.company_id)
+        except (EtapaKanban.DoesNotExist, ValueError, TypeError):
+            raise NotFound("Etapa não encontrada.")
+        vaga = services.mover_vaga_etapa(vaga, etapa, request.user)
         return Response(VagaSerializer(vaga, context=self.get_serializer_context()).data)
 
     @action(detail=True, methods=["post"], url_path="cobrar")

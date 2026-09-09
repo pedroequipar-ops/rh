@@ -47,13 +47,15 @@ _VAGA_ABRE_TRIAGEM = {
 
 
 def _etapa_inicial(company_id):
-    etapa = EtapaKanban.objects.filter(company_id=company_id, nome="Triagem").first()
+    """Etapa onde uma pessoa recém-cadastrada entra: a primeira que exige
+    cadastro completo (ex.: Perfil Comportamental). Antes dela quem circula
+    é o card da vaga, não o candidato."""
+    base = EtapaKanban.objects.filter(company_id=company_id, is_saida_negativa=False)
+    etapa = base.filter(exige_cadastro_completo=True).order_by("ordem").first()
     if etapa is None:
-        etapa = (
-            EtapaKanban.objects.filter(company_id=company_id, is_saida_negativa=False)
-            .order_by("ordem")
-            .first()
-        )
+        etapa = base.filter(nome="Triagem").first()
+    if etapa is None:
+        etapa = base.order_by("ordem").first()
     return etapa
 
 

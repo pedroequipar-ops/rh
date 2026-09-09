@@ -11,6 +11,7 @@ export interface EtapaInput {
   ordem: number
   is_saida_negativa?: boolean
   cor?: string | null
+  exige_cadastro_completo?: boolean
 }
 
 export async function createEtapa(input: EtapaInput): Promise<EtapaKanban> {

@@ -25,6 +25,8 @@ interface KanbanBoardProps {
   vagas?: Vaga[]
   vagaModalBase?: string
   onMoveVaga?: (vagaId: string, status: VagaStatus) => void
+  onMoveVagaEtapa?: (vagaId: string, etapaId: string) => void
+  onRegistrarCandidato?: (vaga: Vaga, etapa: EtapaKanban) => void
 }
 
 export function KanbanBoard({
@@ -36,6 +38,8 @@ export function KanbanBoard({
   vagas,
   vagaModalBase,
   onMoveVaga,
+  onMoveVagaEtapa,
+  onRegistrarCandidato,
 }: KanbanBoardProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -50,6 +54,8 @@ export function KanbanBoard({
   const activeCandidato =
     activeId && !activeVagaId ? candidatos.find((c) => c.id === activeId) ?? null : null
 
+  const vagaEmTriagem = activeVaga?.status === 'EM_TRIAGEM'
+
   function handleDragStart(event: DragStartEvent) {
     setActiveId(String(event.active.id))
   }
@@ -62,13 +68,27 @@ export function KanbanBoard({
     const overIdStr = String(over.id)
 
     if (activeIdStr.startsWith('vaga:')) {
-      if (!overIdStr.startsWith('status:')) return
       const vagaId = activeIdStr.slice(5)
-      const destino = overIdStr.slice(7) as VagaStatus
       const vaga = vagas?.find((v) => v.id === vagaId)
-      if (!vaga || vaga.status === destino) return
-      if (!vaga.transicoes_disponiveis.includes(destino)) return
-      onMoveVaga?.(vagaId, destino)
+      if (!vaga) return
+
+      if (overIdStr.startsWith('status:')) {
+        const destino = overIdStr.slice(7) as VagaStatus
+        if (vaga.status === destino) return
+        if (!vaga.transicoes_disponiveis.includes(destino)) return
+        onMoveVaga?.(vagaId, destino)
+        return
+      }
+
+      // soltou numa coluna de etapa
+      if (vaga.status !== 'EM_TRIAGEM') return
+      const etapa = etapas.find((e) => e.id === overIdStr)
+      if (!etapa || etapa.is_saida_negativa) return
+      if (etapa.exige_cadastro_completo) {
+        onRegistrarCandidato?.(vaga, etapa)
+      } else if (vaga.etapa_atual?.id !== etapa.id) {
+        onMoveVagaEtapa?.(vagaId, etapa.id)
+      }
       return
     }
 
@@ -127,6 +147,13 @@ export function KanbanBoard({
           candidatos={candidatos.filter((c) => c.etapa_atual.id === etapa.id)}
           draggable={draggable}
           candidatoModalBase={candidatoModalBase}
+          vagasNaEtapa={vagas?.filter(
+            (v) => v.status === 'EM_TRIAGEM' && v.etapa_atual?.id === etapa.id,
+          )}
+          vagaModalBase={vagaModalBase}
+          vagaDraggable={draggable && !!vagas}
+          aceitaVaga={vagaEmTriagem && !etapa.is_saida_negativa}
+          cadastroAqui={etapa.exige_cadastro_completo}
         />
       ))}
     </div>

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { Settings, SlidersHorizontal } from 'lucide-react'
 import { listEtapas } from '../../api/etapas'
 import { listCandidatos, moverEtapa } from '../../api/candidatos'
-import { listVagas, transicionarVaga } from '../../api/vagas'
+import { listVagas, moverVagaEtapa, transicionarVaga } from '../../api/vagas'
 import { KanbanBoard } from '../../components/kanban/KanbanBoard'
 import { EtapaColumnEditor } from '../../components/kanban/EtapaColumnEditor'
 import { ConfigVagasModal } from '../../components/vaga/ConfigVagasModal'
@@ -13,6 +13,7 @@ import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
 
 export function KanbanPage() {
   const { showToast } = useToast()
+  const navigate = useNavigate()
   const [etapas, setEtapas] = useState<EtapaKanban[]>([])
   const [candidatos, setCandidatos] = useState<Candidato[]>([])
   const [vagas, setVagas] = useState<Vaga[]>([])
@@ -64,6 +65,23 @@ export function KanbanPage() {
     }
   }
 
+  async function handleMoveVagaEtapa(vagaId: string, etapaId: string) {
+    const anterior = vagas
+    const etapa = etapas.find((e) => e.id === etapaId) ?? null
+    setVagas((prev) => prev.map((v) => (v.id === vagaId ? { ...v, etapa_atual: etapa } : v)))
+    try {
+      const atualizada = await moverVagaEtapa(vagaId, etapaId)
+      setVagas((prev) => prev.map((v) => (v.id === vagaId ? atualizada : v)))
+    } catch {
+      setVagas(anterior)
+      showToast('Não foi possível mover o card da vaga', 'error')
+    }
+  }
+
+  function handleRegistrarCandidato(vaga: Vaga, etapa: EtapaKanban) {
+    navigate(`/rh/candidatos/novo?vaga=${vaga.id}&etapa=${etapa.id}`)
+  }
+
   return (
     <div className="flex h-[calc(100vh-57px)] flex-col">
       <div className="flex items-center justify-between px-4 pt-4">
@@ -99,6 +117,8 @@ export function KanbanPage() {
             vagas={vagas}
             vagaModalBase="/rh/kanban/vaga"
             onMoveVaga={handleMoveVaga}
+            onMoveVagaEtapa={handleMoveVagaEtapa}
+            onRegistrarCandidato={handleRegistrarCandidato}
           />
         </div>
       )}

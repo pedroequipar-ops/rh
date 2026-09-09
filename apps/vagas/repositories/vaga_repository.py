@@ -13,14 +13,14 @@ _ORDEM_FLUXO = (
 
 class VagaRepository(IVagaRepository):
     def get_by_id(self, vaga_id, company_id):
-        return Vaga.objects.select_related("setor", "aprovada_por").get(
+        return Vaga.objects.select_related("setor", "aprovada_por", "etapa_atual").get(
             id=vaga_id, company_id=company_id
         )
 
     def list_by_company(self, company_id):
         return (
             Vaga.objects.filter(company_id=company_id)
-            .select_related("setor", "aprovada_por")
+            .select_related("setor", "aprovada_por", "etapa_atual")
             .annotate(_n_cand=Count("candidatos", filter=Q(candidatos__active=True)))
             .order_by(*_ORDEM_FLUXO)
         )

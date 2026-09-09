@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { UploadCloud } from 'lucide-react'
 import {
   analisarCurriculo,
@@ -17,6 +17,9 @@ export function CandidatoFormPage() {
   const navigate = useNavigate()
   const { showToast } = useToast()
   const { id } = useParams<{ id: string }>()
+  const [searchParams] = useSearchParams()
+  const vagaPreselecionada = searchParams.get('vaga')
+  const etapaDestino = searchParams.get('etapa')
   const isEdit = Boolean(id)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -48,6 +51,10 @@ export function CandidatoFormPage() {
       .then(setVagas)
       .catch(() => setVagas([]))
   }, [])
+
+  useEffect(() => {
+    if (!isEdit && vagaPreselecionada) setVagaId(vagaPreselecionada)
+  }, [isEdit, vagaPreselecionada])
 
   useEffect(() => {
     if (!id) return
@@ -114,7 +121,8 @@ export function CandidatoFormPage() {
           setPerfilExperiencia(extraido.perfil_experiencia ?? '')
           setPerfilHabilidades(extraido.perfil_habilidades ?? '')
           setPerfilCertificacoes(extraido.perfil_certificacoes ?? '')
-          if (extraido.vaga_sugerida_id) setVagaId(extraido.vaga_sugerida_id)
+          if (extraido.vaga_sugerida_id && !vagaPreselecionada)
+            setVagaId(extraido.vaga_sugerida_id)
           setJustificativa(extraido.justificativa ?? null)
         }
       } catch {
@@ -144,6 +152,7 @@ export function CandidatoFormPage() {
       perfil_certificacoes: perfilCertificacoes,
       curriculo_key: curriculoKey ?? '',
       vaga_id: vagaId,
+      ...(!isEdit && etapaDestino ? { etapa_atual_id: etapaDestino } : {}),
     }
     try {
       if (isEdit && id) {
@@ -300,8 +309,9 @@ export function CandidatoFormPage() {
           <select
             required
             value={vagaId}
+            disabled={Boolean(vagaPreselecionada)}
             onChange={(e) => setVagaId(e.target.value)}
-            className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500"
           >
             <option value="" disabled>
               Selecione uma vaga

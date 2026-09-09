@@ -489,6 +489,92 @@ def test_patch_edita_datas_sem_mudar_status(company_factory, user_factory, vaga_
 
 
 @pytest.mark.django_db
+def test_vaga_em_triagem_ganha_etapa_inicial(
+    company_factory, user_factory, vaga_factory, etapa_factory
+):
+    company = company_factory()
+    etapa_factory(company=company, nome="Triagem", ordem=0, exige_cadastro_completo=False)
+    etapa_factory(
+        company=company, nome="Perfil Comportamental", ordem=2, exige_cadastro_completo=True
+    )
+    vaga = vaga_factory(company=company, status=Vaga.Status.ENCERRADA)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    r = client.post(
+        f"/v1/vagas/{vaga.id}/transicionar/", {"para": "EM_TRIAGEM"}, format="json"
+    )
+    assert r.status_code == 200
+    assert r.data["etapa_atual"]["nome"] == "Triagem"
+
+
+@pytest.mark.django_db
+def test_mover_card_da_vaga_entre_etapas_de_triagem(
+    company_factory, user_factory, vaga_factory, etapa_factory
+):
+    company = company_factory()
+    etapa_factory(company=company, nome="Triagem", ordem=0, exige_cadastro_completo=False)
+    e1 = etapa_factory(
+        company=company, nome="Primeira Entrevista", ordem=1, exige_cadastro_completo=False
+    )
+    vaga = vaga_factory(company=company, status=Vaga.Status.EM_TRIAGEM)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    r = client.post(
+        f"/v1/vagas/{vaga.id}/mover-etapa/", {"etapa_id": str(e1.id)}, format="json"
+    )
+    assert r.status_code == 200
+    assert r.data["etapa_atual"]["id"] == str(e1.id)
+
+
+@pytest.mark.django_db
+def test_mover_card_da_vaga_para_etapa_que_exige_cadastro_falha(
+    company_factory, user_factory, vaga_factory, etapa_factory
+):
+    company = company_factory()
+    perfil = etapa_factory(
+        company=company, nome="Perfil Comportamental", ordem=2, exige_cadastro_completo=True
+    )
+    vaga = vaga_factory(company=company, status=Vaga.Status.EM_TRIAGEM)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    r = client.post(
+        f"/v1/vagas/{vaga.id}/mover-etapa/", {"etapa_id": str(perfil.id)}, format="json"
+    )
+    assert r.status_code == 400
+
+
+@pytest.mark.django_db
+def test_mover_card_da_vaga_fora_de_triagem_falha(
+    company_factory, user_factory, vaga_factory, etapa_factory
+):
+    company = company_factory()
+    etapa = etapa_factory(company=company, nome="Triagem", ordem=0)
+    vaga = vaga_factory(company=company, status=Vaga.Status.APROVADA)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    r = client.post(
+        f"/v1/vagas/{vaga.id}/mover-etapa/", {"etapa_id": str(etapa.id)}, format="json"
+    )
+    assert r.status_code == 400
+
+
+@pytest.mark.django_db
+def test_patch_qtd_pessoas_fase(company_factory, user_factory, vaga_factory):
+    company = company_factory()
+    vaga = vaga_factory(company=company, status=Vaga.Status.EM_TRIAGEM)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    r = client.patch(f"/v1/vagas/{vaga.id}/", {"qtd_pessoas_fase": 20}, format="json")
+    assert r.status_code == 200
+    assert r.data["qtd_pessoas_fase"] == 20
+
+
+@pytest.mark.django_db
 def test_config_get_e_patch_exige_aprovacao(company_factory, setor_factory, user_factory):
     company = company_factory(exige_aprovacao_vaga=True)
     setor = setor_factory(company=company)

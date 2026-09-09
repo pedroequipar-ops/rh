@@ -27,10 +27,16 @@ export function VagaKanbanCardContent({ vaga }: { vaga: Vaga }) {
             <AlarmClock size={11} /> Atrasada
           </span>
         )}
-        {vaga.total_candidatos > 0 && (
+        {vaga.status === 'EM_TRIAGEM' ? (
           <span className="inline-flex items-center gap-1 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] text-slate-600">
-            <Users size={11} /> {vaga.total_candidatos}
+            <Users size={11} /> {vaga.qtd_pessoas_fase} na fase
           </span>
+        ) : (
+          vaga.total_candidatos > 0 && (
+            <span className="inline-flex items-center gap-1 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] text-slate-600">
+              <Users size={11} /> {vaga.total_candidatos}
+            </span>
+          )
         )}
         {vaga.total_cobrancas > 0 && (
           <span className="inline-flex items-center gap-1 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] text-slate-600">

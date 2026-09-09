@@ -29,6 +29,7 @@ export interface VagaInput {
   motivo_solicitacao?: string
   data_inicio_prevista?: string | null
   data_alvo_preenchimento?: string | null
+  qtd_pessoas_fase?: number
 }
 
 export async function createVaga(input: VagaInput): Promise<Vaga> {
@@ -65,6 +66,11 @@ export async function transicionarVaga(
   observacao?: string,
 ): Promise<Vaga> {
   const { data } = await apiClient.post<Vaga>(`/vagas/${id}/transicionar/`, { para, observacao })
+  return data
+}
+
+export async function moverVagaEtapa(id: string, etapaId: string): Promise<Vaga> {
+  const { data } = await apiClient.post<Vaga>(`/vagas/${id}/mover-etapa/`, { etapa_id: etapaId })
   return data
 }
 
