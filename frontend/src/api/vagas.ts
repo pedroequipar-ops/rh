@@ -74,6 +74,11 @@ export async function moverVagaEtapa(id: string, etapaId: string): Promise<Vaga>
   return data
 }
 
+export async function registrarCandidaturas(id: string, quantidade: number): Promise<Vaga> {
+  const { data } = await apiClient.post<Vaga>(`/vagas/${id}/candidaturas/`, { quantidade })
+  return data
+}
+
 export async function cobrarVaga(id: string, mensagem?: string): Promise<number> {
   const { data } = await apiClient.post<{ cobrancas_enviadas: number }>(`/vagas/${id}/cobrar/`, {
     mensagem,

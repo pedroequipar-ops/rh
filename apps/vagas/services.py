@@ -19,9 +19,8 @@ ALLOWED_TRANSITIONS = {
     S.SOLICITADA: {S.APROVADA, S.RECUSADA, S.CANCELADA},
     S.RECUSADA: {S.SOLICITADA, S.CANCELADA},
     S.APROVADA: {S.PUBLICADA, S.CONGELADA, S.CANCELADA},
-    S.PUBLICADA: {S.RECEBENDO, S.EM_TRIAGEM, S.CONGELADA, S.CANCELADA},
-    S.RECEBENDO: {S.ENCERRADA, S.EM_TRIAGEM, S.CONGELADA, S.CANCELADA},
-    S.ENCERRADA: {S.EM_TRIAGEM, S.RECEBENDO, S.CANCELADA},
+    S.PUBLICADA: {S.ENCERRADA, S.EM_TRIAGEM, S.CONGELADA, S.CANCELADA},
+    S.ENCERRADA: {S.EM_TRIAGEM, S.PUBLICADA, S.CANCELADA},
     S.EM_TRIAGEM: {S.PREENCHIDA, S.CANCELADA},
     S.CONGELADA: {S.CANCELADA},
     S.CANCELADA: set(),
@@ -37,6 +36,9 @@ SETOR_ALLOWED = {
     (S.RECUSADA, S.CANCELADA),
 }
 
+# Status ativos onde um prazo estourado ainda faz sentido alertar.
+STATUS_PRAZO_ATIVO = {S.APROVADA, S.PUBLICADA, S.ENCERRADA, S.EM_TRIAGEM}
+
 STAMP_FIELDS = {
     S.SOLICITADA: "solicitada_em",
     S.APROVADA: "aprovada_em",
@@ -48,7 +50,7 @@ STAMP_FIELDS = {
 FECHAMENTO = {S.PREENCHIDA, S.CANCELADA}
 
 # Status em que a bola está com o RH / com o setor solicitante.
-RESPONSAVEL_RH = {S.SOLICITADA, S.APROVADA, S.PUBLICADA, S.RECEBENDO, S.ENCERRADA}
+RESPONSAVEL_RH = {S.SOLICITADA, S.APROVADA, S.PUBLICADA, S.ENCERRADA}
 RESPONSAVEL_SETOR = {S.RASCUNHO, S.RECUSADA}
 
 
@@ -104,6 +106,53 @@ def notificar_vaga_criada(vaga, company_id):
     )
 
 
+def _prazo_estourado(vaga, hoje=None):
+    hoje = hoje or timezone.localdate()
+    if vaga.status not in STATUS_PRAZO_ATIVO:
+        return False
+    return bool(
+        (vaga.data_alvo_preenchimento and vaga.data_alvo_preenchimento < hoje)
+        or (vaga.data_inicio_prevista and vaga.data_inicio_prevista < hoje)
+    )
+
+
+def alertar_vagas_com_prazo_estourado():
+    """Cria uma notificação (uma vez) para cada vaga ativa cujo prazo de
+    preenchimento ou de início previsto já passou. Roda por cron do SO."""
+    hoje = timezone.localdate()
+    total = 0
+    vagas = Vaga.objects.filter(
+        status__in=STATUS_PRAZO_ATIVO, prazo_alertado_em__isnull=True
+    ).select_related("setor")
+    for vaga in vagas:
+        if not _prazo_estourado(vaga, hoje):
+            continue
+        now = timezone.now()
+        vaga.prazo_alertado_em = now
+        vaga.save(update_fields=["prazo_alertado_em", "updated_at"])
+        registrar_historico(vaga, "", vaga.status, None, "Prazo da vaga estourado")
+        _notificar(
+            vaga.company_id,
+            User.objects.filter(
+                company_id=vaga.company_id, role=User.Role.RH, is_active=True
+            ),
+            vaga,
+            f'Vaga "{vaga.titulo}" passou do prazo de preenchimento/início.',
+        )
+        total += 1
+    return total
+
+
+def limpar_alerta_prazo_se_futuro(vaga):
+    """Zera o carimbo de alerta quando as datas voltam a ficar no futuro,
+    para o alerta poder disparar de novo se estourar outra vez."""
+    if not vaga.prazo_alertado_em:
+        return
+    if not _prazo_estourado(vaga):
+        vaga.prazo_alertado_em = None
+        vaga.save(update_fields=["prazo_alertado_em", "updated_at"])
+
+
 def etapa_triagem_inicial(company_id):
     """Primeira etapa do kanban que ainda não exige cadastro completo."""
     return (
@@ -146,6 +195,31 @@ def registrar_historico(vaga, de_status, para_status, user, observacao=""):
         por=user if (user and not user.is_anonymous) else None,
         observacao=observacao or "",
     )
+
+
+def registrar_candidaturas_recebidas(vaga, quantidade, user):
+    """RH informa quantas pessoas mandaram currículo enquanto a vaga está
+    publicada. Atualiza ``qtd_pessoas_fase`` e grava no histórico."""
+    if vaga.status != S.PUBLICADA:
+        raise ValidationError(
+            {"detail": "Só dá para registrar candidaturas com a vaga publicada."}
+        )
+    try:
+        quantidade = int(quantidade)
+    except (TypeError, ValueError):
+        raise ValidationError({"quantidade": "Valor inválido."})
+    if quantidade < 0:
+        raise ValidationError({"quantidade": "Valor inválido."})
+
+    delta = quantidade - (vaga.qtd_pessoas_fase or 0)
+    vaga.qtd_pessoas_fase = quantidade
+    vaga.save(update_fields=["qtd_pessoas_fase", "updated_at"])
+
+    obs = f"Candidaturas recebidas: {quantidade}"
+    if delta > 0:
+        obs += f" (+{delta})"
+    registrar_historico(vaga, "", S.PUBLICADA, user, obs)
+    return vaga
 
 
 def aplicar_transicao(vaga, para, user, observacao="", *, extra_fields=None, checar_papel=True):

@@ -29,7 +29,6 @@ class Vaga(TimeStampedModel):
         RECUSADA = "RECUSADA", "Recusada"
         APROVADA = "APROVADA", "Aprovada"
         PUBLICADA = "PUBLICADA", "Publicada"
-        RECEBENDO = "RECEBENDO", "Recebendo candidaturas"
         ENCERRADA = "ENCERRADA", "Candidaturas encerradas"
         EM_TRIAGEM = "EM_TRIAGEM", "Em triagem"
         CONGELADA = "CONGELADA", "Congelada"
@@ -106,6 +105,9 @@ class Vaga(TimeStampedModel):
     # Cobrança
     cobrada_em = models.DateTimeField(null=True, blank=True)
     total_cobrancas = models.PositiveIntegerField(default=0)
+
+    # Prazo (preenchimento / início previsto): carimbo do aviso já disparado
+    prazo_alertado_em = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at"]

@@ -20,6 +20,7 @@ ROLE_PERMISSIONS = {
         "vagas.edit",
         "vagas.delete",
         "vagas.candidatos",
+        "vagas.candidaturas",
         "vagas.transicionar",
         "vagas.aprovar",
         "vagas.cobrar",

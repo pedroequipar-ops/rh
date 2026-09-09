@@ -342,7 +342,7 @@ def test_fluxo_completo_ate_em_triagem(company_factory, user_factory, vaga_facto
     assert (
         client.post(f"/v1/vagas/{vaga.id}/aprovar/", {}, format="json").status_code == 200
     )
-    for destino in ("PUBLICADA", "RECEBENDO", "ENCERRADA", "EM_TRIAGEM"):
+    for destino in ("PUBLICADA", "ENCERRADA", "EM_TRIAGEM"):
         r = client.post(
             f"/v1/vagas/{vaga.id}/transicionar/", {"para": destino}, format="json"
         )
@@ -354,7 +354,6 @@ def test_fluxo_completo_ate_em_triagem(company_factory, user_factory, vaga_facto
     assert {h["para_status"] for h in hist.data} >= {
         "APROVADA",
         "PUBLICADA",
-        "RECEBENDO",
         "ENCERRADA",
         "EM_TRIAGEM",
     }
@@ -457,7 +456,7 @@ def test_listagem_ordena_urgente_e_prioridade_primeiro(
 @pytest.mark.django_db
 def test_patch_edita_datas_sem_mudar_status(company_factory, user_factory, vaga_factory):
     company = company_factory()
-    vaga = vaga_factory(company=company, status=Vaga.Status.RECEBENDO)
+    vaga = vaga_factory(company=company, status=Vaga.Status.PUBLICADA)
     rh = user_factory(company=company, role=User.Role.RH)
     client = _client_for(rh, company)
 
@@ -468,7 +467,7 @@ def test_patch_edita_datas_sem_mudar_status(company_factory, user_factory, vaga_
     )
     assert r.status_code == 200
     assert r.data["data_alvo_preenchimento"] == "2026-12-01"
-    assert r.data["status"] == "RECEBENDO"
+    assert r.data["status"] == "PUBLICADA"
 
 
 @pytest.mark.django_db
@@ -555,3 +554,69 @@ def test_patch_qtd_pessoas_fase(company_factory, user_factory, vaga_factory):
     r = client.patch(f"/v1/vagas/{vaga.id}/", {"qtd_pessoas_fase": 20}, format="json")
     assert r.status_code == 200
     assert r.data["qtd_pessoas_fase"] == 20
+
+
+@pytest.mark.django_db
+def test_registrar_candidaturas_recebidas_vai_pro_historico(
+    company_factory, user_factory, vaga_factory
+):
+    company = company_factory()
+    vaga = vaga_factory(company=company, status=Vaga.Status.PUBLICADA)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    r = client.post(f"/v1/vagas/{vaga.id}/candidaturas/", {"quantidade": 12}, format="json")
+    assert r.status_code == 200
+    assert r.data["qtd_pessoas_fase"] == 12
+
+    hist = client.get(f"/v1/vagas/{vaga.id}/historico/")
+    assert any(h["observacao"].startswith("Candidaturas recebidas: 12") for h in hist.data)
+
+    # fora de PUBLICADA não deixa
+    client.post(f"/v1/vagas/{vaga.id}/transicionar/", {"para": "CANCELADA"}, format="json")
+    bloqueado = client.post(
+        f"/v1/vagas/{vaga.id}/candidaturas/", {"quantidade": 3}, format="json"
+    )
+    assert bloqueado.status_code == 400
+
+
+@pytest.mark.django_db
+def test_alertar_prazo_estourado_notifica_rh_uma_vez(
+    company_factory, user_factory, vaga_factory
+):
+    from datetime import date
+
+    from apps.vagas import services
+    from apps.vagas.models import VagaNotificacao
+
+    company = company_factory()
+    rh = user_factory(company=company, role=User.Role.RH)
+    vaga = vaga_factory(
+        company=company,
+        status=Vaga.Status.PUBLICADA,
+        data_alvo_preenchimento=date(2020, 1, 1),
+    )
+    no_prazo = vaga_factory(
+        company=company,
+        status=Vaga.Status.PUBLICADA,
+        data_alvo_preenchimento=date(2999, 1, 1),
+    )
+
+    assert services.alertar_vagas_com_prazo_estourado() == 1
+    assert services.alertar_vagas_com_prazo_estourado() == 0  # não repete
+
+    vaga.refresh_from_db()
+    assert vaga.prazo_alertado_em is not None
+    no_prazo.refresh_from_db()
+    assert no_prazo.prazo_alertado_em is None
+    assert VagaNotificacao.objects.filter(destinatario=rh, vaga=vaga).count() == 1
+
+    # empurrar a data pro futuro zera o alerta
+    client = _client_for(rh, company)
+    client.patch(
+        f"/v1/vagas/{vaga.id}/",
+        {"data_alvo_preenchimento": "2999-01-01"},
+        format="json",
+    )
+    vaga.refresh_from_db()
+    assert vaga.prazo_alertado_em is None

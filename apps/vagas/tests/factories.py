@@ -26,5 +26,5 @@ class VagaFactory(DjangoModelFactory):
     quantidade_vagas = 1
     setor = factory.SubFactory(SetorFactory)
     criado_por = factory.SubFactory(UserFactory)
-    status = Vaga.Status.RECEBENDO
+    status = Vaga.Status.PUBLICADA
     prioridade = Vaga.Prioridade.MEDIA

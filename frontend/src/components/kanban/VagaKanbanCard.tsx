@@ -31,7 +31,7 @@ export function VagaKanbanCardContent({ vaga }: { vaga: Vaga }) {
           <span className="inline-flex items-center gap-1 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] text-slate-600">
             <Users size={11} /> {vaga.qtd_pessoas_fase} na fase
           </span>
-        ) : vaga.status === 'RECEBENDO' && vaga.qtd_pessoas_fase > 0 ? (
+        ) : vaga.status === 'PUBLICADA' && vaga.qtd_pessoas_fase > 0 ? (
           <span className="inline-flex items-center gap-1 rounded border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] text-slate-600">
             <Users size={11} /> {vaga.qtd_pessoas_fase} recebidas
           </span>

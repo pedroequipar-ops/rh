@@ -14,6 +14,7 @@ from .models import EtapaKanban, Vaga, VagaNotificacao
 from .repositories.etapa_repository import EtapaRepository
 from .repositories.vaga_repository import VagaRepository
 from .serializers import (
+    VagaCandidaturasSerializer,
     EtapaKanbanReordenarSerializer,
     EtapaKanbanSerializer,
     VagaAprovarSerializer,
@@ -79,6 +80,7 @@ class VagaViewSet(viewsets.ModelViewSet):
         "partial_update": "vagas.edit",
         "destroy": "vagas.delete",
         "candidatos": "vagas.candidatos",
+        "candidaturas": "vagas.candidaturas",
         "historico": "vagas.view",
         "transicionar": "vagas.transicionar",
         "mover_etapa": "vagas.transicionar",
@@ -135,7 +137,8 @@ class VagaViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         if self.request.user.role == "SETOR":
             serializer.validated_data.pop("setor", None)
-        serializer.save()
+        vaga = serializer.save()
+        services.limpar_alerta_prazo_se_futuro(vaga)
 
     @action(detail=True, methods=["get"], url_path="candidatos")
     def candidatos(self, request, pk=None):
@@ -214,6 +217,16 @@ class VagaViewSet(viewsets.ModelViewSet):
         except (EtapaKanban.DoesNotExist, ValueError, TypeError):
             raise NotFound("Etapa não encontrada.")
         vaga = services.mover_vaga_etapa(vaga, etapa, request.user)
+        return Response(VagaSerializer(vaga, context=self.get_serializer_context()).data)
+
+    @action(detail=True, methods=["post"], url_path="candidaturas")
+    def candidaturas(self, request, pk=None):
+        vaga = self.get_object()
+        ser = VagaCandidaturasSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        vaga = services.registrar_candidaturas_recebidas(
+            vaga, ser.validated_data["quantidade"], request.user
+        )
         return Response(VagaSerializer(vaga, context=self.get_serializer_context()).data)
 
     @action(detail=True, methods=["post"], url_path="cobrar")

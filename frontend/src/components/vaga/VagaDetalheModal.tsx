@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { useNavigate, useParams, useLocation, useOutletContext } from 'react-router-dom'
-import { Bell, Flame, History, MessageCircle, Pencil, X } from 'lucide-react'
+import { Bell, Check, Flame, History, MessageCircle, Pencil, X } from 'lucide-react'
 import clsx from 'clsx'
 import { ChatPanel } from '../candidato/ChatPanel'
 import {
@@ -10,6 +10,7 @@ import {
   getVagaHistorico,
   listSetores,
   recusarVaga,
+  registrarCandidaturas,
   transicionarVaga,
   updateVaga,
 } from '../../api/vagas'
@@ -28,7 +29,6 @@ const ACAO_LABEL: Partial<Record<VagaStatus, string>> = {
   SOLICITADA: 'Enviar solicitação',
   APROVADA: 'Aprovar',
   PUBLICADA: 'Publicar',
-  RECEBENDO: 'Abrir candidaturas',
   ENCERRADA: 'Encerrar candidaturas',
   EM_TRIAGEM: 'Iniciar triagem',
   CONGELADA: 'Congelar',
@@ -38,7 +38,6 @@ const ACAO_LABEL: Partial<Record<VagaStatus, string>> = {
 }
 
 const QTD_FASE_LABEL: Partial<Record<VagaStatus, string>> = {
-  RECEBENDO: 'Candidaturas recebidas',
   EM_TRIAGEM: 'Pessoas nesta fase',
 }
 
@@ -46,6 +45,13 @@ function fmtData(iso: string | null): string {
   if (!iso) return '—'
   const d = new Date(iso)
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
+
+function dataVencida(iso: string | null): boolean {
+  if (!iso) return false
+  const hoje = new Date()
+  hoje.setHours(0, 0, 0, 0)
+  return new Date(iso) < hoje
 }
 
 function fmtDataHora(iso: string): string {
@@ -57,6 +63,94 @@ function fmtDataHora(iso: string): string {
     hour: '2-digit',
     minute: '2-digit',
   })
+}
+
+function CandidaturasRecebidas({
+  vaga,
+  isRh,
+  onRegistrado,
+}: {
+  vaga: Vaga
+  isRh: boolean
+  onRegistrado: (v: Vaga) => void
+}) {
+  const { showToast } = useToast()
+  const [editando, setEditando] = useState(false)
+  const [valor, setValor] = useState(String(vaga.qtd_pessoas_fase))
+  const [salvando, setSalvando] = useState(false)
+
+  async function salvar() {
+    const n = Number(valor)
+    if (!Number.isFinite(n) || n < 0 || n === vaga.qtd_pessoas_fase) {
+      setEditando(false)
+      return
+    }
+    setSalvando(true)
+    try {
+      onRegistrado(await registrarCandidaturas(vaga.id, n))
+      showToast('Candidaturas registradas no histórico')
+      setEditando(false)
+    } catch {
+      showToast('Não foi possível registrar', 'error')
+    } finally {
+      setSalvando(false)
+    }
+  }
+
+  if (!isRh) {
+    return <span>Candidaturas recebidas: {vaga.qtd_pessoas_fase}</span>
+  }
+
+  if (!editando) {
+    return (
+      <span className="inline-flex items-center gap-1">
+        Candidaturas recebidas: {vaga.qtd_pessoas_fase}
+        <button
+          onClick={() => {
+            setValor(String(vaga.qtd_pessoas_fase))
+            setEditando(true)
+          }}
+          className="rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+          aria-label="Editar candidaturas recebidas"
+        >
+          <Pencil size={12} />
+        </button>
+      </span>
+    )
+  }
+
+  return (
+    <span className="inline-flex items-center gap-1">
+      Candidaturas recebidas:
+      <input
+        type="number"
+        min={0}
+        autoFocus
+        value={valor}
+        onChange={(e) => setValor(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') salvar()
+          if (e.key === 'Escape') setEditando(false)
+        }}
+        className="w-16 rounded border border-slate-300 px-1.5 py-0.5 text-sm focus:border-slate-500 focus:outline-none"
+      />
+      <button
+        onClick={salvar}
+        disabled={salvando}
+        className="rounded p-0.5 text-emerald-600 hover:bg-emerald-50 disabled:opacity-50"
+        aria-label="Salvar"
+      >
+        <Check size={14} />
+      </button>
+      <button
+        onClick={() => setEditando(false)}
+        className="rounded p-0.5 text-slate-400 hover:bg-slate-100"
+        aria-label="Cancelar"
+      >
+        <X size={14} />
+      </button>
+    </span>
+  )
 }
 
 export function VagaDetalheModal() {
@@ -295,27 +389,7 @@ export function VagaDetalheModal() {
           {error && <p className="text-sm text-red-500">Não foi possível carregar esta vaga.</p>}
           {!error && !vaga && <p className="text-sm text-slate-400">Carregando...</p>}
 
-          {!error && vaga && !editando && mostrarChat && (
-            <div className="flex h-[560px] flex-col">
-              <div className="mb-3 flex items-center justify-between">
-                <div className="min-w-0">
-                  <h2 className="truncate text-lg font-semibold text-slate-800">{vaga.titulo}</h2>
-                  <p className="text-sm text-slate-500">Conversa com o setor {vaga.setor.nome}</p>
-                </div>
-                <button
-                  onClick={() => setMostrarChat(false)}
-                  className="flex shrink-0 items-center gap-1.5 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
-                >
-                  Voltar aos detalhes
-                </button>
-              </div>
-              <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-slate-200">
-                <ChatPanel kind="vaga" id={vaga.id} />
-              </div>
-            </div>
-          )}
-
-          {!error && vaga && !editando && !mostrarChat && (
+          {!error && vaga && !editando && (
             <div className="grid gap-6 md:grid-cols-[1fr_260px]">
               {/* coluna principal */}
               <div className="space-y-5">
@@ -354,33 +428,43 @@ export function VagaDetalheModal() {
                       )}
                     </div>
                   </div>
-                  <div className="flex shrink-0 items-start gap-1.5">
-                    <button
-                      onClick={() => setMostrarChat(true)}
-                      className="flex items-center gap-1.5 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
-                    >
-                      <MessageCircle size={12} /> Chat com o setor
-                    </button>
-                    <button
-                      onClick={iniciarEdicao}
-                      className="flex items-center gap-1.5 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
-                    >
-                      <Pencil size={12} /> Editar
-                    </button>
-                  </div>
+                  <button
+                    onClick={iniciarEdicao}
+                    className="flex shrink-0 items-center gap-1.5 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+                  >
+                    <Pencil size={12} /> Editar
+                  </button>
                 </div>
 
                 <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-600">
                   <span>{vaga.quantidade_vagas} vaga(s)</span>
                   <span>{vaga.salario ? `R$ ${vaga.salario}` : 'Salário não informado'}</span>
-                  <span>Início previsto: {fmtData(vaga.data_inicio_prevista)}</span>
-                  <span>Prazo p/ preencher: {fmtData(vaga.data_alvo_preenchimento)}</span>
-                  {QTD_FASE_LABEL[vaga.status] && (
+                  <span
+                    className={clsx(
+                      vaga.atrasada && dataVencida(vaga.data_inicio_prevista) && 'font-medium text-amber-700',
+                    )}
+                  >
+                    Início previsto: {fmtData(vaga.data_inicio_prevista)}
+                  </span>
+                  <span
+                    className={clsx(
+                      vaga.atrasada && dataVencida(vaga.data_alvo_preenchimento) && 'font-medium text-amber-700',
+                    )}
+                  >
+                    Prazo p/ preencher: {fmtData(vaga.data_alvo_preenchimento)}
+                  </span>
+                  {vaga.status === 'EM_TRIAGEM' && (
                     <span>
-                      {vaga.status === 'EM_TRIAGEM'
-                        ? `${vaga.etapa_atual?.nome ?? 'Triagem'}: ${vaga.qtd_pessoas_fase} pessoa(s)`
-                        : `Candidaturas recebidas: ${vaga.qtd_pessoas_fase}`}
+                      {vaga.etapa_atual?.nome ?? 'Triagem'}: {vaga.qtd_pessoas_fase} pessoa(s)
                     </span>
+                  )}
+                  {vaga.status === 'PUBLICADA' && (
+                    <CandidaturasRecebidas
+                      key={vaga.qtd_pessoas_fase}
+                      vaga={vaga}
+                      isRh={isRh}
+                      onRegistrado={recarregar}
+                    />
                   )}
                 </div>
 
@@ -450,6 +534,7 @@ export function VagaDetalheModal() {
               </div>
 
               {/* painel de ações */}
+              <div className="space-y-3">
               <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
                 <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">Ações</h3>
 
@@ -576,6 +661,19 @@ export function VagaDetalheModal() {
                     )}
                   </div>
                 )}
+              </div>
+
+              <button
+                onClick={() => setMostrarChat((v) => !v)}
+                className="flex w-full items-center justify-center gap-1.5 rounded border border-slate-300 bg-white px-2 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              >
+                <MessageCircle size={13} /> Chat com o setor
+              </button>
+              {mostrarChat && (
+                <div className="h-60 overflow-hidden rounded-lg border border-slate-200 bg-white">
+                  <ChatPanel kind="vaga" id={vaga.id} />
+                </div>
+              )}
               </div>
             </div>
           )}

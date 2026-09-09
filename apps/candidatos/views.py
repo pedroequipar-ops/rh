@@ -41,7 +41,6 @@ _VAGA_BLOQUEIA_CANDIDATO = {
 }
 _VAGA_ABRE_TRIAGEM = {
     Vaga.Status.PUBLICADA,
-    Vaga.Status.RECEBENDO,
     Vaga.Status.ENCERRADA,
 }
 

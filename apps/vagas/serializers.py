@@ -1,5 +1,4 @@
 from django.db.models import Count
-from django.utils import timezone
 from rest_framework import serializers
 
 from apps.accounts.models import Setor
@@ -8,13 +7,10 @@ from apps.accounts.serializers import SetorSerializer
 from . import services
 from .models import EtapaKanban, Vaga, VagaHistoricoStatus, VagaNotificacao
 
-_STATUS_SEM_ATRASO = {Vaga.Status.EM_TRIAGEM, Vaga.Status.PREENCHIDA, Vaga.Status.CANCELADA}
-
-
 def _vaga_atrasada(vaga) -> bool:
-    if not vaga.data_alvo_preenchimento or vaga.status in _STATUS_SEM_ATRASO:
-        return False
-    return vaga.data_alvo_preenchimento < timezone.localdate()
+    """Atrasada = prazo de preenchimento ou de início previsto já passou,
+    com a vaga ainda num status ativo."""
+    return services._prazo_estourado(vaga)
 
 
 class EtapaKanbanSerializer(serializers.ModelSerializer):
@@ -92,6 +88,7 @@ class VagaSerializer(serializers.ModelSerializer):
             "aprovada_por",
             "cobrada_em",
             "total_cobrancas",
+            "prazo_alertado_em",
             "atrasada",
             "total_candidatos",
             "total_por_etapa",
@@ -115,6 +112,7 @@ class VagaSerializer(serializers.ModelSerializer):
             "aprovada_por",
             "cobrada_em",
             "total_cobrancas",
+            "prazo_alertado_em",
             "created_at",
             "updated_at",
         ]
@@ -221,6 +219,10 @@ class VagaRecusarSerializer(serializers.Serializer):
 
 class VagaCobrarSerializer(serializers.Serializer):
     mensagem = serializers.CharField(required=False, allow_blank=True, default="")
+
+
+class VagaCandidaturasSerializer(serializers.Serializer):
+    quantidade = serializers.IntegerField(min_value=0)
 
 
 class VagaHistoricoStatusSerializer(serializers.ModelSerializer):

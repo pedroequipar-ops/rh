@@ -37,7 +37,6 @@ export type VagaStatus =
   | 'RECUSADA'
   | 'APROVADA'
   | 'PUBLICADA'
-  | 'RECEBENDO'
   | 'ENCERRADA'
   | 'EM_TRIAGEM'
   | 'CONGELADA'
@@ -86,6 +85,7 @@ export interface Vaga {
   aprovada_por: string | null
   cobrada_em: string | null
   total_cobrancas: number
+  prazo_alertado_em: string | null
   atrasada: boolean
   total_candidatos: number
   total_por_etapa: VagaTotalPorEtapa[] | null

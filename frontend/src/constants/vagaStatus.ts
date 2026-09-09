@@ -34,11 +34,6 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
     badge: 'bg-indigo-100 text-indigo-800 border-indigo-200',
     header: 'border-indigo-200 bg-indigo-50 text-indigo-800',
   },
-  RECEBENDO: {
-    label: 'Recebendo candidaturas',
-    badge: 'bg-violet-100 text-violet-800 border-violet-200',
-    header: 'border-violet-200 bg-violet-50 text-violet-800',
-  },
   ENCERRADA: {
     label: 'Candidaturas encerradas',
     badge: 'bg-slate-200 text-slate-700 border-slate-300',
@@ -76,7 +71,6 @@ export const FLUXO_STATUSES: VagaStatus[] = [
   'RECUSADA',
   'APROVADA',
   'PUBLICADA',
-  'RECEBENDO',
   'ENCERRADA',
   'CONGELADA',
 ]

@@ -462,7 +462,7 @@ def test_primeiro_candidato_move_vaga_para_em_triagem(
     company = company_factory()
     setor = setor_factory(company=company)
     etapa_factory(company=company, nome="Triagem")
-    vaga = vaga_factory(company=company, setor=setor, status=Vaga.Status.RECEBENDO)
+    vaga = vaga_factory(company=company, setor=setor, status=Vaga.Status.PUBLICADA)
     rh = user_factory(company=company, role=User.Role.RH)
 
     client = _client_for(rh, company)
