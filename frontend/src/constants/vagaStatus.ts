@@ -66,7 +66,7 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
   },
 }
 
-/** Colunas do kanban antes da triagem, na ordem do fluxo. */
+/** Colunas de vaga no kanban, na ordem do fluxo (antes das colunas de candidato). */
 export const FLUXO_STATUSES: VagaStatus[] = [
   'RASCUNHO',
   'SOLICITADA',
@@ -76,14 +76,11 @@ export const FLUXO_STATUSES: VagaStatus[] = [
   'RECEBENDO',
   'ENCERRADA',
   'CONGELADA',
+  'EM_TRIAGEM',
 ]
 
-/** Status de vaga que saíram do fluxo pré-triagem (não viram coluna). */
-export const STATUS_FORA_DO_FLUXO: VagaStatus[] = [
-  'EM_TRIAGEM',
-  'CANCELADA',
-  'PREENCHIDA',
-]
+/** Status de vaga que não viram coluna (terminais). */
+export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['CANCELADA', 'PREENCHIDA']
 
 export function statusLabel(status: VagaStatus): string {
   return VAGA_STATUS_META[status]?.label ?? status
