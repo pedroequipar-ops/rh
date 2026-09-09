@@ -10,7 +10,8 @@ from rest_framework.views import APIView
 
 from apps.accounts.models import User
 from apps.core.permissions import HasFunctionPermission
-from apps.vagas.models import EtapaKanban
+from apps.vagas import services as vagas_services
+from apps.vagas.models import EtapaKanban, Vaga
 from apps.vagas.repositories.etapa_repository import EtapaRepository
 from utils.queue import QueueEngine
 from utils.storage import MinioStorage
@@ -29,6 +30,20 @@ from .serializers import (
     UploadUrlRequestSerializer,
     UploadUrlResponseSerializer,
 )
+
+
+_VAGA_BLOQUEIA_CANDIDATO = {
+    Vaga.Status.RASCUNHO,
+    Vaga.Status.SOLICITADA,
+    Vaga.Status.RECUSADA,
+    Vaga.Status.APROVADA,
+    Vaga.Status.CANCELADA,
+}
+_VAGA_ABRE_TRIAGEM = {
+    Vaga.Status.PUBLICADA,
+    Vaga.Status.RECEBENDO,
+    Vaga.Status.ENCERRADA,
+}
 
 
 def _etapa_inicial(company_id):
@@ -86,10 +101,23 @@ class CandidatoViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         company_id = capture_company_id(self.request)
+        vaga = serializer.validated_data["vaga"]
+        if vaga.status in _VAGA_BLOQUEIA_CANDIDATO:
+            raise ValidationError(
+                {"vaga_id": "Vaga ainda não está recebendo candidaturas."}
+            )
         extra = {"company_id": company_id, "cadastrado_por": self.request.user}
         if "etapa_atual" not in serializer.validated_data:
             extra["etapa_atual"] = _etapa_inicial(company_id)
         candidato = serializer.save(**extra)
+        if vaga.status in _VAGA_ABRE_TRIAGEM:
+            vagas_services.aplicar_transicao(
+                vaga,
+                Vaga.Status.EM_TRIAGEM,
+                self.request.user,
+                "auto: primeiro candidato cadastrado",
+                checar_papel=False,
+            )
         QueueEngine().publish(
             "notifications",
             {

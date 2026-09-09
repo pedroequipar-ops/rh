@@ -12,6 +12,9 @@ class IVagaRepository(ABC):
     def list_by_setor(self, company_id: str, setor_id: str): ...
 
     @abstractmethod
+    def by_status(self, queryset, status_list: list): ...
+
+    @abstractmethod
     def create(self, data: dict): ...
 
     @abstractmethod

@@ -1,21 +1,30 @@
+from django.utils import timezone
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.models import User
+from apps.accounts.models import Company, User
 from apps.core.permissions import HasFunctionPermission
 from utils.utils import capture_company_id
 
+from . import services
 from .models import EtapaKanban, Vaga, VagaNotificacao
 from .repositories.etapa_repository import EtapaRepository
 from .repositories.vaga_repository import VagaRepository
 from .serializers import (
+    CompanyConfigSerializer,
     EtapaKanbanReordenarSerializer,
     EtapaKanbanSerializer,
+    VagaAprovarSerializer,
+    VagaCobrarSerializer,
+    VagaHistoricoStatusSerializer,
     VagaNotificacaoSerializer,
+    VagaRecusarSerializer,
     VagaSerializer,
+    VagaTransicaoSerializer,
 )
 
 
@@ -72,6 +81,11 @@ class VagaViewSet(viewsets.ModelViewSet):
         "partial_update": "vagas.edit",
         "destroy": "vagas.delete",
         "candidatos": "vagas.candidatos",
+        "historico": "vagas.view",
+        "transicionar": "vagas.transicionar",
+        "aprovar": "vagas.aprovar",
+        "recusar": "vagas.aprovar",
+        "cobrar": "vagas.cobrar",
     }
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
@@ -83,21 +97,45 @@ class VagaViewSet(viewsets.ModelViewSet):
         company_id = capture_company_id(self.request)
         user = self.request.user
         if user.role == "SETOR":
-            return self.repo.list_by_setor(company_id, user.setor_id)
-        return self.repo.list_by_company(company_id)
+            qs = self.repo.list_by_setor(company_id, user.setor_id)
+        else:
+            qs = self.repo.list_by_company(company_id)
+        status_param = self.request.query_params.get("status")
+        if status_param:
+            qs = self.repo.by_status(qs, status_param.split(","))
+        return qs
+
+    def _status_inicial(self, user, company):
+        raw = str(self.request.data.get("status") or "").upper()
+        if raw == Vaga.Status.RASCUNHO:
+            return Vaga.Status.RASCUNHO
+        if user.role == "SETOR" and company.exige_aprovacao_vaga:
+            return Vaga.Status.SOLICITADA
+        return Vaga.Status.APROVADA
 
     def perform_create(self, serializer):
         company_id = capture_company_id(self.request)
         user = self.request.user
+        company = Company.objects.get(id=company_id)
         extra = {"company_id": company_id, "criado_por": user}
-
         if user.role == "SETOR":
             extra["setor_id"] = user.setor_id
 
-        vaga = serializer.save(**extra)
+        inicial = self._status_inicial(user, company)
+        now = timezone.now()
+        extra["status"] = inicial
+        if inicial != Vaga.Status.RASCUNHO:
+            extra["solicitada_em"] = now
+        if inicial == Vaga.Status.APROVADA:
+            extra["aprovada_em"] = now
+            if user.role == "RH":
+                extra["aprovada_por"] = user
 
-        if user.role == "SETOR":
-            _notificar_vaga_criada(vaga, company_id)
+        vaga = serializer.save(**extra)
+        services.registrar_historico(vaga, "", inicial, user, "criação")
+
+        if inicial == Vaga.Status.SOLICITADA or user.role == "SETOR":
+            services.notificar_vaga_criada(vaga, company_id)
 
     def perform_update(self, serializer):
         if self.request.user.role == "SETOR":
@@ -116,26 +154,94 @@ class VagaViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
         return Response(serializer.data)
 
+    @action(detail=True, methods=["get"], url_path="historico")
+    def historico(self, request, pk=None):
+        vaga = self.get_object()
+        qs = vaga.historico_status.select_related("por")
+        return Response(VagaHistoricoStatusSerializer(qs, many=True).data)
+
+    @action(detail=True, methods=["post"], url_path="transicionar")
+    def transicionar(self, request, pk=None):
+        vaga = self.get_object()
+        ser = VagaTransicaoSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        vaga = services.aplicar_transicao(
+            vaga,
+            ser.validated_data["para"],
+            request.user,
+            ser.validated_data.get("observacao", ""),
+        )
+        return Response(VagaSerializer(vaga, context=self.get_serializer_context()).data)
+
+    @action(detail=True, methods=["post"], url_path="aprovar")
+    def aprovar(self, request, pk=None):
+        vaga = self.get_object()
+        ser = VagaAprovarSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        extra = {
+            f: ser.validated_data[f]
+            for f in (
+                "prioridade",
+                "urgente",
+                "data_inicio_prevista",
+                "data_alvo_preenchimento",
+            )
+            if f in ser.validated_data
+        }
+        vaga = services.aplicar_transicao(
+            vaga,
+            Vaga.Status.APROVADA,
+            request.user,
+            ser.validated_data.get("observacao", ""),
+            extra_fields=extra,
+        )
+        return Response(VagaSerializer(vaga, context=self.get_serializer_context()).data)
+
+    @action(detail=True, methods=["post"], url_path="recusar")
+    def recusar(self, request, pk=None):
+        vaga = self.get_object()
+        ser = VagaRecusarSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        vaga = services.aplicar_transicao(
+            vaga,
+            Vaga.Status.RECUSADA,
+            request.user,
+            extra_fields={"motivo_recusa": ser.validated_data["motivo"]},
+        )
+        return Response(VagaSerializer(vaga, context=self.get_serializer_context()).data)
+
+    @action(detail=True, methods=["post"], url_path="cobrar")
+    def cobrar(self, request, pk=None):
+        vaga = self.get_object()
+        ser = VagaCobrarSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        enviadas = services.cobrar_vaga(
+            vaga, request.user, ser.validated_data.get("mensagem", "")
+        )
+        return Response({"cobrancas_enviadas": enviadas})
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.soft_delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-def _notificar_vaga_criada(vaga, company_id):
-    destinatarios = User.objects.filter(company_id=company_id, role="RH", is_active=True)
-    mensagem = f'Setor "{vaga.setor.nome}" adicionou a vaga "{vaga.titulo}"'
-    VagaNotificacao.objects.bulk_create(
-        [
-            VagaNotificacao(
-                company_id=company_id,
-                destinatario=user,
-                vaga=vaga,
-                mensagem=mensagem,
-            )
-            for user in destinatarios
-        ]
-    )
+class CompanyConfigView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        company = Company.objects.get(id=capture_company_id(request))
+        return Response(CompanyConfigSerializer(company).data)
+
+    def patch(self, request):
+        user = request.user
+        if not (user.is_superuser or user.role == User.Role.RH):
+            raise PermissionDenied("Somente RH pode alterar a configuração.")
+        company = Company.objects.get(id=capture_company_id(request))
+        ser = CompanyConfigSerializer(company, data=request.data, partial=True)
+        ser.is_valid(raise_exception=True)
+        ser.save()
+        return Response(ser.data)
 
 
 class VagaNotificacaoListView(generics.ListAPIView):

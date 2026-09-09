@@ -403,6 +403,52 @@ def test_falha_da_ia_nao_impede_cadastro_manual(
 
 
 @pytest.mark.django_db
+def test_nao_cria_candidato_em_vaga_solicitada(
+    company_factory, setor_factory, user_factory, etapa_factory, vaga_factory
+):
+    from apps.vagas.models import Vaga
+
+    company = company_factory()
+    setor = setor_factory(company=company)
+    etapa_factory(company=company, nome="Triagem")
+    vaga = vaga_factory(company=company, setor=setor, status=Vaga.Status.SOLICITADA)
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    with patch("apps.candidatos.views.QueueEngine"):
+        response = client.post(
+            "/v1/candidatos/",
+            {"nome": "X", "vaga_id": str(vaga.id), "curriculo_key": ""},
+        )
+
+    assert response.status_code == 400
+
+
+@pytest.mark.django_db
+@patch("apps.candidatos.views.QueueEngine")
+def test_primeiro_candidato_move_vaga_para_em_triagem(
+    mock_queue, company_factory, setor_factory, user_factory, etapa_factory, vaga_factory
+):
+    from apps.vagas.models import Vaga
+
+    company = company_factory()
+    setor = setor_factory(company=company)
+    etapa_factory(company=company, nome="Triagem")
+    vaga = vaga_factory(company=company, setor=setor, status=Vaga.Status.RECEBENDO)
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    response = client.post(
+        "/v1/candidatos/",
+        {"nome": "X", "vaga_id": str(vaga.id), "curriculo_key": ""},
+    )
+
+    assert response.status_code == 201
+    vaga.refresh_from_db()
+    assert vaga.status == Vaga.Status.EM_TRIAGEM
+
+
+@pytest.mark.django_db
 def test_rh_edita_candidato(company_factory, user_factory, candidato_factory):
     company = company_factory()
     candidato = candidato_factory(company=company, nome="Nome Antigo")

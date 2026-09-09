@@ -9,6 +9,7 @@ from apps.core.models import TimeStampedModel
 
 class Company(TimeStampedModel):
     nome = models.CharField(max_length=255)
+    exige_aprovacao_vaga = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "companies"
