@@ -1,19 +1,20 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
-import { useNavigate, useParams, useLocation, useOutletContext } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { Bell, Check, Flame, History, MessageCircle, Pencil, X } from 'lucide-react'
 import clsx from 'clsx'
 import { ChatPanel } from '../candidato/ChatPanel'
 import {
   aprovarVaga,
   cobrarVaga,
-  getVaga,
-  getVagaHistorico,
   listSetores,
   recusarVaga,
   registrarCandidaturas,
   transicionarVaga,
   updateVaga,
 } from '../../api/vagas'
+import { useVaga, useVagaHistorico } from '../../api/hooks/useVagas'
+import { queryKeys } from '../../api/queryKeys'
 import { useAuth } from '../../context/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import { ConfirmDialog } from '../common/ConfirmDialog'
@@ -23,7 +24,7 @@ import {
   VAGA_STATUS_META,
   statusLabel,
 } from '../../constants/vagaStatus'
-import type { Setor, Vaga, VagaHistorico, VagaPrioridade, VagaStatus } from '../../types'
+import type { Setor, Vaga, VagaPrioridade, VagaStatus } from '../../types'
 
 const ACAO_LABEL: Partial<Record<VagaStatus, string>> = {
   SOLICITADA: 'Enviar solicitação',
@@ -155,16 +156,20 @@ function CandidaturasRecebidas({
 
 export function VagaDetalheModal() {
   const { id } = useParams<{ id: string }>()
+  if (!id) return null
+  return <VagaDetalheModalInner key={id} id={id} />
+}
+
+function VagaDetalheModalInner({ id }: { id: string }) {
   const navigate = useNavigate()
   const location = useLocation()
+  const qc = useQueryClient()
   const { me } = useAuth()
   const { showToast } = useToast()
-  const outlet = useOutletContext<{ onVagaChange?: () => void } | null>()
   const isRh = me?.role === 'RH'
 
-  const [vaga, setVaga] = useState<Vaga | null>(null)
-  const [historico, setHistorico] = useState<VagaHistorico[]>([])
-  const [error, setError] = useState(false)
+  const { data: vaga, isError: error } = useVaga(id)
+  const { data: historico = [] } = useVagaHistorico(id)
   const [editando, setEditando] = useState(false)
   const [setores, setSetores] = useState<Setor[]>([])
   const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | null>(null)
@@ -202,36 +207,16 @@ export function VagaDetalheModal() {
 
   const recarregar = useCallback(
     (atualizada: Vaga) => {
-      setVaga(atualizada)
-      getVagaHistorico(atualizada.id).then(setHistorico).catch(() => undefined)
-      outlet?.onVagaChange?.()
+      qc.setQueryData(queryKeys.vaga(atualizada.id), atualizada)
+      qc.setQueryData<Vaga[]>(queryKeys.vagasList, (old) =>
+        old?.map((v) => (v.id === atualizada.id ? atualizada : v)),
+      )
+      qc.invalidateQueries({ queryKey: queryKeys.vagaHistorico(atualizada.id) })
+      qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+      qc.invalidateQueries({ queryKey: queryKeys.candidatos })
     },
-    [outlet],
+    [qc],
   )
-
-  useEffect(() => {
-    if (!id) return
-    let active = true
-    setVaga(null)
-    setError(false)
-    setEditando(false)
-    setAcaoPendente(null)
-    setMostrarChat(false)
-
-    Promise.all([getVaga(id), getVagaHistorico(id)])
-      .then(([v, h]) => {
-        if (!active) return
-        setVaga(v)
-        setHistorico(h)
-      })
-      .catch(() => {
-        if (active) setError(true)
-      })
-
-    return () => {
-      active = false
-    }
-  }, [id])
 
   function iniciarEdicao() {
     if (!vaga) return
@@ -357,7 +342,9 @@ export function VagaDetalheModal() {
     try {
       const n = await cobrarVaga(id, msg || undefined)
       showToast(`Cobrança enviada para ${n} pessoa(s)`)
-      getVaga(id).then(recarregar).catch(() => undefined)
+      qc.invalidateQueries({ queryKey: queryKeys.vaga(id) })
+      qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+      qc.invalidateQueries({ queryKey: queryKeys.vagaHistorico(id) })
     } catch {
       showToast('Não foi possível cobrar (você pode ser o responsável desta etapa)', 'error')
     } finally {
@@ -369,8 +356,6 @@ export function VagaDetalheModal() {
     const base = location.pathname.replace(/\/vaga\/.*$/, '')
     navigate(base)
   }
-
-  if (!id) return null
 
   const statusMeta = vaga ? VAGA_STATUS_META[vaga.status] : null
   const acoes = vaga

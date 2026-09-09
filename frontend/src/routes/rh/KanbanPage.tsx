@@ -1,83 +1,52 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { Settings } from 'lucide-react'
-import { listEtapas } from '../../api/etapas'
-import { listCandidatos, moverEtapa } from '../../api/candidatos'
-import { listVagas, moverVagaEtapa, transicionarVaga } from '../../api/vagas'
 import { KanbanBoard } from '../../components/kanban/KanbanBoard'
 import { EtapaColumnEditor } from '../../components/kanban/EtapaColumnEditor'
-import { useToast } from '../../context/ToastContext'
-import { statusLabel } from '../../constants/vagaStatus'
-import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
+import { useEtapas } from '../../api/hooks/useEtapas'
+import { useCandidatos, useMoverEtapaCandidato } from '../../api/hooks/useCandidatos'
+import { useVagas, useMoverVagaEtapa, useTransicionarVaga } from '../../api/hooks/useVagas'
+import { queryKeys } from '../../api/queryKeys'
+import type { EtapaKanban, Vaga, VagaStatus } from '../../types'
 
 export function KanbanPage() {
-  const { showToast } = useToast()
   const navigate = useNavigate()
-  const [etapas, setEtapas] = useState<EtapaKanban[]>([])
-  const [candidatos, setCandidatos] = useState<Candidato[]>([])
-  const [vagas, setVagas] = useState<Vaga[]>([])
-  const [loading, setLoading] = useState(true)
+  const qc = useQueryClient()
   const [editorOpen, setEditorOpen] = useState(false)
 
-  const load = useCallback(async () => {
-    const [etapasData, candidatosData, vagasData] = await Promise.all([
-      listEtapas(),
-      listCandidatos(),
-      listVagas(),
-    ])
-    setEtapas(etapasData)
-    setCandidatos(candidatosData)
-    setVagas(vagasData)
-  }, [])
+  const etapasQuery = useEtapas()
+  const candidatosQuery = useCandidatos()
+  const vagasQuery = useVagas()
+  const etapas = etapasQuery.data ?? []
+  const candidatos = candidatosQuery.data ?? []
+  const vagas = vagasQuery.data ?? []
+  const loading = etapasQuery.isLoading || candidatosQuery.isLoading || vagasQuery.isLoading
 
-  useEffect(() => {
-    load().finally(() => setLoading(false))
-  }, [load])
+  const transicionarVaga = useTransicionarVaga()
+  const moverVagaEtapa = useMoverVagaEtapa()
+  const moverEtapaCandidato = useMoverEtapaCandidato()
 
-  async function handleMoveCandidato(candidatoId: string, etapaId: string) {
-    const anterior = candidatos
-    const novaEtapa = etapas.find((e) => e.id === etapaId)
-    if (novaEtapa) {
-      setCandidatos((prev) =>
-        prev.map((c) => (c.id === candidatoId ? { ...c, etapa_atual: novaEtapa } : c)),
-      )
-    }
-    try {
-      await moverEtapa(candidatoId, etapaId)
-    } catch {
-      setCandidatos(anterior)
-    }
+  function handleMoveCandidato(candidatoId: string, etapaId: string) {
+    moverEtapaCandidato.mutate({ id: candidatoId, etapaId })
   }
 
-  async function handleMoveVaga(vagaId: string, status: VagaStatus) {
-    const anterior = vagas
-    setVagas((prev) => prev.map((v) => (v.id === vagaId ? { ...v, status } : v)))
-    try {
-      const atualizada = await transicionarVaga(vagaId, status)
-      setVagas((prev) => prev.map((v) => (v.id === vagaId ? atualizada : v)))
-      showToast(`Vaga movida para "${statusLabel(status)}"`)
-      if (status === 'EM_TRIAGEM') load()
-    } catch {
-      setVagas(anterior)
-      showToast('Não foi possível mover a vaga', 'error')
-    }
+  function handleMoveVaga(vagaId: string, status: VagaStatus) {
+    transicionarVaga.mutate({ id: vagaId, para: status })
   }
 
-  async function handleMoveVagaEtapa(vagaId: string, etapaId: string) {
-    const anterior = vagas
-    const etapa = etapas.find((e) => e.id === etapaId) ?? null
-    setVagas((prev) => prev.map((v) => (v.id === vagaId ? { ...v, etapa_atual: etapa } : v)))
-    try {
-      const atualizada = await moverVagaEtapa(vagaId, etapaId)
-      setVagas((prev) => prev.map((v) => (v.id === vagaId ? atualizada : v)))
-    } catch {
-      setVagas(anterior)
-      showToast('Não foi possível mover o card da vaga', 'error')
-    }
+  function handleMoveVagaEtapa(vagaId: string, etapaId: string) {
+    moverVagaEtapa.mutate({ id: vagaId, etapaId })
   }
 
   function handleRegistrarCandidato(vaga: Vaga, etapa: EtapaKanban) {
     navigate(`/rh/candidatos/novo?vaga=${vaga.id}&etapa=${etapa.id}`)
+  }
+
+  function handleEtapasChange() {
+    qc.invalidateQueries({ queryKey: queryKeys.etapas })
+    qc.invalidateQueries({ queryKey: queryKeys.vagas })
+    qc.invalidateQueries({ queryKey: queryKeys.candidatos })
   }
 
   return (
@@ -115,10 +84,14 @@ export function KanbanPage() {
       )}
 
       {editorOpen && (
-        <EtapaColumnEditor etapas={etapas} onClose={() => setEditorOpen(false)} onChange={load} />
+        <EtapaColumnEditor
+          etapas={etapas}
+          onClose={() => setEditorOpen(false)}
+          onChange={handleEtapasChange}
+        />
       )}
 
-      <Outlet context={{ onVagaChange: load }} />
+      <Outlet />
     </div>
   )
 }

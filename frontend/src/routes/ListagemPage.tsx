@@ -1,9 +1,13 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { Trash2, Pencil, Eye, EyeOff, X } from 'lucide-react'
-import { listVagas, listSetores, deleteVaga } from '../api/vagas'
-import { listCandidatos, deleteCandidato } from '../api/candidatos'
-import { listUsuarios, deleteUsuario, deleteSetor, updateSetor, updateUsuario } from '../api/accounts'
+import { deleteSetor, deleteUsuario, updateSetor, updateUsuario } from '../api/accounts'
+import { queryKeys } from '../api/queryKeys'
+import { useVagas, useDeleteVaga } from '../api/hooks/useVagas'
+import { useCandidatos, useDeleteCandidato } from '../api/hooks/useCandidatos'
+import { useSetores } from '../api/hooks/useSetores'
+import { useUsuarios } from '../api/hooks/useUsuarios'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { ConfirmDialog } from '../components/common/ConfirmDialog'
@@ -18,7 +22,7 @@ function SetorEditModal({
 }: {
   setor: Setor
   onClose: () => void
-  onSaved: (setor: Setor) => void
+  onSaved: () => void
 }) {
   const { showToast } = useToast()
   const [nome, setNome] = useState(setor.nome)
@@ -30,8 +34,8 @@ function SetorEditModal({
     setError(null)
     setSubmitting(true)
     try {
-      const atualizado = await updateSetor(setor.id, { nome })
-      onSaved(atualizado)
+      await updateSetor(setor.id, { nome })
+      onSaved()
       onClose()
       showToast('Setor salvo com sucesso')
     } catch {
@@ -84,7 +88,7 @@ function UsuarioEditModal({
   usuario: Usuario
   setores: Setor[]
   onClose: () => void
-  onSaved: (usuario: Usuario) => void
+  onSaved: () => void
 }) {
   const { showToast } = useToast()
   const [username, setUsername] = useState(usuario.username)
@@ -104,8 +108,7 @@ function UsuarioEditModal({
         ...(password ? { password } : {}),
         ...(setorId ? { setor_id: setorId } : {}),
       })
-      const setorAtualizado = setores.find((s) => s.id === setorId) ?? usuario.setor
-      onSaved({ ...usuario, username, setor: setorAtualizado })
+      onSaved()
       onClose()
       showToast('Usuário salvo com sucesso')
     } catch {
@@ -195,13 +198,24 @@ export function ListagemPage() {
   const location = useLocation()
   const { me } = useAuth()
   const { showToast } = useToast()
+  const qc = useQueryClient()
   const isRh = me?.role === 'RH'
 
-  const [vagas, setVagas] = useState<Vaga[]>([])
-  const [candidatos, setCandidatos] = useState<Candidato[]>([])
-  const [setores, setSetores] = useState<Setor[]>([])
-  const [usuarios, setUsuarios] = useState<Usuario[]>([])
-  const [loading, setLoading] = useState(true)
+  const vagasQuery = useVagas()
+  const candidatosQuery = useCandidatos()
+  const setoresQuery = useSetores(Boolean(isRh))
+  const usuariosQuery = useUsuarios(Boolean(isRh))
+
+  const vagas = vagasQuery.data ?? []
+  const candidatos = candidatosQuery.data ?? []
+  const setores = setoresQuery.data ?? []
+  const usuarios = usuariosQuery.data ?? []
+  const loading =
+    vagasQuery.isLoading ||
+    candidatosQuery.isLoading ||
+    setoresQuery.isLoading ||
+    usuariosQuery.isLoading
+
   const [mostrarEncerradas, setMostrarEncerradas] = useState(false)
 
   const vagasEncerradas = vagas.filter(
@@ -220,60 +234,30 @@ export function ListagemPage() {
   const [aba, setAba] = useState<Aba>('candidatos')
   const [usuarioParaEditar, setUsuarioParaEditar] = useState<Usuario | null>(null)
 
-  const load = useCallback(async () => {
-    const [v, c] = await Promise.all([listVagas(), listCandidatos()])
-    setVagas(v)
-    setCandidatos(c)
-    if (isRh) {
-      const [s, u] = await Promise.all([listSetores(), listUsuarios()])
-      setSetores(s)
-      setUsuarios(u)
-    }
-  }, [isRh])
+  const deleteVagaMut = useDeleteVaga()
+  const deleteCandidatoMut = useDeleteCandidato()
 
-  useEffect(() => {
-    load().finally(() => setLoading(false))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  async function handleConfirmDeleteVaga() {
+  function handleConfirmDeleteVaga() {
     if (!vagaParaExcluir) return
-    const id = vagaParaExcluir.id
+    deleteVagaMut.mutate(vagaParaExcluir.id)
     setVagaParaExcluir(null)
-    setVagas((prev) => prev.filter((v) => v.id !== id))
-    try {
-      await deleteVaga(id)
-      showToast('Vaga excluída com sucesso')
-    } catch {
-      load()
-      showToast('Não foi possível excluir a vaga', 'error')
-    }
   }
 
-  async function handleConfirmDeleteCandidato() {
+  function handleConfirmDeleteCandidato() {
     if (!candidatoParaExcluir) return
-    const id = candidatoParaExcluir.id
+    deleteCandidatoMut.mutate(candidatoParaExcluir.id)
     setCandidatoParaExcluir(null)
-    setCandidatos((prev) => prev.filter((c) => c.id !== id))
-    try {
-      await deleteCandidato(id)
-      showToast('Candidato excluído com sucesso')
-    } catch {
-      load()
-      showToast('Não foi possível excluir o candidato', 'error')
-    }
   }
 
   async function handleConfirmDeleteSetor() {
     if (!setorParaExcluir) return
     const id = setorParaExcluir.id
     setSetorParaExcluir(null)
-    setSetores((prev) => prev.filter((s) => s.id !== id))
     try {
       await deleteSetor(id)
+      qc.invalidateQueries({ queryKey: queryKeys.setores })
       showToast('Setor excluído com sucesso')
     } catch {
-      load()
       showToast('Não foi possível excluir o setor', 'error')
     }
   }
@@ -282,12 +266,11 @@ export function ListagemPage() {
     if (!usuarioParaExcluir) return
     const id = usuarioParaExcluir.id
     setUsuarioParaExcluir(null)
-    setUsuarios((prev) => prev.filter((u) => u.id !== id))
     try {
       await deleteUsuario(id)
+      qc.invalidateQueries({ queryKey: queryKeys.usuarios })
       showToast('Usuário excluído com sucesso')
     } catch {
-      load()
       showToast('Não foi possível excluir o usuário', 'error')
     }
   }
@@ -626,9 +609,7 @@ export function ListagemPage() {
         <SetorEditModal
           setor={setorParaEditar}
           onClose={() => setSetorParaEditar(null)}
-          onSaved={(atualizado) =>
-            setSetores((prev) => prev.map((s) => (s.id === atualizado.id ? atualizado : s)))
-          }
+          onSaved={() => qc.invalidateQueries({ queryKey: queryKeys.setores })}
         />
       )}
 
@@ -637,9 +618,7 @@ export function ListagemPage() {
           usuario={usuarioParaEditar}
           setores={setores}
           onClose={() => setUsuarioParaEditar(null)}
-          onSaved={(atualizado) =>
-            setUsuarios((prev) => prev.map((u) => (u.id === atualizado.id ? atualizado : u)))
-          }
+          onSaved={() => qc.invalidateQueries({ queryKey: queryKeys.usuarios })}
         />
       )}
 

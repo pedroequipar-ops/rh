@@ -1,43 +1,24 @@
-import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { X } from 'lucide-react'
-import { getCandidato } from '../../api/candidatos'
-import type { Candidato } from '../../types'
+import { useCandidato } from '../../api/hooks/useCandidatos'
 import { CandidatoInfoPanel } from './CandidatoInfoPanel'
 import { ChatPanel } from './ChatPanel'
 
 export function CandidatoModal() {
   const { id } = useParams<{ id: string }>()
+  if (!id) return null
+  return <CandidatoModalInner key={id} id={id} />
+}
+
+function CandidatoModalInner({ id }: { id: string }) {
   const navigate = useNavigate()
   const location = useLocation()
-  const [candidato, setCandidato] = useState<Candidato | null>(null)
-  const [error, setError] = useState(false)
-
-  useEffect(() => {
-    if (!id) return
-    let active = true
-    setCandidato(null)
-    setError(false)
-
-    getCandidato(id)
-      .then((c) => {
-        if (active) setCandidato(c)
-      })
-      .catch(() => {
-        if (active) setError(true)
-      })
-
-    return () => {
-      active = false
-    }
-  }, [id])
+  const { data: candidato, isError: error } = useCandidato(id)
 
   function handleClose() {
     const base = location.pathname.replace(/\/candidato\/.*$/, '')
     navigate(base)
   }
-
-  if (!id) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={handleClose}>

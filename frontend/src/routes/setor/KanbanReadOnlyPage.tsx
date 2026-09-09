@@ -1,31 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import { listEtapas } from '../../api/etapas'
-import { listCandidatos } from '../../api/candidatos'
-import { listVagas } from '../../api/vagas'
 import { KanbanBoard } from '../../components/kanban/KanbanBoard'
-import type { Candidato, EtapaKanban, Vaga } from '../../types'
+import { useEtapas } from '../../api/hooks/useEtapas'
+import { useCandidatos } from '../../api/hooks/useCandidatos'
+import { useVagas } from '../../api/hooks/useVagas'
 
 export function KanbanReadOnlyPage() {
-  const [etapas, setEtapas] = useState<EtapaKanban[]>([])
-  const [candidatos, setCandidatos] = useState<Candidato[]>([])
-  const [vagas, setVagas] = useState<Vaga[]>([])
-  const [loading, setLoading] = useState(true)
-
-  const load = useCallback(async () => {
-    const [etapasData, candidatosData, vagasData] = await Promise.all([
-      listEtapas(),
-      listCandidatos(),
-      listVagas(),
-    ])
-    setEtapas(etapasData)
-    setCandidatos(candidatosData)
-    setVagas(vagasData)
-  }, [])
-
-  useEffect(() => {
-    load().finally(() => setLoading(false))
-  }, [load])
+  const etapasQuery = useEtapas()
+  const candidatosQuery = useCandidatos()
+  const vagasQuery = useVagas()
+  const etapas = etapasQuery.data ?? []
+  const candidatos = candidatosQuery.data ?? []
+  const vagas = vagasQuery.data ?? []
+  const loading = etapasQuery.isLoading || candidatosQuery.isLoading || vagasQuery.isLoading
 
   return (
     <div className="flex h-[calc(100vh-57px)] flex-col">
@@ -48,7 +34,7 @@ export function KanbanReadOnlyPage() {
         </div>
       )}
 
-      <Outlet context={{ onVagaChange: load }} />
+      <Outlet />
     </div>
   )
 }
