@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate, useParams, useLocation, useOutletContext } from 'react-router-dom'
 import { Bell, Check, Flame, History, MessageCircle, Pencil, X } from 'lucide-react'
 import clsx from 'clsx'
@@ -171,6 +171,7 @@ export function VagaDetalheModal() {
   const [confirmar, setConfirmar] = useState<VagaStatus | null>(null)
   const [busy, setBusy] = useState(false)
   const [mostrarChat, setMostrarChat] = useState(false)
+  const chatRef = useRef<HTMLDivElement>(null)
 
   // form de edição
   const [titulo, setTitulo] = useState('')
@@ -259,6 +260,12 @@ export function VagaDetalheModal() {
     if (params.get('editar') === '1') iniciarEdicao()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaga])
+
+  useEffect(() => {
+    if (mostrarChat) {
+      chatRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    }
+  }, [mostrarChat])
 
   async function handleSalvar(event: FormEvent) {
     event.preventDefault()
@@ -374,7 +381,7 @@ export function VagaDetalheModal() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/40 p-4 py-10"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 p-4"
       onClick={handleClose}
     >
       <div className="relative w-full max-w-3xl" onClick={(e) => e.stopPropagation()}>
@@ -385,14 +392,14 @@ export function VagaDetalheModal() {
           <X size={18} />
         </button>
 
-        <div className="w-full rounded-lg bg-white p-6 shadow-2xl">
+        <div className="flex max-h-[85vh] w-full flex-col overflow-hidden rounded-lg bg-white p-6 shadow-2xl">
           {error && <p className="text-sm text-red-500">Não foi possível carregar esta vaga.</p>}
           {!error && !vaga && <p className="text-sm text-slate-400">Carregando...</p>}
 
           {!error && vaga && !editando && (
-            <div className="grid gap-6 md:grid-cols-[1fr_260px]">
-              {/* coluna principal */}
-              <div className="space-y-5">
+            <div className="grid min-h-0 flex-1 gap-6 md:grid-cols-[1fr_260px]">
+              {/* coluna principal (rola) */}
+              <div className="scrollbar-thin min-h-0 space-y-5 overflow-y-auto pr-2">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <h2 className="text-lg font-semibold text-slate-800">{vaga.titulo}</h2>
@@ -533,8 +540,8 @@ export function VagaDetalheModal() {
                 </div>
               </div>
 
-              {/* painel de ações */}
-              <div className="space-y-3">
+              {/* painel de ações (fixo) */}
+              <div className="scrollbar-thin min-h-0 space-y-3 overflow-y-auto">
               <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
                 <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">Ações</h3>
 
@@ -670,7 +677,10 @@ export function VagaDetalheModal() {
                 <MessageCircle size={13} /> Chat com o setor
               </button>
               {mostrarChat && (
-                <div className="h-60 overflow-hidden rounded-lg border border-slate-200 bg-white">
+                <div
+                  ref={chatRef}
+                  className="h-80 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white"
+                >
                   <ChatPanel kind="vaga" id={vaga.id} />
                 </div>
               )}
@@ -679,7 +689,10 @@ export function VagaDetalheModal() {
           )}
 
           {!error && vaga && editando && (
-            <form onSubmit={handleSalvar} className="space-y-4">
+            <form
+              onSubmit={handleSalvar}
+              className="scrollbar-thin min-h-0 flex-1 space-y-4 overflow-y-auto pr-2"
+            >
               <h2 className="text-lg font-semibold text-slate-800">Editar vaga</h2>
 
               <div>
