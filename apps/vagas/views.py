@@ -1,12 +1,11 @@
 from django.utils import timezone
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.models import Company, User
 from apps.core.permissions import HasFunctionPermission
 from utils.utils import capture_company_id
 
@@ -15,7 +14,6 @@ from .models import EtapaKanban, Vaga, VagaNotificacao
 from .repositories.etapa_repository import EtapaRepository
 from .repositories.vaga_repository import VagaRepository
 from .serializers import (
-    CompanyConfigSerializer,
     EtapaKanbanReordenarSerializer,
     EtapaKanbanSerializer,
     VagaAprovarSerializer,
@@ -106,20 +104,20 @@ class VagaViewSet(viewsets.ModelViewSet):
             qs = self.repo.by_status(qs, status_param.split(","))
         return qs
 
-    def _status_inicial(self, user, company):
-        if user.role == "SETOR" and company.exige_aprovacao_vaga:
+    def _status_inicial(self, user):
+        # Vaga solicitada pelo setor sempre passa por aprovação do RH.
+        if user.role == "SETOR":
             return Vaga.Status.SOLICITADA
         return Vaga.Status.APROVADA
 
     def perform_create(self, serializer):
         company_id = capture_company_id(self.request)
         user = self.request.user
-        company = Company.objects.get(id=company_id)
         extra = {"company_id": company_id, "criado_por": user}
         if user.role == "SETOR":
             extra["setor_id"] = user.setor_id
 
-        inicial = self._status_inicial(user, company)
+        inicial = self._status_inicial(user)
         now = timezone.now()
         extra["status"] = inicial
         extra["solicitada_em"] = now
@@ -232,24 +230,6 @@ class VagaViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.soft_delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class CompanyConfigView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        company = Company.objects.get(id=capture_company_id(request))
-        return Response(CompanyConfigSerializer(company).data)
-
-    def patch(self, request):
-        user = request.user
-        if not (user.is_superuser or user.role == User.Role.RH):
-            raise PermissionDenied("Somente RH pode alterar a configuração.")
-        company = Company.objects.get(id=capture_company_id(request))
-        ser = CompanyConfigSerializer(company, data=request.data, partial=True)
-        ser.is_valid(raise_exception=True)
-        ser.save()
-        return Response(ser.data)
 
 
 class VagaNotificacaoListView(generics.ListAPIView):

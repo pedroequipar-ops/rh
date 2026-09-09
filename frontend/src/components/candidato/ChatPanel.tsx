@@ -4,14 +4,15 @@ import clsx from 'clsx'
 import { listMensagens, marcarMensagensComoLidas } from '../../api/chat'
 import { tokenStorage } from '../../api/client'
 import { useAuth } from '../../context/AuthContext'
-import { ChatSocket, type ChatSocketStatus } from '../../ws/chatSocket'
+import { ChatSocket, type ChatKind, type ChatSocketStatus } from '../../ws/chatSocket'
 import type { ChatMensagem } from '../../types'
 
 interface ChatPanelProps {
-  candidatoId: string
+  kind: ChatKind
+  id: string
 }
 
-export function ChatPanel({ candidatoId }: ChatPanelProps) {
+export function ChatPanel({ kind, id }: ChatPanelProps) {
   const { me } = useAuth()
   const [messages, setMessages] = useState<ChatMensagem[]>([])
   const [status, setStatus] = useState<ChatSocketStatus>('connecting')
@@ -25,7 +26,7 @@ export function ChatPanel({ candidatoId }: ChatPanelProps) {
 
   useEffect(() => {
     let active = true
-    listMensagens(candidatoId)
+    listMensagens(kind, id)
       .then(({ mensagens, temMaisAntigas: hasMore, proximaPagina }) => {
         if (!active) return
         setMessages(mensagens)
@@ -41,7 +42,8 @@ export function ChatPanel({ candidatoId }: ChatPanelProps) {
     if (!token || !companyId) return
 
     const socket = new ChatSocket({
-      candidatoId,
+      kind,
+      id,
       token,
       companyId,
       onStatusChange: setStatus,
@@ -49,7 +51,7 @@ export function ChatPanel({ candidatoId }: ChatPanelProps) {
         const msg = data as ChatMensagem
         if (msg?.id && msg?.texto) {
           setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]))
-          marcarMensagensComoLidas(candidatoId).catch(() => {})
+          marcarMensagensComoLidas(kind, id).catch(() => {})
         }
       },
     })
@@ -61,7 +63,7 @@ export function ChatPanel({ candidatoId }: ChatPanelProps) {
       socket.close()
       socketRef.current = null
     }
-  }, [candidatoId])
+  }, [kind, id])
 
   const lastMessageId = messages[messages.length - 1]?.id ?? null
   useEffect(() => {
@@ -76,7 +78,8 @@ export function ChatPanel({ candidatoId }: ChatPanelProps) {
     const previousScrollHeight = container?.scrollHeight ?? 0
     try {
       const { mensagens, temMaisAntigas: hasMore, proximaPagina } = await listMensagens(
-        candidatoId,
+        kind,
+        id,
         proximaPaginaRef.current,
       )
       setMessages((prev) => {

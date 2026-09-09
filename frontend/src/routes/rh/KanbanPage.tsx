@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { Settings, SlidersHorizontal } from 'lucide-react'
+import { Settings } from 'lucide-react'
 import { listEtapas } from '../../api/etapas'
 import { listCandidatos, moverEtapa } from '../../api/candidatos'
 import { listVagas, moverVagaEtapa, transicionarVaga } from '../../api/vagas'
 import { KanbanBoard } from '../../components/kanban/KanbanBoard'
 import { EtapaColumnEditor } from '../../components/kanban/EtapaColumnEditor'
-import { ConfigVagasModal } from '../../components/vaga/ConfigVagasModal'
 import { useToast } from '../../context/ToastContext'
 import { statusLabel } from '../../constants/vagaStatus'
 import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
@@ -19,7 +18,6 @@ export function KanbanPage() {
   const [vagas, setVagas] = useState<Vaga[]>([])
   const [loading, setLoading] = useState(true)
   const [editorOpen, setEditorOpen] = useState(false)
-  const [configOpen, setConfigOpen] = useState(false)
 
   const load = useCallback(async () => {
     const [etapasData, candidatosData, vagasData] = await Promise.all([
@@ -88,13 +86,6 @@ export function KanbanPage() {
         <h1 className="text-lg font-semibold text-slate-800">Fluxo de vagas e candidatos</h1>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setConfigOpen(true)}
-            className="flex items-center gap-1.5 rounded border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
-          >
-            <SlidersHorizontal size={14} />
-            Config. de vagas
-          </button>
-          <button
             onClick={() => setEditorOpen(true)}
             className="flex items-center gap-1.5 rounded border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
           >
@@ -126,7 +117,6 @@ export function KanbanPage() {
       {editorOpen && (
         <EtapaColumnEditor etapas={etapas} onClose={() => setEditorOpen(false)} onChange={load} />
       )}
-      {configOpen && <ConfigVagasModal onClose={() => setConfigOpen(false)} />}
 
       <Outlet context={{ onVagaChange: load }} />
     </div>

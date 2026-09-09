@@ -9,7 +9,7 @@ class ChatMensagemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChatMensagem
-        fields = ["id", "candidato_id", "autor", "autor_id", "texto", "created_at"]
+        fields = ["id", "candidato_id", "vaga_id", "autor", "autor_id", "texto", "created_at"]
         read_only_fields = fields
 
 
@@ -19,6 +19,13 @@ class CandidatoNaoLidasSerializer(serializers.Serializer):
     quantidade = serializers.IntegerField()
 
 
+class VagaNaoLidasSerializer(serializers.Serializer):
+    vaga_id = serializers.UUIDField()
+    vaga_titulo = serializers.CharField()
+    quantidade = serializers.IntegerField()
+
+
 class ChatNaoLidasResponseSerializer(serializers.Serializer):
     total = serializers.IntegerField()
     candidatos = CandidatoNaoLidasSerializer(many=True)
+    vagas = VagaNaoLidasSerializer(many=True)

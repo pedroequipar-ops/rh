@@ -2,13 +2,19 @@ from django.db.models import Count
 from django.utils import timezone
 from rest_framework import serializers
 
-from apps.accounts.models import Company, Setor
+from apps.accounts.models import Setor
 from apps.accounts.serializers import SetorSerializer
 
 from . import services
 from .models import EtapaKanban, Vaga, VagaHistoricoStatus, VagaNotificacao
 
 _STATUS_SEM_ATRASO = {Vaga.Status.EM_TRIAGEM, Vaga.Status.PREENCHIDA, Vaga.Status.CANCELADA}
+
+
+def _vaga_atrasada(vaga) -> bool:
+    if not vaga.data_alvo_preenchimento or vaga.status in _STATUS_SEM_ATRASO:
+        return False
+    return vaga.data_alvo_preenchimento < timezone.localdate()
 
 
 class EtapaKanbanSerializer(serializers.ModelSerializer):
@@ -117,9 +123,7 @@ class VagaSerializer(serializers.ModelSerializer):
         return obj.aprovada_por.username if obj.aprovada_por_id else None
 
     def get_atrasada(self, obj):
-        if not obj.data_alvo_preenchimento or obj.status in _STATUS_SEM_ATRASO:
-            return False
-        return obj.data_alvo_preenchimento < timezone.localdate()
+        return _vaga_atrasada(obj)
 
     def get_total_candidatos(self, obj):
         anotado = getattr(obj, "_n_cand", None)
@@ -153,6 +157,51 @@ class VagaSerializer(serializers.ModelSerializer):
         return services.transicoes_disponiveis(obj, request.user)
 
 
+class VagaResumoSerializer(serializers.ModelSerializer):
+    """Dados de fluxo/prazo/datas da vaga para exibir dentro do candidato
+    (etapas de triagem em diante, quando o card já virou "pessoa da vaga")."""
+
+    setor = serializers.CharField(source="setor.nome", read_only=True)
+    status_display = serializers.CharField(source="get_status_display", read_only=True)
+    prioridade_display = serializers.CharField(source="get_prioridade_display", read_only=True)
+    motivo_solicitacao_display = serializers.CharField(
+        source="get_motivo_solicitacao_display", read_only=True
+    )
+    atrasada = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Vaga
+        fields = [
+            "id",
+            "titulo",
+            "setor",
+            "quantidade_vagas",
+            "salario",
+            "status",
+            "status_display",
+            "prioridade",
+            "prioridade_display",
+            "urgente",
+            "motivo_solicitacao",
+            "motivo_solicitacao_display",
+            "data_inicio_prevista",
+            "data_alvo_preenchimento",
+            "atrasada",
+            "solicitada_em",
+            "aprovada_em",
+            "publicada_em",
+            "encerrada_em",
+            "triagem_iniciada_em",
+            "cobrada_em",
+            "total_cobrancas",
+            "created_at",
+        ]
+        read_only_fields = fields
+
+    def get_atrasada(self, obj):
+        return _vaga_atrasada(obj)
+
+
 class VagaTransicaoSerializer(serializers.Serializer):
     para = serializers.ChoiceField(choices=Vaga.Status.choices)
     observacao = serializers.CharField(required=False, allow_blank=True, default="")
@@ -181,12 +230,6 @@ class VagaHistoricoStatusSerializer(serializers.ModelSerializer):
         model = VagaHistoricoStatus
         fields = ["id", "de_status", "para_status", "por", "observacao", "created_at"]
         read_only_fields = fields
-
-
-class CompanyConfigSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Company
-        fields = ["exige_aprovacao_vaga"]
 
 
 class VagaNotificacaoSerializer(serializers.ModelSerializer):

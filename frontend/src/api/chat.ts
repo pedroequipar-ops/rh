@@ -1,5 +1,6 @@
 import { apiClient } from './client'
 import type { ChatMensagem, Paginated } from '../types'
+import type { ChatKind } from '../ws/chatSocket'
 
 const MENSAGENS_PAGE_SIZE = 30
 
@@ -9,8 +10,16 @@ export interface MensagensPage {
   proximaPagina: number
 }
 
-export async function listMensagens(candidatoId: string, page = 1): Promise<MensagensPage> {
-  const { data } = await apiClient.get<Paginated<ChatMensagem>>(`/candidatos/${candidatoId}/mensagens/`, {
+function basePath(kind: ChatKind, id: string): string {
+  return kind === 'vaga' ? `/vagas/${id}/mensagens/` : `/candidatos/${id}/mensagens/`
+}
+
+export async function listMensagens(
+  kind: ChatKind,
+  id: string,
+  page = 1,
+): Promise<MensagensPage> {
+  const { data } = await apiClient.get<Paginated<ChatMensagem>>(basePath(kind, id), {
     params: { ordering: '-created_at', page, page_size: MENSAGENS_PAGE_SIZE },
   })
   return {
@@ -20,8 +29,8 @@ export async function listMensagens(candidatoId: string, page = 1): Promise<Mens
   }
 }
 
-export async function marcarMensagensComoLidas(candidatoId: string): Promise<void> {
-  await apiClient.post(`/candidatos/${candidatoId}/mensagens/marcar-lida/`)
+export async function marcarMensagensComoLidas(kind: ChatKind, id: string): Promise<void> {
+  await apiClient.post(`${basePath(kind, id)}marcar-lida/`)
 }
 
 export interface CandidatoNaoLidas {
@@ -30,9 +39,16 @@ export interface CandidatoNaoLidas {
   quantidade: number
 }
 
+export interface VagaNaoLidas {
+  vaga_id: string
+  vaga_titulo: string
+  quantidade: number
+}
+
 export interface NaoLidasResumo {
   total: number
   candidatos: CandidatoNaoLidas[]
+  vagas: VagaNaoLidas[]
 }
 
 export async function getNaoLidas(): Promise<NaoLidasResumo> {

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { useNavigate, useParams, useLocation, useOutletContext } from 'react-router-dom'
-import { Bell, Flame, History, Pencil, X } from 'lucide-react'
+import { Bell, Flame, History, MessageCircle, Pencil, X } from 'lucide-react'
 import clsx from 'clsx'
+import { ChatPanel } from '../candidato/ChatPanel'
 import {
   aprovarVaga,
   cobrarVaga,
@@ -34,6 +35,11 @@ const ACAO_LABEL: Partial<Record<VagaStatus, string>> = {
   CANCELADA: 'Cancelar vaga',
   PREENCHIDA: 'Marcar preenchida',
   RECUSADA: 'Recusar',
+}
+
+const QTD_FASE_LABEL: Partial<Record<VagaStatus, string>> = {
+  RECEBENDO: 'Candidaturas recebidas',
+  EM_TRIAGEM: 'Pessoas nesta fase',
 }
 
 function fmtData(iso: string | null): string {
@@ -70,6 +76,7 @@ export function VagaDetalheModal() {
   const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | null>(null)
   const [confirmar, setConfirmar] = useState<VagaStatus | null>(null)
   const [busy, setBusy] = useState(false)
+  const [mostrarChat, setMostrarChat] = useState(false)
 
   // form de edição
   const [titulo, setTitulo] = useState('')
@@ -114,6 +121,7 @@ export function VagaDetalheModal() {
     setError(false)
     setEditando(false)
     setAcaoPendente(null)
+    setMostrarChat(false)
 
     Promise.all([getVaga(id), getVagaHistorico(id)])
       .then(([v, h]) => {
@@ -175,7 +183,7 @@ export function VagaDetalheModal() {
         motivo_solicitacao: motivoSolicitacao,
         data_inicio_prevista: dataInicio || null,
         data_alvo_preenchimento: dataAlvo || null,
-        ...(vaga?.status === 'EM_TRIAGEM' ? { qtd_pessoas_fase: qtdPessoasFase } : {}),
+        ...(vaga && QTD_FASE_LABEL[vaga.status] ? { qtd_pessoas_fase: qtdPessoasFase } : {}),
         ...(isRh ? { setor_id: setorId } : {}),
       })
       recarregar(atualizada)
@@ -287,7 +295,27 @@ export function VagaDetalheModal() {
           {error && <p className="text-sm text-red-500">Não foi possível carregar esta vaga.</p>}
           {!error && !vaga && <p className="text-sm text-slate-400">Carregando...</p>}
 
-          {!error && vaga && !editando && (
+          {!error && vaga && !editando && mostrarChat && (
+            <div className="flex h-[560px] flex-col">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="min-w-0">
+                  <h2 className="truncate text-lg font-semibold text-slate-800">{vaga.titulo}</h2>
+                  <p className="text-sm text-slate-500">Conversa com o setor {vaga.setor.nome}</p>
+                </div>
+                <button
+                  onClick={() => setMostrarChat(false)}
+                  className="flex shrink-0 items-center gap-1.5 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+                >
+                  Voltar aos detalhes
+                </button>
+              </div>
+              <div className="min-h-0 flex-1 overflow-hidden rounded-lg border border-slate-200">
+                <ChatPanel kind="vaga" id={vaga.id} />
+              </div>
+            </div>
+          )}
+
+          {!error && vaga && !editando && !mostrarChat && (
             <div className="grid gap-6 md:grid-cols-[1fr_260px]">
               {/* coluna principal */}
               <div className="space-y-5">
@@ -326,12 +354,20 @@ export function VagaDetalheModal() {
                       )}
                     </div>
                   </div>
-                  <button
-                    onClick={iniciarEdicao}
-                    className="flex shrink-0 items-center gap-1.5 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
-                  >
-                    <Pencil size={12} /> Editar
-                  </button>
+                  <div className="flex shrink-0 items-start gap-1.5">
+                    <button
+                      onClick={() => setMostrarChat(true)}
+                      className="flex items-center gap-1.5 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+                    >
+                      <MessageCircle size={12} /> Chat com o setor
+                    </button>
+                    <button
+                      onClick={iniciarEdicao}
+                      className="flex items-center gap-1.5 rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+                    >
+                      <Pencil size={12} /> Editar
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-600">
@@ -339,9 +375,11 @@ export function VagaDetalheModal() {
                   <span>{vaga.salario ? `R$ ${vaga.salario}` : 'Salário não informado'}</span>
                   <span>Início previsto: {fmtData(vaga.data_inicio_prevista)}</span>
                   <span>Prazo p/ preencher: {fmtData(vaga.data_alvo_preenchimento)}</span>
-                  {vaga.status === 'EM_TRIAGEM' && (
+                  {QTD_FASE_LABEL[vaga.status] && (
                     <span>
-                      {vaga.etapa_atual?.nome ?? 'Triagem'}: {vaga.qtd_pessoas_fase} pessoa(s)
+                      {vaga.status === 'EM_TRIAGEM'
+                        ? `${vaga.etapa_atual?.nome ?? 'Triagem'}: ${vaga.qtd_pessoas_fase} pessoa(s)`
+                        : `Candidaturas recebidas: ${vaga.qtd_pessoas_fase}`}
                     </span>
                   )}
                 </div>
@@ -663,10 +701,10 @@ export function VagaDetalheModal() {
                 </div>
               </div>
 
-              {vaga.status === 'EM_TRIAGEM' && (
+              {QTD_FASE_LABEL[vaga.status] && (
                 <div>
                   <label className="mb-1 block text-sm font-medium text-slate-600">
-                    Pessoas nesta fase
+                    {QTD_FASE_LABEL[vaga.status]}
                   </label>
                   <input
                     type="number"

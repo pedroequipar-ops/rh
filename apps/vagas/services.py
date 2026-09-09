@@ -56,6 +56,15 @@ def _is_rh(user) -> bool:
     return bool(user and (user.is_superuser or getattr(user, "role", None) == User.Role.RH))
 
 
+def can_access_vaga(user, vaga) -> bool:
+    """RH/superuser veem qualquer vaga; SETOR só as do próprio setor."""
+    if _is_rh(user):
+        return True
+    if getattr(user, "role", None) == User.Role.SETOR:
+        return str(vaga.setor_id) == str(user.setor_id)
+    return False
+
+
 def _destinos_validos(vaga) -> set:
     destinos = set(ALLOWED_TRANSITIONS.get(vaga.status, set()))
     if vaga.status == S.CONGELADA and vaga.status_pre_congelamento:

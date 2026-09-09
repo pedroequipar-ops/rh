@@ -68,7 +68,7 @@ export function CandidatoModal() {
                 <CandidatoInfoPanel candidato={candidato} />
               </div>
               <div className="h-1/2 w-full md:h-full md:w-2/5">
-                <ChatPanel candidatoId={candidato.id} />
+                <ChatPanel kind="candidato" id={candidato.id} />
               </div>
             </>
           )}

@@ -101,8 +101,30 @@ export interface VagaHistorico {
   created_at: string
 }
 
-export interface CompanyConfig {
-  exige_aprovacao_vaga: boolean
+export interface VagaResumo {
+  id: string
+  titulo: string
+  setor: string
+  quantidade_vagas: number
+  salario: string | number | null
+  status: VagaStatus
+  status_display: string
+  prioridade: VagaPrioridade
+  prioridade_display: string
+  urgente: boolean
+  motivo_solicitacao: string
+  motivo_solicitacao_display: string
+  data_inicio_prevista: string | null
+  data_alvo_preenchimento: string | null
+  atrasada: boolean
+  solicitada_em: string | null
+  aprovada_em: string | null
+  publicada_em: string | null
+  encerrada_em: string | null
+  triagem_iniciada_em: string | null
+  cobrada_em: string | null
+  total_cobrancas: number
+  created_at?: string
 }
 
 export interface Candidato {
@@ -110,6 +132,7 @@ export interface Candidato {
   vaga_id: string
   vaga_titulo: string
   vaga_setor: string
+  vaga: VagaResumo
   etapa_atual: EtapaKanban
   ordem: number
   nome: string
@@ -143,7 +166,8 @@ export interface CandidatoExtraido {
 
 export interface ChatMensagem {
   id: string
-  candidato_id: string
+  candidato_id: string | null
+  vaga_id: string | null
   autor: string
   autor_id: string
   texto: string

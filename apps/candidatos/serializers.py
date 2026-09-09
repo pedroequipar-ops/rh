@@ -3,7 +3,7 @@ from django.core.validators import URLValidator
 from rest_framework import serializers
 
 from apps.vagas.models import EtapaKanban, Vaga
-from apps.vagas.serializers import EtapaAtualSerializer
+from apps.vagas.serializers import EtapaAtualSerializer, VagaResumoSerializer
 
 from .models import Candidato, CandidatoNotificacao
 
@@ -12,6 +12,7 @@ class CandidatoSerializer(serializers.ModelSerializer):
     vaga_id = serializers.PrimaryKeyRelatedField(source="vaga", queryset=Vaga.objects.all())
     vaga_titulo = serializers.CharField(source="vaga.titulo", read_only=True)
     vaga_setor = serializers.CharField(source="vaga.setor.nome", read_only=True)
+    vaga = VagaResumoSerializer(read_only=True)
     etapa_atual = EtapaAtualSerializer(read_only=True)
     etapa_atual_id = serializers.PrimaryKeyRelatedField(
         source="etapa_atual",
@@ -48,6 +49,7 @@ class CandidatoSerializer(serializers.ModelSerializer):
             "vaga_id",
             "vaga_titulo",
             "vaga_setor",
+            "vaga",
             "etapa_atual",
             "etapa_atual_id",
             "ordem",

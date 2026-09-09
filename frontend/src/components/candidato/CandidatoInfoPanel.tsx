@@ -1,13 +1,32 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FileText, Link, Mail, Pencil, Phone } from 'lucide-react'
+import { AlarmClock, Bell, FileText, Flame, Link, Mail, Pencil, Phone } from 'lucide-react'
+import clsx from 'clsx'
 import { getCurriculoUrl } from '../../api/candidatos'
 import { useAuth } from '../../context/AuthContext'
+import { PRIORIDADE_META, VAGA_STATUS_META } from '../../constants/vagaStatus'
 import type { Candidato } from '../../types'
 
 interface CandidatoInfoPanelProps {
   candidato: Candidato
 }
+
+function fmtData(iso: string | null): string {
+  if (!iso) return '—'
+  return new Date(iso).toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  })
+}
+
+const CARIMBOS: { campo: keyof Candidato['vaga']; titulo: string }[] = [
+  { campo: 'solicitada_em', titulo: 'Solicitada' },
+  { campo: 'aprovada_em', titulo: 'Aprovada' },
+  { campo: 'publicada_em', titulo: 'Publicada' },
+  { campo: 'triagem_iniciada_em', titulo: 'Triagem iniciada' },
+  { campo: 'encerrada_em', titulo: 'Candidaturas encerradas' },
+]
 
 type CampoPerfil =
   | 'perfil_formacao'
@@ -79,6 +98,86 @@ export function CandidatoInfoPanel({ candidato }: CandidatoInfoPanelProps) {
             >
               {candidato.linkedin_url}
             </a>
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+          Dados da vaga
+        </h3>
+
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span
+            className={clsx(
+              'rounded border px-2 py-0.5 text-xs font-medium',
+              VAGA_STATUS_META[candidato.vaga.status]?.badge,
+            )}
+          >
+            {candidato.vaga.status_display}
+          </span>
+          <span
+            className={clsx(
+              'rounded border px-2 py-0.5 text-xs font-medium',
+              PRIORIDADE_META[candidato.vaga.prioridade]?.badge,
+            )}
+          >
+            Prioridade {candidato.vaga.prioridade_display}
+          </span>
+          {candidato.vaga.urgente && (
+            <span className="inline-flex items-center gap-1 rounded border border-red-200 bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">
+              <Flame size={12} /> Urgente
+            </span>
+          )}
+          {candidato.vaga.atrasada && (
+            <span className="inline-flex items-center gap-1 rounded border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+              <AlarmClock size={12} /> Atrasada
+            </span>
+          )}
+        </div>
+
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm text-slate-600">
+          <div>
+            <dt className="text-xs text-slate-400">Início previsto</dt>
+            <dd>{fmtData(candidato.vaga.data_inicio_prevista)}</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-slate-400">Prazo p/ preencher</dt>
+            <dd>{fmtData(candidato.vaga.data_alvo_preenchimento)}</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-slate-400">Quantidade</dt>
+            <dd>{candidato.vaga.quantidade_vagas} vaga(s)</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-slate-400">Salário</dt>
+            <dd>{candidato.vaga.salario ? `R$ ${candidato.vaga.salario}` : '—'}</dd>
+          </div>
+          {candidato.vaga.motivo_solicitacao_display && (
+            <div className="col-span-2">
+              <dt className="text-xs text-slate-400">Motivo da solicitação</dt>
+              <dd>{candidato.vaga.motivo_solicitacao_display}</dd>
+            </div>
+          )}
+        </dl>
+
+        <div>
+          <h4 className="mb-1 text-xs font-medium text-slate-500">Linha do tempo</h4>
+          <ol className="space-y-1 border-l border-slate-200 pl-3 text-xs text-slate-600">
+            {CARIMBOS.filter(({ campo }) => candidato.vaga[campo]).map(({ campo, titulo }) => (
+              <li key={campo}>
+                <span className="font-medium text-slate-700">{titulo}</span> ·{' '}
+                {fmtData(candidato.vaga[campo] as string | null)}
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {candidato.vaga.total_cobrancas > 0 && (
+          <p className="flex items-center gap-1.5 text-xs text-slate-500">
+            <Bell size={12} className="text-slate-400" />
+            {candidato.vaga.total_cobrancas} cobrança(s)
+            {candidato.vaga.cobrada_em && ` · última em ${fmtData(candidato.vaga.cobrada_em)}`}
           </p>
         )}
       </div>

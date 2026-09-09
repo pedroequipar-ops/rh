@@ -10,6 +10,7 @@ from apps.candidatos.tests.factories import CandidatoFactory
 from apps.chat.middleware import JWTAuthMiddlewareStack
 from apps.chat.models import ChatMensagem
 from apps.chat.routing import websocket_urlpatterns
+from apps.vagas.tests.factories import VagaFactory
 
 application = JWTAuthMiddlewareStack(URLRouter(websocket_urlpatterns))
 
@@ -89,6 +90,43 @@ async def test_conexao_rejeitada_para_setor_de_outro_setor():
     connected, close_code = await communicator.connect()
     assert connected is False
     assert close_code == 4403
+
+
+def _vaga_ws_path(vaga_id, user, company_id):
+    token = str(AccessToken.for_user(user))
+    return f"/ws/v1/chat/vaga/{vaga_id}/?token={token}&company_id={company_id}"
+
+
+@sync_to_async
+def _setup_vaga_rh():
+    company = CompanyFactory()
+    setor = SetorFactory(company=company)
+    vaga = VagaFactory(company=company, setor=setor)
+    rh = UserFactory(company=company, role=User.Role.RH)
+    return company, vaga, rh
+
+
+@pytest.mark.django_db(transaction=True)
+@pytest.mark.asyncio
+async def test_chat_vaga_conecta_e_persiste_mensagem():
+    company, vaga, rh = await _setup_vaga_rh()
+
+    communicator = WebsocketCommunicator(application, _vaga_ws_path(vaga.id, rh, company.id))
+    connected, _ = await communicator.connect()
+    assert connected
+
+    await communicator.send_json_to({"texto": "Vaga aprovada, pode publicar"})
+    response = await communicator.receive_json_from()
+
+    assert response["texto"] == "Vaga aprovada, pode publicar"
+    assert response["vaga_id"] == str(vaga.id)
+
+    exists = await sync_to_async(
+        ChatMensagem.objects.filter(vaga=vaga, texto="Vaga aprovada, pode publicar").exists
+    )()
+    assert exists
+
+    await communicator.disconnect()
 
 
 @pytest.mark.django_db(transaction=True)

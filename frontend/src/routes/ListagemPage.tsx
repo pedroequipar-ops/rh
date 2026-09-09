@@ -189,6 +189,8 @@ function UsuarioEditModal({
   )
 }
 
+type Aba = 'candidatos' | 'vagas' | 'setores' | 'usuarios'
+
 export function ListagemPage() {
   const location = useLocation()
   const { me } = useAuth()
@@ -215,6 +217,7 @@ export function ListagemPage() {
   const [setorParaExcluir, setSetorParaExcluir] = useState<Setor | null>(null)
   const [usuarioParaExcluir, setUsuarioParaExcluir] = useState<Usuario | null>(null)
   const [setorParaEditar, setSetorParaEditar] = useState<Setor | null>(null)
+  const [aba, setAba] = useState<Aba>('candidatos')
   const [usuarioParaEditar, setUsuarioParaEditar] = useState<Usuario | null>(null)
 
   const load = useCallback(async () => {
@@ -293,9 +296,47 @@ export function ListagemPage() {
     return <p className="p-6 text-sm text-slate-400">Carregando...</p>
   }
 
+  const abas: { id: Aba; label: string; count: number }[] = [
+    { id: 'candidatos', label: 'Candidatos cadastrados', count: candidatos.length },
+    { id: 'vagas', label: 'Vagas ativas', count: vagasAtivas.length },
+    ...(isRh
+      ? ([
+          { id: 'setores', label: 'Setores', count: setores.length },
+          { id: 'usuarios', label: 'Usuários', count: usuarios.length },
+        ] as { id: Aba; label: string; count: number }[])
+      : []),
+  ]
+
   return (
-    <div className="grid grid-cols-1 gap-6 p-4 sm:p-6 lg:h-[calc(100vh-57px)] lg:grid-cols-2 lg:grid-rows-2 lg:overflow-hidden">
-      <section className="flex min-h-0 flex-col">
+    <div className="flex h-[calc(100vh-57px)] flex-col gap-4 p-4 sm:flex-row sm:p-6">
+      <nav className="flex shrink-0 gap-1 overflow-x-auto sm:w-56 sm:flex-col sm:overflow-visible">
+        {abas.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setAba(item.id)}
+            className={clsx(
+              'flex items-center justify-between gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-left text-sm font-medium transition',
+              aba === item.id
+                ? 'bg-violet-100 text-violet-700'
+                : 'text-slate-600 hover:bg-slate-100',
+            )}
+          >
+            {item.label}
+            <span
+              className={clsx(
+                'rounded-full px-1.5 text-xs',
+                aba === item.id ? 'bg-violet-200 text-violet-700' : 'bg-slate-200 text-slate-600',
+              )}
+            >
+              {item.count}
+            </span>
+          </button>
+        ))}
+      </nav>
+
+      <div className="flex min-h-0 flex-1 flex-col">
+      {aba === 'candidatos' && (
+      <section className="flex min-h-0 flex-1 flex-col">
         <h2 className="mb-3 shrink-0 text-sm font-semibold uppercase tracking-wide text-slate-500">
           Candidatos cadastrados ({candidatos.length})
         </h2>
@@ -354,8 +395,10 @@ export function ListagemPage() {
           </div>
         )}
       </section>
+      )}
 
-      <section className="flex min-h-0 flex-col">
+      {aba === 'vagas' && (
+      <section className="flex min-h-0 flex-1 flex-col">
         <div className="mb-3 flex shrink-0 items-center justify-between">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
             Vagas ativas ({vagasAtivas.length})
@@ -446,9 +489,10 @@ export function ListagemPage() {
           </div>
         )}
       </section>
+      )}
 
-      {isRh && (
-        <section className="flex min-h-0 flex-col">
+      {isRh && aba === 'setores' && (
+        <section className="flex min-h-0 flex-1 flex-col">
           <h2 className="mb-3 shrink-0 text-sm font-semibold uppercase tracking-wide text-slate-500">
             Setores ({setores.length})
           </h2>
@@ -492,8 +536,8 @@ export function ListagemPage() {
         </section>
       )}
 
-      {isRh && (
-        <section className="flex min-h-0 flex-col">
+      {isRh && aba === 'usuarios' && (
+        <section className="flex min-h-0 flex-1 flex-col">
           <h2 className="mb-3 shrink-0 text-sm font-semibold uppercase tracking-wide text-slate-500">
             Usuários ({usuarios.length})
           </h2>
@@ -540,6 +584,7 @@ export function ListagemPage() {
           )}
         </section>
       )}
+      </div>
 
       {candidatoParaExcluir && (
         <ConfirmDialog

@@ -140,6 +140,34 @@ def test_setor_nao_pode_criar_candidato(
 
 
 @pytest.mark.django_db
+def test_candidato_expoe_dados_de_fluxo_da_vaga(
+    company_factory, user_factory, candidato_factory
+):
+    from datetime import date
+
+    company = company_factory()
+    candidato = candidato_factory(company=company)
+    candidato.vaga.prioridade = 3
+    candidato.vaga.urgente = True
+    candidato.vaga.data_alvo_preenchimento = date(2020, 1, 1)
+    candidato.vaga.motivo_solicitacao = "SUBSTITUICAO"
+    candidato.vaga.save()
+
+    rh = user_factory(company=company, role=User.Role.RH)
+    r = _client_for(rh, company).get(f"/v1/candidatos/{candidato.id}/")
+
+    assert r.status_code == 200
+    vaga = r.data["vaga"]
+    assert vaga["prioridade_display"] == "Alta"
+    assert vaga["urgente"] is True
+    assert vaga["motivo_solicitacao_display"] == "Substituição"
+    assert vaga["data_alvo_preenchimento"] == "2020-01-01"
+    assert "solicitada_em" in vaga and "triagem_iniciada_em" in vaga
+    # vaga_id continua disponível para escrita/leitura simples
+    assert str(r.data["vaga_id"]) == str(candidato.vaga_id)
+
+
+@pytest.mark.django_db
 def test_rh_move_candidato_de_etapa(
     company_factory, setor_factory, user_factory, etapa_factory, candidato_factory
 ):

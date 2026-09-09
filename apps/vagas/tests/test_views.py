@@ -233,10 +233,8 @@ def test_soft_delete_etapa_nao_aparece_em_objects_mas_existe_em_allobjects(
 
 
 @pytest.mark.django_db
-def test_setor_cria_vaga_com_gate_ligado_fica_solicitada(
-    company_factory, setor_factory, user_factory
-):
-    company = company_factory(exige_aprovacao_vaga=True)
+def test_setor_cria_vaga_fica_solicitada(company_factory, setor_factory, user_factory):
+    company = company_factory()
     setor = setor_factory(company=company)
     setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
     rh = user_factory(company=company, role=User.Role.RH)
@@ -248,21 +246,6 @@ def test_setor_cria_vaga_com_gate_ligado_fica_solicitada(
     assert r.data["status"] == "SOLICITADA"
     assert r.data["solicitada_em"] is not None
     assert VagaNotificacao.objects.filter(destinatario=rh).count() == 1
-
-
-@pytest.mark.django_db
-def test_setor_cria_vaga_com_gate_desligado_fica_aprovada(
-    company_factory, setor_factory, user_factory
-):
-    company = company_factory(exige_aprovacao_vaga=False)
-    setor = setor_factory(company=company)
-    setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
-
-    client = _client_for(setor_user, company)
-    r = client.post("/v1/vagas/", {"titulo": "Vendedor", "quantidade_vagas": 1})
-
-    assert r.status_code == 201
-    assert r.data["status"] == "APROVADA"
 
 
 @pytest.mark.django_db
@@ -572,25 +555,3 @@ def test_patch_qtd_pessoas_fase(company_factory, user_factory, vaga_factory):
     r = client.patch(f"/v1/vagas/{vaga.id}/", {"qtd_pessoas_fase": 20}, format="json")
     assert r.status_code == 200
     assert r.data["qtd_pessoas_fase"] == 20
-
-
-@pytest.mark.django_db
-def test_config_get_e_patch_exige_aprovacao(company_factory, setor_factory, user_factory):
-    company = company_factory(exige_aprovacao_vaga=True)
-    setor = setor_factory(company=company)
-    rh = user_factory(company=company, role=User.Role.RH)
-    setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
-
-    rh_client = _client_for(rh, company)
-    assert rh_client.get("/v1/company/config/").data["exige_aprovacao_vaga"] is True
-
-    patch = rh_client.patch(
-        "/v1/company/config/", {"exige_aprovacao_vaga": False}, format="json"
-    )
-    assert patch.status_code == 200
-    assert patch.data["exige_aprovacao_vaga"] is False
-
-    negado = _client_for(setor_user, company).patch(
-        "/v1/company/config/", {"exige_aprovacao_vaga": True}, format="json"
-    )
-    assert negado.status_code == 403

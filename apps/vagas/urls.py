@@ -2,7 +2,6 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from .views import (
-    CompanyConfigView,
     EtapaKanbanViewSet,
     VagaNotificacaoListView,
     VagaNotificacaoMarcarLidasView,
@@ -15,7 +14,6 @@ router.register("vagas", VagaViewSet, basename="vaga")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("company/config/", CompanyConfigView.as_view(), name="company-config"),
     path(
         "vagas-notificacoes/",
         VagaNotificacaoListView.as_view(),

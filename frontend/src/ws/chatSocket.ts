@@ -1,7 +1,10 @@
 export type ChatSocketStatus = 'connecting' | 'open' | 'closed'
 
+export type ChatKind = 'candidato' | 'vaga'
+
 interface ChatSocketOptions {
-  candidatoId: string
+  kind: ChatKind
+  id: string
   token: string
   companyId: string
   onMessage: (data: unknown) => void
@@ -28,9 +31,9 @@ export class ChatSocket {
   }
 
   private open() {
-    const { candidatoId, token, companyId } = this.options
+    const { kind, id, token, companyId } = this.options
     const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-    const url = `${protocol}://${window.location.host}/ws/v1/chat/candidato/${candidatoId}/?token=${encodeURIComponent(
+    const url = `${protocol}://${window.location.host}/ws/v1/chat/${kind}/${id}/?token=${encodeURIComponent(
       token,
     )}&company_id=${encodeURIComponent(companyId)}`
 
@@ -53,9 +56,7 @@ export class ChatSocket {
 
     ws.onclose = () => {
       this.options.onStatusChange?.('closed')
-      if (!this.closedByClient) {
-        this.scheduleReconnect()
-      }
+      if (!this.closedByClient) this.scheduleReconnect()
     }
 
     ws.onerror = () => {
