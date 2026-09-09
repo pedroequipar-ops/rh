@@ -34,7 +34,8 @@ export function VagaFormPage() {
       .catch(() => setSetores([]))
   }, [isRh])
 
-  async function enviar(rascunho: boolean) {
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault()
     setError(null)
     setSubmitting(true)
     try {
@@ -49,21 +50,15 @@ export function VagaFormPage() {
         motivo_solicitacao: motivoSolicitacao || undefined,
         data_inicio_prevista: dataInicio || null,
         data_alvo_preenchimento: dataAlvo || null,
-        ...(rascunho ? { status: 'RASCUNHO' as const } : {}),
         ...(isRh ? { setor_id: setorId } : {}),
       })
-      showToast(rascunho ? 'Rascunho salvo' : 'Vaga criada com sucesso')
+      showToast('Vaga criada com sucesso')
       navigate(isRh ? '/rh/kanban' : '/setor/kanban')
     } catch {
       setError('Não foi possível criar a vaga. Confira os campos e tente novamente.')
     } finally {
       setSubmitting(false)
     }
-  }
-
-  function handleSubmit(event: FormEvent) {
-    event.preventDefault()
-    enviar(false)
   }
 
   return (
@@ -203,23 +198,13 @@ export function VagaFormPage() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <div className="flex gap-2">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50"
-          >
-            {submitting ? 'Salvando...' : isRh ? 'Criar vaga' : 'Enviar solicitação'}
-          </button>
-          <button
-            type="button"
-            disabled={submitting || !titulo}
-            onClick={() => enviar(true)}
-            className="rounded border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-          >
-            Salvar rascunho
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={submitting}
+          className="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50"
+        >
+          {submitting ? 'Salvando...' : isRh ? 'Criar vaga' : 'Enviar solicitação'}
+        </button>
       </form>
     </div>
   )

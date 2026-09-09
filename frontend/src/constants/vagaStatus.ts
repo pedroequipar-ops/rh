@@ -68,7 +68,6 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
 
 /** Colunas de vaga no kanban, na ordem do fluxo (antes das colunas de candidato). */
 export const FLUXO_STATUSES: VagaStatus[] = [
-  'RASCUNHO',
   'SOLICITADA',
   'RECUSADA',
   'APROVADA',

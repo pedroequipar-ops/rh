@@ -106,9 +106,6 @@ class VagaViewSet(viewsets.ModelViewSet):
         return qs
 
     def _status_inicial(self, user, company):
-        raw = str(self.request.data.get("status") or "").upper()
-        if raw == Vaga.Status.RASCUNHO:
-            return Vaga.Status.RASCUNHO
         if user.role == "SETOR" and company.exige_aprovacao_vaga:
             return Vaga.Status.SOLICITADA
         return Vaga.Status.APROVADA
@@ -124,8 +121,7 @@ class VagaViewSet(viewsets.ModelViewSet):
         inicial = self._status_inicial(user, company)
         now = timezone.now()
         extra["status"] = inicial
-        if inicial != Vaga.Status.RASCUNHO:
-            extra["solicitada_em"] = now
+        extra["solicitada_em"] = now
         if inicial == Vaga.Status.APROVADA:
             extra["aprovada_em"] = now
             if user.role == "RH":

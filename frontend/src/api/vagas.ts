@@ -29,7 +29,6 @@ export interface VagaInput {
   motivo_solicitacao?: string
   data_inicio_prevista?: string | null
   data_alvo_preenchimento?: string | null
-  status?: 'RASCUNHO'
 }
 
 export async function createVaga(input: VagaInput): Promise<Vaga> {

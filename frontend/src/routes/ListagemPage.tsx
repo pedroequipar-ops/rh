@@ -200,6 +200,15 @@ export function ListagemPage() {
   const [setores, setSetores] = useState<Setor[]>([])
   const [usuarios, setUsuarios] = useState<Usuario[]>([])
   const [loading, setLoading] = useState(true)
+  const [mostrarEncerradas, setMostrarEncerradas] = useState(false)
+
+  const vagasEncerradas = vagas.filter(
+    (v) => v.status === 'CANCELADA' || v.status === 'PREENCHIDA',
+  )
+  const vagasAtivas = vagas.filter(
+    (v) => v.status !== 'CANCELADA' && v.status !== 'PREENCHIDA',
+  )
+  const vagasVisiveis = mostrarEncerradas ? vagas : vagasAtivas
 
   const [vagaParaExcluir, setVagaParaExcluir] = useState<Vaga | null>(null)
   const [candidatoParaExcluir, setCandidatoParaExcluir] = useState<Candidato | null>(null)
@@ -347,10 +356,22 @@ export function ListagemPage() {
       </section>
 
       <section className="flex min-h-0 flex-col">
-        <h2 className="mb-3 shrink-0 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Vagas ativas ({vagas.length})
-        </h2>
-        {vagas.length === 0 ? (
+        <div className="mb-3 flex shrink-0 items-center justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+            Vagas ativas ({vagasAtivas.length})
+          </h2>
+          {vagasEncerradas.length > 0 && (
+            <button
+              onClick={() => setMostrarEncerradas((v) => !v)}
+              className="text-xs text-slate-500 hover:text-slate-700 hover:underline"
+            >
+              {mostrarEncerradas
+                ? 'ocultar encerradas'
+                : `+ ${vagasEncerradas.length} encerrada(s)`}
+            </button>
+          )}
+        </div>
+        {vagasVisiveis.length === 0 ? (
           <p className="text-sm text-slate-400">Nenhuma vaga ativa.</p>
         ) : (
           <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto rounded-lg border border-slate-200 bg-white">
@@ -365,7 +386,7 @@ export function ListagemPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {vagas.map((vaga) => (
+                {vagasVisiveis.map((vaga) => (
                   <tr key={vaga.id} className="hover:bg-slate-50">
                     <td className="px-4 py-2.5">
                       <Link
