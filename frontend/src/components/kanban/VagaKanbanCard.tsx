@@ -106,9 +106,7 @@ export function VagaKanbanCardContent({ vaga }: { vaga: Vaga }) {
             </span>
           )}
         </div>
-        {vaga.responsavel && (
-          <Avatar name={vaga.responsavel.username} size="xs" className="shrink-0" />
-        )}
+        <Avatar name={vaga.setor.nome} size="xs" className="shrink-0" />
       </div>
     </>
   )
@@ -118,9 +116,10 @@ interface VagaKanbanCardProps {
   vaga: Vaga
   draggable: boolean
   vagaModalBase: string
+  selected?: boolean
 }
 
-export function VagaKanbanCard({ vaga, draggable, vagaModalBase }: VagaKanbanCardProps) {
+export function VagaKanbanCard({ vaga, draggable, vagaModalBase, selected }: VagaKanbanCardProps) {
   const navigate = useNavigate()
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `vaga:${vaga.id}`,
@@ -141,6 +140,7 @@ export function VagaKanbanCard({ vaga, draggable, vagaModalBase }: VagaKanbanCar
           : 'border-slate-200 shadow-sm hover:shadow',
         draggable && 'cursor-grab active:cursor-grabbing',
         isDragging && 'opacity-60',
+        selected && 'border-blue-400 ring-2 ring-blue-200 shadow-md',
       )}
     >
       <VagaKanbanCardContent vaga={vaga} />

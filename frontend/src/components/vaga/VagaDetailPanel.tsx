@@ -1,9 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { Bell, Flame, MessageCircle, Upload, UserPlus, X } from 'lucide-react'
+import { Bell, Flame, Upload, UserPlus, X } from 'lucide-react'
 import clsx from 'clsx'
-import { ActivityFeed } from '../atividade/ActivityFeed'
 import { BulkCurriculoDropzone } from '../candidato/BulkCurriculoDropzone'
 import { ChatPanel } from '../candidato/ChatPanel'
 import { ConfirmDialog } from '../common/ConfirmDialog'
@@ -73,10 +72,9 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const usuariosQuery = useUsuarios(isRh)
   const candidatosQuery = useCandidatosDaVaga(vaga.id)
 
-  const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'atividade'>('detalhes')
+  const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'chat'>('detalhes')
   const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | null>(null)
   const [confirmar, setConfirmar] = useState<VagaStatus | null>(null)
-  const [mostrarChat, setMostrarChat] = useState(false)
   const [importOpen, setImportOpen] = useState(false)
   const [motivoRecusa, setMotivoRecusa] = useState('')
   const [aprovarPrioridade, setAprovarPrioridade] = useState<VagaPrioridade>(vaga.prioridade)
@@ -129,8 +127,11 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const acoes = vaga.transicoes_disponiveis.filter((s) => s !== 'APROVADA' && s !== 'RECUSADA')
   const podeAprovar = vaga.transicoes_disponiveis.includes('APROVADA') && isRh
   const podeRecusar = vaga.transicoes_disponiveis.includes('RECUSADA') && isRh
+  const emPessoas = pathname.includes('/pessoas/')
   const podeRegistrarCandidato =
-    isRh && (vaga.status === 'PUBLICADA' || vaga.status === 'ENCERRADA' || vaga.status === 'EM_TRIAGEM')
+    isRh &&
+    emPessoas &&
+    (vaga.status === 'PUBLICADA' || vaga.status === 'ENCERRADA' || vaga.status === 'EM_TRIAGEM')
 
   return (
     <div className="flex h-full flex-col">
@@ -202,8 +203,8 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
         onChange={(v) => setAba(v as typeof aba)}
         tabs={[
           { value: 'detalhes', label: 'Detalhes' },
-          { value: 'candidatos', label: 'Candidatos' },
-          { value: 'atividade', label: 'Atividade' },
+          ...(emPessoas ? [{ value: 'candidatos', label: 'Candidatos' }] : []),
+          { value: 'chat', label: 'Chat' },
         ]}
       />
 
@@ -446,19 +447,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
           </div>
 
           <TarefasSection alvoTipo="VAGA" alvoId={vaga.id} />
-
-          <Button
-            variant="secondary"
-            onClick={() => setMostrarChat((v) => !v)}
-            className="w-full"
-          >
-            <MessageCircle size={13} /> Chat com o setor
-          </Button>
-          {mostrarChat && (
-            <div className="h-80 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white">
-              <ChatPanel kind="vaga" id={vaga.id} />
-            </div>
-          )}
         </div>
       )}
 
@@ -483,23 +471,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
             </div>
           )}
 
-          {(vaga.total_por_etapa ?? []).length > 0 && (
-            <div className="space-y-1">
-              {(vaga.total_por_etapa ?? []).map((e) => (
-                <div key={e.etapa_id} className="flex items-center gap-2 text-xs text-slate-600">
-                  <span className="w-28 shrink-0 truncate">{e.nome}</span>
-                  <div className="h-2 flex-1 overflow-hidden rounded bg-slate-100">
-                    <div
-                      className="h-full rounded bg-blue-500"
-                      style={{ width: `${(e.total / Math.max(vaga.total_candidatos, 1)) * 100}%` }}
-                    />
-                  </div>
-                  <span className="w-6 shrink-0 text-right">{e.total}</span>
-                </div>
-              ))}
-            </div>
-          )}
-
           {candidatosQuery.isLoading && <p className="text-sm text-slate-400">Carregando...</p>}
           {!candidatosQuery.isLoading && (candidatosQuery.data ?? []).length === 0 && (
             <p className="text-sm text-slate-400">Nenhum candidato ainda.</p>
@@ -517,9 +488,9 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
         </div>
       )}
 
-      {aba === 'atividade' && (
+      {aba === 'chat' && (
         <div className="min-h-0 flex-1">
-          <ActivityFeed alvoTipo="vaga" alvoId={vaga.id} />
+          <ChatPanel kind="vaga" id={vaga.id} />
         </div>
       )}
 

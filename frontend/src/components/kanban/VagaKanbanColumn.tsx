@@ -14,6 +14,7 @@ interface VagaKanbanColumnProps {
   dropInvalido?: boolean
   /** duplo clique numa área vazia da coluna (fora de um card) */
   onDoubleClick?: () => void
+  selectedVagaId?: string | null
 }
 
 export function VagaKanbanColumn({
@@ -24,6 +25,7 @@ export function VagaKanbanColumn({
   aceitaDrop,
   dropInvalido,
   onDoubleClick,
+  selectedVagaId,
 }: VagaKanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: `status:${status}` })
   const meta = VAGA_STATUS_META[status]
@@ -63,6 +65,7 @@ export function VagaKanbanColumn({
             vaga={vaga}
             draggable={draggable}
             vagaModalBase={vagaModalBase}
+            selected={vaga.id === selectedVagaId}
           />
         ))}
         {vagas.length === 0 && (

@@ -16,6 +16,7 @@ interface KanbanColumnProps {
   /** destaque quando uma vaga arrastada pode cair aqui */
   aceitaVaga?: boolean
   cadastroAqui?: boolean
+  selectedVagaId?: string | null
 }
 
 export function KanbanColumn({
@@ -28,6 +29,7 @@ export function KanbanColumn({
   vagaDraggable,
   aceitaVaga,
   cadastroAqui,
+  selectedVagaId,
 }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: etapa.id })
   const dot = etapa.is_saida_negativa ? 'bg-red-500' : (etapa.cor ?? 'bg-slate-400')
@@ -79,6 +81,7 @@ export function KanbanColumn({
             vaga={vaga}
             draggable={!!vagaDraggable}
             vagaModalBase={vagaModalBase ?? ''}
+            selected={vaga.id === selectedVagaId}
           />
         ))}
         {candidatos.map((candidato) => (

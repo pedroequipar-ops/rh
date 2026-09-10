@@ -6,12 +6,22 @@ interface PopoverProps {
   onClose: () => void
   trigger: ReactNode
   align?: 'start' | 'end'
+  /** lado onde o painel abre em relação ao trigger; 'top' pra quando o trigger fica colado no rodapé */
+  side?: 'top' | 'bottom'
   className?: string
   children: ReactNode
 }
 
 /** Popover ancorado ao trigger; click-fora e Esc fecham. */
-export function Popover({ open, onClose, trigger, align = 'start', className, children }: PopoverProps) {
+export function Popover({
+  open,
+  onClose,
+  trigger,
+  align = 'start',
+  side = 'bottom',
+  className,
+  children,
+}: PopoverProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -36,7 +46,8 @@ export function Popover({ open, onClose, trigger, align = 'start', className, ch
       {open ? (
         <div
           className={cn(
-            'absolute top-full z-50 mt-1 min-w-48 rounded-lg border border-slate-200 bg-white py-1 text-sm shadow-lg',
+            'absolute z-50 min-w-48 rounded-lg border border-slate-200 bg-white py-1 text-sm shadow-lg',
+            side === 'top' ? 'bottom-full mb-1' : 'top-full mt-1',
             align === 'end' ? 'right-0' : 'left-0',
             className,
           )}

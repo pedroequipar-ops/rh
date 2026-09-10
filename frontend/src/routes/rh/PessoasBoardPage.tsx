@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { Settings } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
@@ -14,14 +14,17 @@ import { useBoardFilters } from '../../components/board/useBoardFilters'
 import { BoardSwitcher } from '../../components/kanban/BoardSwitcher'
 import { PessoasBoard } from '../../components/kanban/PessoasBoard'
 import { EtapaColumnEditor } from '../../components/kanban/EtapaColumnEditor'
+import { vagaIdFromLocation } from '../../lib/selectedVaga'
 import type { EtapaKanban, Vaga } from '../../types'
 
 export function PessoasBoardPage() {
   const { me } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const qc = useQueryClient()
   const isRh = me?.role === 'RH'
   const base = isRh ? '/rh' : '/setor'
+  const selectedVagaId = vagaIdFromLocation(location.pathname, location.search)
   const [editorOpen, setEditorOpen] = useState(false)
 
   const etapasQuery = useEtapas()
@@ -106,6 +109,7 @@ export function PessoasBoardPage() {
               onMoveCandidato={isRh ? handleMoveCandidato : undefined}
               onMoveVagaEtapa={isRh ? handleMoveVagaEtapa : undefined}
               onRegistrarCandidato={isRh ? handleRegistrarCandidato : undefined}
+              selectedVagaId={selectedVagaId}
             />
           </div>
         )}

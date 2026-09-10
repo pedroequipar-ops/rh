@@ -12,7 +12,7 @@ import { useToast } from '../../context/ToastContext'
 import { Button, Field, FormModal, Input, Select, Textarea } from '../../components/ui'
 import type { Vaga } from '../../types'
 
-const MAX_CURRICULO_SIZE_BYTES = 10 * 1024 * 1024
+const MAX_CURRICULO_SIZE_BYTES = 25 * 1024 * 1024
 const FORM_ID = 'candidato-form'
 
 function SectionTitle({ children }: { children: ReactNode }) {
@@ -54,7 +54,8 @@ export function CandidatoFormPage() {
   const ocupado = uploading || analyzing
 
   function fechar() {
-    navigate(pathname.replace(/\/novo-candidato\/?$/, '') || '/rh/pessoas')
+    const base = pathname.replace(/\/novo-candidato\/?$/, '') || '/rh/pessoas'
+    navigate(vagaPreselecionada ? `${base}/vaga/${vagaPreselecionada}` : base)
   }
 
   useEffect(() => {
@@ -74,7 +75,7 @@ export function CandidatoFormPage() {
       return
     }
     if (file.size > MAX_CURRICULO_SIZE_BYTES) {
-      setError('O currículo deve ter no máximo 10MB.')
+      setError('O currículo deve ter no máximo 25MB.')
       event.target.value = ''
       return
     }
@@ -186,7 +187,7 @@ export function CandidatoFormPage() {
             <span className="text-sm font-medium text-slate-700">
               {fileName ?? 'Selecionar currículo (PDF)'}
             </span>
-            <span className="text-xs text-slate-400">Opcional · PDF de até 10 MB</span>
+            <span className="text-xs text-slate-400">Opcional · PDF de até 25 MB</span>
           </button>
 
           {ocupado && (

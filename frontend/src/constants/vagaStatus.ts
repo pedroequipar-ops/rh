@@ -66,20 +66,14 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
  * EM_TRIAGEM não entra aqui: nesse status o card da vaga vive nas colunas de
  * etapa de triagem (Triagem, Primeira Entrevista) via `vaga.etapa_atual`.
  */
-export const FLUXO_STATUSES: VagaStatus[] = [
-  'SOLICITADA',
-  'RECUSADA',
-  'APROVADA',
-  'PUBLICADA',
-  'ENCERRADA',
-  'CONGELADA',
-]
+export const FLUXO_STATUSES: VagaStatus[] = ['SOLICITADA', 'APROVADA', 'PUBLICADA']
 
 /** Status de vaga que não viram coluna de status (terminais ou geridos por etapa). */
 export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['EM_TRIAGEM', 'CANCELADA', 'PREENCHIDA']
 
-/** Colunas de exceção: só aparecem quando têm vaga (ou são destino de um arraste). */
-export const COLUNAS_OCULTAS_SE_VAZIAS: VagaStatus[] = ['RECUSADA', 'CONGELADA']
+/** Status de baixo volume: viram "bolinhas" soltas (canto do board), não
+ * coluna cheia — ainda aceitam arraste, só não poluem o kanban. */
+export const STATUS_ORBS: VagaStatus[] = ['RECUSADA', 'ENCERRADA', 'CONGELADA']
 
 export function statusLabel(status: VagaStatus): string {
   return VAGA_STATUS_META[status]?.label ?? status

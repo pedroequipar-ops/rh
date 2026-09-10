@@ -95,10 +95,12 @@ export function BulkCurriculoDropzone({
 
   function handleFiles(fileList: FileList | null) {
     if (!fileList || fileList.length === 0) return
-    const { ignoradosNaoPdf, ignoradosMuitoGrandes } = iniciar(Array.from(fileList))
+    const { ignoradosNaoPdf, ignoradosMuitoGrandes, ignoradosLimiteExcedido } = iniciar(Array.from(fileList))
     if (ignoradosNaoPdf > 0) showToast(`${ignoradosNaoPdf} arquivo(s) ignorado(s): só aceita PDF`, 'error')
     if (ignoradosMuitoGrandes > 0)
-      showToast(`${ignoradosMuitoGrandes} arquivo(s) ignorado(s): acima de 10MB`, 'error')
+      showToast(`${ignoradosMuitoGrandes} arquivo(s) ignorado(s): acima de 25MB`, 'error')
+    if (ignoradosLimiteExcedido > 0)
+      showToast(`${ignoradosLimiteExcedido} arquivo(s) ignorado(s): limite de 30 currículos por importação`, 'error')
   }
 
   function handleDrop(event: DragEvent<HTMLDivElement>) {
@@ -149,7 +151,7 @@ export function BulkCurriculoDropzone({
           >
             <UploadCloud size={22} className="text-slate-400" />
             <p className="text-sm text-slate-600">Arraste PDFs aqui ou clique para selecionar</p>
-            <p className="text-xs text-slate-400">Até 10MB cada · até 3 em paralelo</p>
+            <p className="text-xs text-slate-400">Até 25MB cada · máx. 30 por importação · até 3 em paralelo</p>
           </div>
         </div>
 

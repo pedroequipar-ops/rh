@@ -27,6 +27,7 @@ interface PessoasBoardProps {
   onMoveCandidato?: (candidatoId: string, etapaId: string) => void
   onMoveVagaEtapa?: (vagaId: string, etapaId: string) => void
   onRegistrarCandidato?: (vaga: Vaga, etapa: EtapaKanban) => void
+  selectedVagaId?: string | null
 }
 
 /** Board só de pessoas: colunas de etapa. Vagas EM_TRIAGEM aparecem como card
@@ -41,6 +42,7 @@ export function PessoasBoard({
   onMoveCandidato,
   onMoveVagaEtapa,
   onRegistrarCandidato,
+  selectedVagaId,
 }: PessoasBoardProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -129,6 +131,7 @@ export function PessoasBoard({
           vagaDraggable={draggable}
           aceitaVaga={vagaEmTriagem && !etapa.is_saida_negativa}
           cadastroAqui={etapa.exige_cadastro_completo}
+          selectedVagaId={selectedVagaId}
         />
       ))}
     </div>

@@ -17,10 +17,10 @@ export function BoardSwitcher({ vagasHref, pessoasHref, totalVagas, totalPessoas
 
   return (
     <div className="inline-flex rounded-lg bg-slate-100 p-0.5">
-      <NavLink to={vagasHref} end className={itemClass}>
+      <NavLink to={vagasHref} className={itemClass}>
         Vagas <span className="ml-1 text-xs text-slate-400">{totalVagas}</span>
       </NavLink>
-      <NavLink to={pessoasHref} end className={itemClass}>
+      <NavLink to={pessoasHref} className={itemClass}>
         Pessoas <span className="ml-1 text-xs text-slate-400">{totalPessoas}</span>
       </NavLink>
     </div>

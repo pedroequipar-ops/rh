@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useVagas, useTransicionarVaga } from '../../api/hooks/useVagas'
 import { useCandidatos } from '../../api/hooks/useCandidatos'
@@ -9,12 +9,15 @@ import { BuscarButton } from '../../components/board/BuscarButton'
 import { useBoardFilters } from '../../components/board/useBoardFilters'
 import { BoardSwitcher } from '../../components/kanban/BoardSwitcher'
 import { VagasBoard } from '../../components/kanban/VagasBoard'
+import { vagaIdFromLocation } from '../../lib/selectedVaga'
 import type { VagaStatus } from '../../types'
 
 export function VagasBoardPage() {
   const { me } = useAuth()
+  const location = useLocation()
   const isRh = me?.role === 'RH'
   const base = isRh ? '/rh' : '/setor'
+  const selectedVagaId = vagaIdFromLocation(location.pathname, location.search)
 
   const vagasQuery = useVagas()
   const candidatosQuery = useCandidatos()
@@ -67,6 +70,7 @@ export function VagasBoardPage() {
               vagaModalBase={`${base}/vagas/vaga`}
               novaVagaHref={`${base}/vagas/nova-vaga`}
               onMoveVaga={isRh ? handleMoveVaga : undefined}
+              selectedVagaId={selectedVagaId}
             />
           </div>
         )}

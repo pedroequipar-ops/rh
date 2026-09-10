@@ -4,7 +4,8 @@ import { pLimit } from '../../lib/pLimit'
 import type { CandidatoExtraido } from '../../types'
 
 const CONCORRENCIA = 3
-const MAX_CURRICULO_SIZE_BYTES = 10 * 1024 * 1024
+const MAX_CURRICULO_SIZE_BYTES = 25 * 1024 * 1024
+const MAX_ARQUIVOS_POR_IMPORTACAO = 30
 
 export type LinhaStatus =
   | 'fila'
@@ -46,6 +47,7 @@ export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCria
   const canceladoRef = useRef(false)
   const cpfsNoLoteRef = useRef(new Set<string>())
   const limitarRef = useRef(pLimit(CONCORRENCIA))
+  const totalAdicionadosRef = useRef(0)
 
   function atualizar(id: string, patch: Partial<LinhaImportacao>) {
     setLinhas((prev) => prev.map((l) => (l.id === id ? { ...l, ...patch } : l)))
@@ -115,7 +117,10 @@ export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCria
     (files: File[]) => {
       canceladoRef.current = false
       const pdfs = files.filter((f) => f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf'))
-      const aceitos = pdfs.filter((f) => f.size <= MAX_CURRICULO_SIZE_BYTES)
+      const dentroDoTamanho = pdfs.filter((f) => f.size <= MAX_CURRICULO_SIZE_BYTES)
+      const espacoDisponivel = Math.max(MAX_ARQUIVOS_POR_IMPORTACAO - totalAdicionadosRef.current, 0)
+      const aceitos = dentroDoTamanho.slice(0, espacoDisponivel)
+      totalAdicionadosRef.current += aceitos.length
 
       const novasLinhas: LinhaImportacao[] = aceitos.map((file) => ({
         id: `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
@@ -129,7 +134,8 @@ export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCria
 
       return {
         ignoradosNaoPdf: files.length - pdfs.length,
-        ignoradosMuitoGrandes: pdfs.length - aceitos.length,
+        ignoradosMuitoGrandes: pdfs.length - dentroDoTamanho.length,
+        ignoradosLimiteExcedido: dentroDoTamanho.length - aceitos.length,
       }
     },
     [processarLinha],
@@ -151,6 +157,7 @@ export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCria
   function limpar() {
     setLinhas([])
     cpfsNoLoteRef.current = new Set()
+    totalAdicionadosRef.current = 0
   }
 
   const resumo = {
