@@ -198,6 +198,25 @@ def test_setor_exclui_a_propria_vaga(company_factory, setor_factory, user_factor
 
 
 @pytest.mark.django_db
+def test_restaurar_vaga_excluida(company_factory, setor_factory, user_factory, vaga_factory):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    vaga = vaga_factory(company=company, setor=setor)
+
+    client = _client_for(rh, company)
+    client.delete(f"/v1/vagas/{vaga.id}/")
+    vaga.refresh_from_db()
+    assert vaga.active is False
+
+    response = client.post(f"/v1/vagas/{vaga.id}/restaurar/")
+
+    assert response.status_code == 200
+    vaga.refresh_from_db()
+    assert vaga.active is True
+
+
+@pytest.mark.django_db
 def test_setor_nao_pode_excluir_vaga_de_outro_setor(
     company_factory, setor_factory, user_factory, vaga_factory
 ):

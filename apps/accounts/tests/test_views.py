@@ -176,6 +176,11 @@ def test_rh_lista_e_exclui_usuario(company_factory, setor_factory, user_factory)
     listagem_apos = client.get("/v1/usuarios/")
     assert usuario_setor.username not in [item["username"] for item in listagem_apos.data["results"]]
 
+    restauracao = client.post(f"/v1/usuarios/{usuario_setor.id}/restaurar/")
+    assert restauracao.status_code == 200
+    usuario_setor.refresh_from_db()
+    assert usuario_setor.is_active is True
+
 
 @pytest.mark.django_db
 def test_rh_nao_pode_excluir_o_proprio_usuario(company_factory, user_factory):
@@ -208,6 +213,11 @@ def test_rh_exclui_setor(company_factory, setor_factory, user_factory):
     assert response.status_code == 204
     setor.refresh_from_db()
     assert setor.active is False
+
+    restauracao = client.post(f"/v1/setores/{setor.id}/restaurar/")
+    assert restauracao.status_code == 200
+    setor.refresh_from_db()
+    assert setor.active is True
 
 
 @pytest.mark.django_db

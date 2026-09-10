@@ -78,6 +78,7 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         "analisar_curriculo": "candidatos.analisar_curriculo",
         "curriculo_url": "candidatos.curriculo_url",
         "mover_etapa": "candidatos.mover_etapa",
+        "restaurar": "candidatos.delete",
     }
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
@@ -154,6 +155,18 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.repo.soft_delete(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["post"], url_path="restaurar")
+    def restaurar(self, request, pk=None):
+        """Desfaz uma exclusão recente (toast "Desfazer" da Listagem)."""
+        company_id = capture_company_id(request)
+        try:
+            candidato = Candidato.allobjects.get(id=pk, company_id=company_id)
+        except Candidato.DoesNotExist:
+            raise NotFound("Candidato não encontrado.")
+        candidato.active = True
+        candidato.save(update_fields=["active", "updated_at"])
+        return Response(CandidatoSerializer(candidato, context=self.get_serializer_context()).data)
 
     @action(detail=False, methods=["post"], url_path="upload-url")
     def upload_url(self, request):

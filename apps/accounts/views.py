@@ -1,5 +1,6 @@
 from rest_framework import status, viewsets
-from rest_framework.exceptions import ValidationError
+from rest_framework.decorators import action
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -49,6 +50,7 @@ class SetorViewSet(viewsets.ModelViewSet):
         "update": "setores.edit",
         "partial_update": "setores.edit",
         "destroy": "setores.delete",
+        "restaurar": "setores.delete",
     }
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
@@ -65,6 +67,18 @@ class SetorViewSet(viewsets.ModelViewSet):
         instance.soft_delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(detail=True, methods=["post"], url_path="restaurar")
+    def restaurar(self, request, pk=None):
+        """Desfaz uma exclusão recente (toast "Desfazer" da Listagem/Configurações)."""
+        company_id = capture_company_id(request)
+        try:
+            setor = Setor.allobjects.get(id=pk, company_id=company_id)
+        except Setor.DoesNotExist:
+            raise NotFound("Setor não encontrado.")
+        setor.active = True
+        setor.save(update_fields=["active", "updated_at"])
+        return Response(SetorSerializer(setor).data)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.none()
@@ -76,6 +90,7 @@ class UserViewSet(viewsets.ModelViewSet):
         "update": "usuarios.edit",
         "partial_update": "usuarios.edit",
         "destroy": "usuarios.delete",
+        "restaurar": "usuarios.delete",
     }
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
@@ -112,3 +127,15 @@ class UserViewSet(viewsets.ModelViewSet):
         instance.is_active = False
         instance.save(update_fields=["is_active"])
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["post"], url_path="restaurar")
+    def restaurar(self, request, pk=None):
+        """Desfaz uma exclusão recente (toast "Desfazer" da Listagem/Configurações)."""
+        company_id = capture_company_id(request)
+        try:
+            usuario = User.objects.get(id=pk, company_id=company_id)
+        except User.DoesNotExist:
+            raise NotFound("Usuário não encontrado.")
+        usuario.is_active = True
+        usuario.save(update_fields=["is_active"])
+        return Response(UserListSerializer(usuario).data)

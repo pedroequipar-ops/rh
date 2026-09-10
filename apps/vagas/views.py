@@ -87,6 +87,7 @@ class VagaViewSet(viewsets.ModelViewSet):
         "aprovar": "vagas.aprovar",
         "recusar": "vagas.aprovar",
         "cobrar": "vagas.cobrar",
+        "restaurar": "vagas.delete",
     }
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
@@ -258,6 +259,18 @@ class VagaViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.soft_delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["post"], url_path="restaurar")
+    def restaurar(self, request, pk=None):
+        """Desfaz uma exclusão recente (toast "Desfazer" da Listagem)."""
+        company_id = capture_company_id(request)
+        try:
+            vaga = Vaga.allobjects.get(id=pk, company_id=company_id)
+        except Vaga.DoesNotExist:
+            raise NotFound("Vaga não encontrada.")
+        vaga.active = True
+        vaga.save(update_fields=["active", "updated_at"])
+        return Response(VagaSerializer(vaga, context=self.get_serializer_context()).data)
 
 
 class VagaNotificacaoListView(generics.ListAPIView):

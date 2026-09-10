@@ -493,3 +493,21 @@ def test_rh_edita_candidato(company_factory, user_factory, candidato_factory):
     assert str(response.data["vaga_id"]) == str(candidato.vaga_id)
     candidato.refresh_from_db()
     assert candidato.telefone == "11900001111"
+
+
+@pytest.mark.django_db
+def test_restaurar_candidato_excluido(company_factory, user_factory, candidato_factory):
+    company = company_factory()
+    candidato = candidato_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    client.delete(f"/v1/candidatos/{candidato.id}/")
+    candidato.refresh_from_db()
+    assert candidato.active is False
+
+    response = client.post(f"/v1/candidatos/{candidato.id}/restaurar/")
+
+    assert response.status_code == 200
+    candidato.refresh_from_db()
+    assert candidato.active is True
