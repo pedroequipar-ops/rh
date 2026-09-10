@@ -50,10 +50,10 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
 
       <button
         onClick={() => setCollapsed((v) => !v)}
-        className="hidden shrink-0 items-center justify-center border-t border-slate-100 py-2 text-slate-400 transition-fast hover:bg-slate-50 hover:text-slate-600 md:flex"
+        className="hidden shrink-0 items-center justify-center border-t border-slate-100 py-1.5 text-slate-300 outline-none transition-fast hover:bg-slate-50 hover:text-slate-500 focus-visible:bg-slate-50 focus-visible:text-slate-500 md:flex"
         aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
       >
-        {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
+        {collapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
       </button>
     </>
   )
@@ -63,7 +63,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       <aside
         className={cn(
           'hidden shrink-0 flex-col border-r border-slate-200 bg-white transition-fast md:flex',
-          collapsed ? 'w-16' : 'w-60',
+          collapsed ? 'w-16' : 'w-52',
         )}
       >
         {content}
