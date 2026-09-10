@@ -9,7 +9,7 @@ import {
 } from '@dnd-kit/core'
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { ArrowDown, ArrowUp, Columns3, Download, GripVertical, Rows3, Search } from 'lucide-react'
+import { ArrowDown, ArrowUp, Columns3, Download, GripVertical, Search } from 'lucide-react'
 import clsx from 'clsx'
 import { Popover } from './Popover'
 import { EmptyState } from './EmptyState'
@@ -29,13 +29,12 @@ export interface DataTableColumn<T> {
 interface StoredState {
   visible: string[]
   order: string[]
-  density: 'compact' | 'comfortable'
   groupBy: string | null
 }
 
 function loadState(storageId: string, columns: { key: string }[]): StoredState {
   const allKeys = columns.map((c) => c.key)
-  const fallback: StoredState = { visible: allKeys, order: allKeys, density: 'comfortable', groupBy: null }
+  const fallback: StoredState = { visible: allKeys, order: allKeys, groupBy: null }
   try {
     const raw = localStorage.getItem(`datatable:${storageId}`)
     if (!raw) return fallback
@@ -46,7 +45,6 @@ function loadState(storageId: string, columns: { key: string }[]): StoredState {
     return {
       order,
       visible: visible.length ? visible : allKeys,
-      density: parsed.density === 'compact' ? 'compact' : 'comfortable',
       groupBy: parsed.groupBy && allKeys.includes(parsed.groupBy) ? parsed.groupBy : null,
     }
   } catch {
@@ -116,6 +114,11 @@ interface DataTableProps<T> {
   emptyMessage?: string
   emptyAction?: ReactNode
   toolbarExtra?: ReactNode
+  /** Quando os 3 estão presentes, mostra uma coluna de seleção (checkbox) à
+   * esquerda. `onToggleTodos` recebe os ids atualmente visíveis (filtrados). */
+  selecionados?: Set<string>
+  onToggleSelecionado?: (id: string) => void
+  onToggleTodos?: (ids: string[]) => void
 }
 
 /** Tabela genérica com ordenar, agrupar, mostrar/ocultar/reordenar colunas
@@ -130,6 +133,9 @@ export function DataTable<T>({
   emptyMessage = 'Nada encontrado.',
   emptyAction,
   toolbarExtra,
+  selecionados,
+  onToggleSelecionado,
+  onToggleTodos,
 }: DataTableProps<T>) {
   const [state, setState] = useState<StoredState>(() => loadState(storageId, columns))
   const [columnsOpen, setColumnsOpen] = useState(false)
@@ -217,15 +223,30 @@ export function DataTable<T>({
     URL.revokeObjectURL(url)
   }
 
-  const padY = state.density === 'compact' ? 'py-1' : 'py-2.5'
+  const padY = 'py-2.5'
+  const selecaoAtiva = Boolean(selecionados && onToggleSelecionado && onToggleTodos)
+  const idsVisiveis = ordenadas.map(rowKey)
+  const todosSelecionados = selecaoAtiva && idsVisiveis.length > 0 && idsVisiveis.every((id) => selecionados!.has(id))
+  const algumSelecionado = selecaoAtiva && idsVisiveis.some((id) => selecionados!.has(id))
 
   function renderRow(row: T) {
+    const id = rowKey(row)
     return (
       <tr
-        key={rowKey(row)}
+        key={id}
         onClick={onRowClick ? () => onRowClick(row) : undefined}
         className={clsx('hover:bg-slate-50', onRowClick && 'cursor-pointer')}
       >
+        {selecaoAtiva && (
+          <td className={clsx('w-8 px-3', padY)} onClick={(e) => e.stopPropagation()}>
+            <input
+              type="checkbox"
+              checked={selecionados!.has(id)}
+              onChange={() => onToggleSelecionado!(id)}
+              className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+            />
+          </td>
+        )}
         {visibleColumns.map((col) => (
           <td
             key={col.key}
@@ -306,15 +327,6 @@ export function DataTable<T>({
         </Popover>
 
         <button
-          onClick={() => update({ density: state.density === 'compact' ? 'comfortable' : 'compact' })}
-          title="Densidade"
-          className="flex h-8 items-center gap-1.5 rounded border border-slate-300 px-2.5 text-sm text-slate-700 hover:bg-slate-50"
-        >
-          <Rows3 size={14} />
-          {state.density === 'compact' ? 'Compacto' : 'Confortável'}
-        </button>
-
-        <button
           onClick={exportCsv}
           title="Exportar CSV"
           className="flex h-8 items-center gap-1.5 rounded border border-slate-300 px-2.5 text-sm text-slate-700 hover:bg-slate-50"
@@ -333,6 +345,19 @@ export function DataTable<T>({
           <table className="w-full text-left text-sm">
             <thead className="sticky top-0 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
               <tr>
+                {selecaoAtiva && (
+                  <th className="w-8 px-3 py-2">
+                    <input
+                      type="checkbox"
+                      checked={todosSelecionados}
+                      ref={(el) => {
+                        if (el) el.indeterminate = algumSelecionado && !todosSelecionados
+                      }}
+                      onChange={() => onToggleTodos!(idsVisiveis)}
+                      className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    />
+                  </th>
+                )}
                 {visibleColumns.map((col) => (
                   <th
                     key={col.key}
@@ -358,7 +383,7 @@ export function DataTable<T>({
                     <Fragment key={chave}>
                       <tr className="bg-slate-50">
                         <td
-                          colSpan={visibleColumns.length}
+                          colSpan={visibleColumns.length + (selecaoAtiva ? 1 : 0)}
                           className="px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500"
                         >
                           {chave || '—'} <span className="font-normal normal-case text-slate-400">({linhas.length})</span>

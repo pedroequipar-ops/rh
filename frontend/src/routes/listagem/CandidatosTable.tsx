@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Pencil, Trash2 } from 'lucide-react'
 import { DataTable, type DataTableColumn } from '../../components/ui'
@@ -8,19 +9,38 @@ interface CandidatosTableProps {
   basePath: string
   isRh: boolean
   onDelete: (candidato: Candidato) => void
+  /** false esconde o link de edição (nome e lápis) — só nome e excluir. */
+  editavel?: boolean
+  toolbarExtra?: ReactNode
+  selecionados?: Set<string>
+  onToggleSelecionado?: (id: string) => void
+  onToggleTodos?: (ids: string[]) => void
 }
 
-export function CandidatosTable({ candidatos, basePath, isRh, onDelete }: CandidatosTableProps) {
+export function CandidatosTable({
+  candidatos,
+  basePath,
+  isRh,
+  onDelete,
+  editavel = true,
+  toolbarExtra,
+  selecionados,
+  onToggleSelecionado,
+  onToggleTodos,
+}: CandidatosTableProps) {
   const columns: DataTableColumn<Candidato>[] = [
     {
       key: 'nome',
       label: 'Nome',
       value: (c) => c.nome,
-      cell: (c) => (
-        <Link to={`${basePath}/candidato/${c.id}`} className="font-medium text-slate-800 hover:underline">
-          {c.nome}
-        </Link>
-      ),
+      cell: (c) =>
+        editavel ? (
+          <Link to={`${basePath}/candidato/${c.id}`} className="font-medium text-slate-800 hover:underline">
+            {c.nome}
+          </Link>
+        ) : (
+          <span className="font-medium text-slate-800">{c.nome}</span>
+        ),
     },
     {
       key: 'vaga',
@@ -54,13 +74,15 @@ export function CandidatosTable({ candidatos, basePath, isRh, onDelete }: Candid
             align: 'right',
             cell: (c) => (
               <div className="flex justify-end gap-0.5">
-                <Link
-                  to={`${basePath}/candidato/${c.id}`}
-                  className="inline-flex rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-                  aria-label="Editar candidato"
-                >
-                  <Pencil size={16} />
-                </Link>
+                {editavel && (
+                  <Link
+                    to={`${basePath}/candidato/${c.id}`}
+                    className="inline-flex rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                    aria-label="Editar candidato"
+                  >
+                    <Pencil size={16} />
+                  </Link>
+                )}
                 <button
                   onClick={() => onDelete(c)}
                   className="rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600"
@@ -83,6 +105,10 @@ export function CandidatosTable({ candidatos, basePath, isRh, onDelete }: Candid
       rowKey={(c) => c.id}
       searchValue={(c) => `${c.nome} ${c.vaga_titulo}`}
       emptyMessage="Nenhum candidato cadastrado."
+      toolbarExtra={toolbarExtra}
+      selecionados={selecionados}
+      onToggleSelecionado={onToggleSelecionado}
+      onToggleTodos={onToggleTodos}
     />
   )
 }

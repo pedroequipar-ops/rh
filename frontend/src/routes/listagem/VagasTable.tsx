@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Pencil, Trash2 } from 'lucide-react'
 import clsx from 'clsx'
@@ -9,9 +10,24 @@ interface VagasTableProps {
   vagas: Vaga[]
   basePath: string
   onDelete: (vaga: Vaga) => void
+  /** false esconde o link de edição (título e lápis) — só título e excluir. */
+  editavel?: boolean
+  toolbarExtra?: ReactNode
+  selecionados?: Set<string>
+  onToggleSelecionado?: (id: string) => void
+  onToggleTodos?: (ids: string[]) => void
 }
 
-export function VagasTable({ vagas, basePath, onDelete }: VagasTableProps) {
+export function VagasTable({
+  vagas,
+  basePath,
+  onDelete,
+  editavel = true,
+  toolbarExtra,
+  selecionados,
+  onToggleSelecionado,
+  onToggleTodos,
+}: VagasTableProps) {
   const columns: DataTableColumn<Vaga>[] = [
     {
       key: 'titulo',
@@ -19,9 +35,13 @@ export function VagasTable({ vagas, basePath, onDelete }: VagasTableProps) {
       value: (v) => v.titulo,
       cell: (v) => (
         <>
-          <Link to={`${basePath}/vaga/${v.id}`} className="font-medium text-slate-800 hover:underline">
-            {v.titulo}
-          </Link>
+          {editavel ? (
+            <Link to={`${basePath}/vaga/${v.id}`} className="font-medium text-slate-800 hover:underline">
+              {v.titulo}
+            </Link>
+          ) : (
+            <span className="font-medium text-slate-800">{v.titulo}</span>
+          )}
           {v.urgente && (
             <span className="ml-2 rounded border border-red-200 bg-red-50 px-1.5 py-0.5 text-[11px] font-medium text-red-700">
               Urgente
@@ -72,13 +92,15 @@ export function VagasTable({ vagas, basePath, onDelete }: VagasTableProps) {
       align: 'right',
       cell: (v) => (
         <div className="flex justify-end gap-0.5">
-          <Link
-            to={`${basePath}/vaga/${v.id}`}
-            className="inline-flex rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-            aria-label="Editar vaga"
-          >
-            <Pencil size={16} />
-          </Link>
+          {editavel && (
+            <Link
+              to={`${basePath}/vaga/${v.id}`}
+              className="inline-flex rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              aria-label="Editar vaga"
+            >
+              <Pencil size={16} />
+            </Link>
+          )}
           <button
             onClick={() => onDelete(v)}
             className="rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600"
@@ -99,6 +121,10 @@ export function VagasTable({ vagas, basePath, onDelete }: VagasTableProps) {
       rowKey={(v) => v.id}
       searchValue={(v) => `${v.titulo} ${v.setor.nome}`}
       emptyMessage="Nenhuma vaga encontrada."
+      toolbarExtra={toolbarExtra}
+      selecionados={selecionados}
+      onToggleSelecionado={onToggleSelecionado}
+      onToggleTodos={onToggleTodos}
     />
   )
 }

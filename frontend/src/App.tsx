@@ -9,8 +9,9 @@ import { ListagemPage } from './routes/ListagemPage'
 import { ConfigLayout } from './routes/config/ConfigLayout'
 import { EtapasConfig } from './routes/config/EtapasConfig'
 import { SetoresConfig } from './routes/config/SetoresConfig'
-import { UsuariosConfig } from './routes/config/UsuariosConfig'
 import { EmpresaConfig } from './routes/config/EmpresaConfig'
+import { CandidatosConfig } from './routes/config/CandidatosConfig'
+import { VagasAtivasConfig } from './routes/config/VagasAtivasConfig'
 import { VagasBoardPage } from './routes/rh/VagasBoardPage'
 import { PessoasBoardPage } from './routes/rh/PessoasBoardPage'
 import { VagaFormPage } from './routes/rh/VagaFormPage'
@@ -59,17 +60,18 @@ export default function App() {
             <Route path="/rh/listagem" element={<Navigate to="/config/listagem" replace />} />
 
             <Route path="/config" element={<ConfigLayout />}>
-              <Route index element={<Navigate to="/config/etapas" replace />} />
+              <Route index element={<Navigate to="/config/setores" replace />} />
               <Route path="etapas" element={<EtapasConfig />} />
               <Route path="setores" element={<SetoresConfig />} />
-              <Route path="usuarios" element={<UsuariosConfig />} />
-              <Route path="empresa" element={<EmpresaConfig />} />
-              <Route path="listagem" element={<ListagemPage embedded />}>
+              <Route path="usuarios" element={<Navigate to="/config/setores" replace />} />
+              <Route path="candidatos" element={<CandidatosConfig />}>
                 <Route path="candidato/:id" element={<CandidatoModal />} />
-                <Route path="vaga/:id" element={<VagaDetalheModal />} />
                 <Route path="nova-vaga" element={<VagaFormPage />} />
                 <Route path="novo-candidato" element={<CandidatoFormPage />} />
               </Route>
+              <Route path="vagas-ativas" element={<VagasAtivasConfig />} />
+              <Route path="empresa" element={<EmpresaConfig />} />
+              <Route path="listagem" element={<Navigate to="/config/setores" replace />} />
             </Route>
           </Route>
 
