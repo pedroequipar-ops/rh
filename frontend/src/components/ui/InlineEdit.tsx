@@ -1,4 +1,5 @@
 import { useState, type KeyboardEvent, type ReactNode } from 'react'
+import { Pencil } from 'lucide-react'
 import { cn } from './cn'
 
 type InlineEditType = 'text' | 'textarea' | 'number' | 'date' | 'select'
@@ -75,23 +76,35 @@ export function InlineEdit({
   }
 
   if (!editing) {
+    const valorRotulo =
+      type === 'select' ? (options?.find((o) => o.value === value)?.label ?? value) : value
     return (
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={() => {
-          setDraft(value)
-          setError(null)
-          setEditing(true)
-        }}
-        className={cn(
-          'w-full rounded px-1.5 py-1 text-left text-sm text-slate-800 hover:bg-slate-100 disabled:cursor-default disabled:hover:bg-transparent',
-          !value && !display ? 'text-slate-400' : undefined,
-          className,
-        )}
-      >
-        {display ?? (value || placeholder || '—')}
-      </button>
+      <div className="group/inline flex items-start gap-1">
+        <span
+          className={cn(
+            'min-w-0 flex-1 whitespace-pre-wrap px-1.5 py-1 text-sm text-slate-800',
+            !value && !display ? 'text-slate-400' : undefined,
+            className,
+          )}
+        >
+          {display ?? (valorRotulo || placeholder || '—')}
+        </span>
+        {!disabled ? (
+          <button
+            type="button"
+            title="Editar"
+            aria-label="Editar"
+            onClick={() => {
+              setDraft(value)
+              setError(null)
+              setEditing(true)
+            }}
+            className="mt-0.5 shrink-0 rounded p-1 text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-600 group-hover/inline:text-slate-400"
+          >
+            <Pencil size={13} />
+          </button>
+        ) : null}
+      </div>
     )
   }
 
