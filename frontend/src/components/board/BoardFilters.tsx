@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { Search, SlidersHorizontal, User, X } from 'lucide-react'
+import { Search, SlidersHorizontal, X } from 'lucide-react'
 import { Popover } from '../ui/Popover'
 import { Badge } from '../ui/Badge'
 import { cn } from '../ui/cn'
-import { useAuth } from '../../context/AuthContext'
 import { useTagsList } from '../../api/hooks/useTags'
 import {
   MOTIVO_SOLICITACAO_OPCOES,
@@ -96,7 +95,6 @@ export function BoardFilters({
   usuarios = [],
 }: BoardFiltersProps) {
   const [open, setOpen] = useState(false)
-  const { me } = useAuth()
   const { data: tags = [] } = useTagsList()
   const tagOpcoes: Opcao[] = tags.map((t) => ({ value: t.nome, label: t.nome }))
 
@@ -120,22 +118,8 @@ export function BoardFilters({
     if (f.saidaNegativa) chips.push({ key: 'saidaNegativa', label: 'Em saída', onRemove: () => filters.setFilter('saidaNegativa', false) })
   }
 
-  const souEu = Boolean(me) && filters.filters.responsavel.length === 1 && filters.filters.responsavel[0] === me?.id
-
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      {me && (
-        <button
-          onClick={() => filters.toggleInList('responsavel', me.id)}
-          className={cn(
-            'flex items-center gap-1.5 rounded border px-3 py-1.5 text-sm transition-fast',
-            souEu ? 'border-blue-200 bg-blue-50 text-blue-700' : 'border-slate-300 text-slate-700 hover:bg-slate-50',
-          )}
-        >
-          <User size={14} />
-          Meus
-        </button>
-      )}
       <Popover
         open={open}
         onClose={() => setOpen(false)}
