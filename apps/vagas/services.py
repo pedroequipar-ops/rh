@@ -5,6 +5,7 @@ papel do usuário, aplica carimbos automáticos, grava ``VagaHistoricoStatus`` e
 dispara notificações. Espelha o padrão de ``apps/candidatos/services.py``.
 """
 
+from django.db.models import Q
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied, ValidationError
 
@@ -114,6 +115,16 @@ def _prazo_estourado(vaga, hoje=None):
     return bool(
         (vaga.data_alvo_preenchimento and vaga.data_alvo_preenchimento < hoje)
         or (vaga.data_inicio_prevista and vaga.data_inicio_prevista < hoje)
+    )
+
+
+def atrasada_q(hoje=None) -> Q:
+    """Equivalente a `_prazo_estourado`, mas como `Q` pra filtrar/contar no
+    banco (dashboard) em vez de carregar tudo em Python. Mantida em paridade
+    com `_prazo_estourado` — ver teste de paridade em apps/dashboard."""
+    hoje = hoje or timezone.localdate()
+    return Q(status__in=STATUS_PRAZO_ATIVO) & (
+        Q(data_alvo_preenchimento__lt=hoje) | Q(data_inicio_prevista__lt=hoje)
     )
 
 

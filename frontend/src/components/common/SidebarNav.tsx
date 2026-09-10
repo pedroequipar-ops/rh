@@ -1,4 +1,4 @@
-import { Briefcase, List, Plus, UserPlus, Users } from 'lucide-react'
+import { Briefcase, LayoutDashboard, List, Plus, UserPlus, Users } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ButtonLink } from '../ui/Button'
@@ -16,6 +16,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
   const base = isRh ? '/rh' : '/setor'
 
   const items = [
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
     { to: `${base}/vagas`, label: 'Vagas', icon: Briefcase },
     { to: `${base}/pessoas`, label: 'Pessoas', icon: Users },
     { to: `${base}/listagem`, label: 'Listagem', icon: List },
@@ -24,10 +25,11 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
   return (
     <nav className="flex flex-col gap-2 overflow-y-auto px-2 py-3">
       <div className="flex flex-col gap-0.5">
-        {items.map(({ to, label, icon: Icon }) => (
+        {items.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
+            end={end}
             onClick={onNavigate}
             title={collapsed ? label : undefined}
             className={({ isActive }) =>

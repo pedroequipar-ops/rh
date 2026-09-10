@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/common/AppShell'
 import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { LoginPage } from './routes/LoginPage'
+import { DashboardPage } from './routes/DashboardPage'
 import { ListagemPage } from './routes/ListagemPage'
 import { VagasBoardPage } from './routes/rh/VagasBoardPage'
 import { PessoasBoardPage } from './routes/rh/PessoasBoardPage'
@@ -18,6 +19,9 @@ export default function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
           <Route element={<ProtectedRoute allowedRoles={['RH']} />}>
             <Route path="/rh/vagas" element={<VagasBoardPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />

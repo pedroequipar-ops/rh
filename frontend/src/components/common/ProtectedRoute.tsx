@@ -22,8 +22,7 @@ export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   }
 
   if (allowedRoles && !allowedRoles.includes(me.role)) {
-    const fallback = me.role === 'RH' ? '/rh/pessoas' : '/setor/pessoas'
-    return <Navigate to={fallback} replace />
+    return <Navigate to="/dashboard" replace />
   }
 
   return <Outlet />

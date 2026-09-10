@@ -17,8 +17,8 @@ export function LoginPage() {
     setError(null)
     setSubmitting(true)
     try {
-      const me = await login(username, password)
-      navigate(me.role === 'RH' ? '/rh/pessoas' : '/setor/pessoas')
+      await login(username, password)
+      navigate('/dashboard')
     } catch {
       setError('Usuário ou senha inválidos.')
     } finally {
