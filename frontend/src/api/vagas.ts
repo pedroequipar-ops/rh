@@ -1,10 +1,9 @@
-import { apiClient, unwrapList } from './client'
+import { apiClient, fetchAll, unwrapList } from './client'
 import type { Candidato, Setor, Vaga, VagaHistorico, VagaPrioridade, VagaStatus } from '../types'
 
 export async function listVagas(status?: VagaStatus[]): Promise<Vaga[]> {
-  const params = status && status.length ? { status: status.join(',') } : undefined
-  const { data } = await apiClient.get('/vagas/', { params })
-  return unwrapList<Vaga>(data)
+  const params = status && status.length ? { status: status.join(',') } : {}
+  return fetchAll<Vaga>('/vagas/', params)
 }
 
 export async function getVaga(id: string): Promise<Vaga> {

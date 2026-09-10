@@ -80,3 +80,30 @@ apiClient.interceptors.response.use(
 export function unwrapList<T>(data: T[] | { results: T[] }): T[] {
   return Array.isArray(data) ? data : data.results
 }
+
+interface PaginaDRF<T> {
+  results: T[]
+  next: string | null
+}
+
+/**
+ * Busca uma lista paginada inteira (segue `next` até acabar). Use para telas
+ * que precisam de todos os registros — quadros kanban, tabelas da Listagem —
+ * já que a API pagina em 20 por página.
+ */
+export async function fetchAll<T>(
+  url: string,
+  params: Record<string, unknown> = {},
+): Promise<T[]> {
+  const out: T[] = []
+  let page = 1
+  for (;;) {
+    const { data } = await apiClient.get<T[] | PaginaDRF<T>>(url, {
+      params: { ...params, page, page_size: 100 },
+    })
+    if (Array.isArray(data)) return data
+    out.push(...data.results)
+    if (!data.next) return out
+    page += 1
+  }
+}

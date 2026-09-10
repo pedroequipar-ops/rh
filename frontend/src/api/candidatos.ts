@@ -1,4 +1,4 @@
-import { apiClient, unwrapList } from './client'
+import { apiClient, fetchAll } from './client'
 import type { Candidato, CandidatoExtraido } from '../types'
 
 export interface UploadUrlResponse {
@@ -62,8 +62,7 @@ export async function updateCandidato(id: string, input: Partial<CandidatoInput>
 }
 
 export async function listCandidatos(): Promise<Candidato[]> {
-  const { data } = await apiClient.get('/candidatos/')
-  return unwrapList<Candidato>(data)
+  return fetchAll<Candidato>('/candidatos/')
 }
 
 export async function getCurriculoUrl(id: string): Promise<string> {

@@ -1,4 +1,4 @@
-import { apiClient, unwrapList } from './client'
+import { apiClient, fetchAll } from './client'
 import type { UsuarioResumo } from '../types'
 
 export type TarefaAlvoTipo = 'VAGA' | 'CANDIDATO'
@@ -35,15 +35,12 @@ export interface ListTarefasParams {
 }
 
 export async function listTarefas(params: ListTarefasParams = {}): Promise<Tarefa[]> {
-  const { data } = await apiClient.get('/tarefas/', {
-    params: {
-      responsavel: params.responsavel,
-      alvo_tipo: params.alvo_tipo,
-      alvo_id: params.alvo_id,
-      pendentes: params.pendentes ? '1' : undefined,
-    },
+  return fetchAll<Tarefa>('/tarefas/', {
+    responsavel: params.responsavel,
+    alvo_tipo: params.alvo_tipo,
+    alvo_id: params.alvo_id,
+    pendentes: params.pendentes ? '1' : undefined,
   })
-  return unwrapList<Tarefa>(data)
 }
 
 export async function createTarefa(input: TarefaInput): Promise<Tarefa> {
