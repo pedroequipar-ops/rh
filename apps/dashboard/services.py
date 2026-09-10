@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F, Q, Sum, Window
-from django.db.models.functions import Lead
+from django.db.models.functions import Lead, TruncWeek
+from django.utils import timezone
 
 from apps.candidatos.models import Candidato
 from apps.chat.models import ChatMensagem
@@ -12,6 +15,7 @@ STATUS_ATIVOS = {S.SOLICITADA, S.APROVADA, S.PUBLICADA, S.ENCERRADA, S.EM_TRIAGE
 
 LIMITE_ATRASADAS = 10
 LIMITE_TOP_COBRANCAS = 5
+SEMANAS_SERIE = 8
 
 
 def _escopo_vagas(company_id, setor_id=None, inicio=None, fim=None):
@@ -49,6 +53,18 @@ def vagas_por_status(company_id, setor_id=None, inicio=None, fim=None) -> list[d
         {"status": status, "status_display": label, "total": contagem.get(status, 0)}
         for status, label in Vaga.Status.choices
     ]
+
+
+def vagas_ativas_por_setor(company_id, setor_id=None, limite=8) -> list[dict]:
+    """Vagas em status ativo agrupadas por setor, maiores volumes primeiro."""
+    qs = (
+        _escopo_vagas(company_id, setor_id)
+        .filter(status__in=STATUS_ATIVOS)
+        .values("setor__nome")
+        .annotate(total=Count("id"))
+        .order_by("-total", "setor__nome")[:limite]
+    )
+    return [{"setor": r["setor__nome"], "total": r["total"]} for r in qs]
 
 
 def vagas_atrasadas(company_id, setor_id=None, limite=LIMITE_ATRASADAS) -> list[dict]:
@@ -176,6 +192,38 @@ def chats_sem_resposta(company_id, user_role, setor_id=None) -> int:
     )
 
     return vagas_pendentes + candidatos_pendentes
+
+
+def vagas_series(company_id, setor_id=None, semanas=SEMANAS_SERIE) -> list[dict]:
+    """Vagas criadas x preenchidas por semana (segunda a domingo), nas últimas
+    `semanas` semanas incluindo a atual."""
+    hoje = timezone.localdate()
+    semana_atual = hoje - timedelta(days=hoje.weekday())
+    baldes = [semana_atual - timedelta(weeks=i) for i in range(semanas - 1, -1, -1)]
+    inicio = baldes[0]
+    base = _escopo_vagas(company_id, setor_id)
+
+    def _por_semana(qs, campo):
+        return {
+            row["semana"].date(): row["total"]
+            for row in (
+                qs.annotate(semana=TruncWeek(campo)).values("semana").annotate(total=Count("id"))
+            )
+            if row["semana"] is not None
+        }
+
+    criadas = _por_semana(base.filter(created_at__date__gte=inicio), "created_at")
+    preenchidas = _por_semana(
+        base.filter(status=S.PREENCHIDA, fechada_em__date__gte=inicio), "fechada_em"
+    )
+    return [
+        {
+            "semana": s.isoformat(),
+            "criadas": criadas.get(s, 0),
+            "preenchidas": preenchidas.get(s, 0),
+        }
+        for s in baldes
+    ]
 
 
 def candidaturas_vs_cadastrados(company_id, setor_id=None) -> list[dict]:

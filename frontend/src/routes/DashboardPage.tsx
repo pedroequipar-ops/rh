@@ -5,9 +5,14 @@ import { useSetores } from '../api/hooks/useSetores'
 import { useConcluirTarefa, useTarefas } from '../api/hooks/useTarefas'
 import { BuscarButton } from '../components/board/BuscarButton'
 import { StatCard } from '../components/dashboard/StatCard'
-import { StatusBarList } from '../components/dashboard/StatusBarList'
 import { FunnelChart } from '../components/dashboard/FunnelChart'
 import { AtrasadasList } from '../components/dashboard/AtrasadasList'
+import { HorizontalBarChart } from '../components/dashboard/charts/HorizontalBarChart'
+import { WeeklySeriesChart } from '../components/dashboard/charts/WeeklySeriesChart'
+import { CandidaturasChart } from '../components/dashboard/charts/CandidaturasChart'
+import { DonutChart } from '../components/dashboard/charts/DonutChart'
+import { GaugeChart } from '../components/dashboard/charts/GaugeChart'
+import { chart } from '../components/dashboard/charts/chartTheme'
 import { Card } from '../components/ui/Card'
 
 function fmtData(iso: string | null): string {
@@ -74,6 +79,13 @@ export function DashboardPage() {
         {isLoading || !data ? (
           <p className="text-sm text-slate-400">Carregando...</p>
         ) : (
+          (() => {
+            const serie = data.vagas_series ?? []
+            const porSetor = data.vagas_ativas_por_setor ?? []
+            const baseTaxa = data.resumo.ativas + data.resumo.preenchidas
+            const taxaPreenchimento = baseTaxa > 0 ? (data.resumo.preenchidas / baseTaxa) * 100 : 0
+            const mostrarPorSetor = porSetor.length > 1
+            return (
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
               <StatCard label="Vagas ativas" value={data.resumo.ativas} />
@@ -95,13 +107,40 @@ export function DashboardPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <Card className="p-4">
+              <h2 className="mb-1 text-sm font-semibold text-slate-700">
+                Vagas por semana — criadas x preenchidas
+              </h2>
+              <p className="mb-2 text-xs text-slate-400">Últimas 8 semanas</p>
+              <WeeklySeriesChart pontos={serie} />
+            </Card>
+
+            <div className={`grid grid-cols-1 gap-4 ${mostrarPorSetor ? 'lg:grid-cols-2' : ''}`}>
+              <Card className="p-4">
+                <h2 className="mb-1 text-sm font-semibold text-slate-700">Taxa de preenchimento</h2>
+                <p className="mb-2 text-xs text-slate-400">Preenchidas ÷ (ativas + preenchidas)</p>
+                <GaugeChart valor={taxaPreenchimento} legenda={`${data.resumo.preenchidas} de ${baseTaxa}`} />
+              </Card>
+
+              {mostrarPorSetor && (
+                <Card className="p-4">
+                  <h2 className="mb-3 text-sm font-semibold text-slate-700">Vagas ativas por setor</h2>
+                  <DonutChart
+                    unidade="vagas ativas"
+                    data={porSetor.map((s) => ({ label: s.setor, value: s.total }))}
+                  />
+                </Card>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
               <Card className="p-4">
                 <h2 className="mb-3 text-sm font-semibold text-slate-700">Vagas por status</h2>
-                <StatusBarList
-                  items={data.vagas_por_status
+                <HorizontalBarChart
+                  data={data.vagas_por_status
                     .filter((s) => s.total > 0)
-                    .map((s) => ({ key: s.status, label: s.status_display, total: s.total }))}
+                    .map((s) => ({ label: s.status_display, value: s.total }))}
+                  emptyMessage="Nenhuma vaga no período."
                 />
               </Card>
 
@@ -146,30 +185,19 @@ export function DashboardPage() {
                 <h2 className="mb-3 text-sm font-semibold text-slate-700">
                   Candidaturas informadas x cadastradas
                 </h2>
-                {data.candidaturas_vs_cadastrados.length === 0 ? (
-                  <p className="text-sm text-slate-400">Nenhuma vaga publicada.</p>
-                ) : (
-                  <div className="flex flex-col gap-1.5">
-                    {data.candidaturas_vs_cadastrados.map((item) => (
-                      <div key={item.vaga_id} className="flex items-center justify-between gap-2 text-sm">
-                        <span className="min-w-0 flex-1 truncate text-slate-700">{item.titulo}</span>
-                        <span className="shrink-0 text-xs text-slate-400">
-                          {item.candidaturas} informadas · {item.cadastrados} cadastradas
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <CandidaturasChart itens={data.candidaturas_vs_cadastrados} />
               </Card>
 
               <Card className="p-4">
-                <h2 className="mb-3 text-sm font-semibold text-slate-700">Tempo médio por status</h2>
-                <StatusBarList
-                  items={data.tempo_medio_por_status.map((s) => ({
-                    key: s.status,
-                    label: s.status_display,
-                    total: s.horas_media,
-                  }))}
+                <h2 className="mb-1 text-sm font-semibold text-slate-700">Tempo médio por status</h2>
+                <p className="mb-2 text-xs text-slate-400">Horas em cada status até a transição seguinte</p>
+                <HorizontalBarChart
+                  color={chart.series2}
+                  unidade="h"
+                  data={data.tempo_medio_por_status
+                    .filter((s) => s.horas_media > 0)
+                    .sort((a, b) => b.horas_media - a.horas_media)
+                    .map((s) => ({ label: s.status_display, value: s.horas_media }))}
                   emptyMessage="Ainda sem transições suficientes."
                 />
               </Card>
@@ -194,6 +222,8 @@ export function DashboardPage() {
               </Card>
             </div>
           </div>
+            )
+          })()
         )}
       </div>
     </div>

@@ -40,9 +40,11 @@ class DashboardView(APIView):
             {
                 "resumo": services.resumo_vagas(company_id, setor_id, inicio, fim),
                 "vagas_por_status": services.vagas_por_status(company_id, setor_id, inicio, fim),
+                "vagas_ativas_por_setor": services.vagas_ativas_por_setor(company_id, setor_id),
                 "vagas_atrasadas": services.vagas_atrasadas(company_id, setor_id),
                 "funil_etapas": services.funil_etapas(company_id, setor_id),
                 "candidaturas_vs_cadastrados": services.candidaturas_vs_cadastrados(company_id, setor_id),
+                "vagas_series": services.vagas_series(company_id, setor_id),
                 "tempo_medio_por_status": services.tempo_medio_por_status(company_id, setor_id),
                 "tempo_medio_preenchimento": services.tempo_medio_preenchimento(company_id, setor_id),
                 "cobrancas": services.cobrancas(company_id, setor_id),

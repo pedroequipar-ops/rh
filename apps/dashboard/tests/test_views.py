@@ -184,3 +184,44 @@ def test_dashboard_v2_chats_sem_resposta(
 
     # 1 vaga com última msg do setor sem resposta + 1 candidato idem = 2.
     assert response.data["chats_sem_resposta"] == 2
+
+
+@pytest.mark.django_db
+def test_dashboard_vagas_series_por_semana(company_factory, setor_factory, user_factory, vaga_factory):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    agora = timezone.now()
+
+    recente = vaga_factory(company=company, setor=setor, status=Vaga.Status.PUBLICADA)
+    antiga = vaga_factory(
+        company=company, setor=setor, status=Vaga.Status.PREENCHIDA, fechada_em=agora
+    )
+    Vaga.objects.filter(pk=antiga.pk).update(created_at=agora - timedelta(weeks=3))
+
+    client = _client_for(rh, company)
+    serie = client.get("/v1/dashboard/").data["vagas_series"]
+
+    assert len(serie) == 8
+    assert serie[-1]["criadas"] == 1  # só a `recente` foi criada nesta semana
+    assert serie[-1]["preenchidas"] == 1  # `antiga` fechou nesta semana
+    assert serie[-4]["criadas"] == 1  # `antiga` foi criada 3 semanas atrás
+    assert str(recente.id)  # sanity
+
+
+@pytest.mark.django_db
+def test_dashboard_vagas_ativas_por_setor(company_factory, setor_factory, user_factory, vaga_factory):
+    company = company_factory()
+    ti = setor_factory(company=company, nome="TI")
+    rh_setor = setor_factory(company=company, nome="RH")
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    vaga_factory(company=company, setor=ti, status=Vaga.Status.PUBLICADA)
+    vaga_factory(company=company, setor=ti, status=Vaga.Status.EM_TRIAGEM)
+    vaga_factory(company=company, setor=rh_setor, status=Vaga.Status.PUBLICADA)
+    vaga_factory(company=company, setor=rh_setor, status=Vaga.Status.PREENCHIDA)  # não conta
+
+    client = _client_for(rh, company)
+    por_setor = client.get("/v1/dashboard/").data["vagas_ativas_por_setor"]
+
+    assert por_setor == [{"setor": "TI", "total": 2}, {"setor": "RH", "total": 1}]

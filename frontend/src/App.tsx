@@ -1,8 +1,8 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/common/AppShell'
 import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { LoginPage } from './routes/LoginPage'
-import { DashboardPage } from './routes/DashboardPage'
 import { MinhasTarefasPage } from './routes/MinhasTarefasPage'
 import { RelatorioBuilder } from './routes/RelatorioBuilder'
 import { ListagemPage } from './routes/ListagemPage'
@@ -19,6 +19,11 @@ import { VagaFormPage as SetorVagaFormPage } from './routes/setor/VagaFormPage'
 import { CandidatoModal } from './components/candidato/CandidatoModal'
 import { VagaDetalheModal } from './components/vaga/VagaDetalheModal'
 
+// carregado sob demanda: puxa o recharts pra fora do bundle inicial
+const DashboardPage = lazy(() =>
+  import('./routes/DashboardPage').then((m) => ({ default: m.DashboardPage })),
+)
+
 export default function App() {
   return (
     <Routes>
@@ -26,7 +31,14 @@ export default function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <Suspense fallback={<div className="p-5 text-sm text-slate-400">Carregando...</div>}>
+                <DashboardPage />
+              </Suspense>
+            }
+          />
           <Route path="/tarefas" element={<MinhasTarefasPage />} />
           <Route path="/relatorios" element={<RelatorioBuilder />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />

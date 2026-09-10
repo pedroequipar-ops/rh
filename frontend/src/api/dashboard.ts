@@ -56,12 +56,25 @@ export interface Cobrancas {
   top_vagas: CobrancaVaga[]
 }
 
+export interface VagaPorSetor {
+  setor: string
+  total: number
+}
+
+export interface VagaSeriePonto {
+  semana: string
+  criadas: number
+  preenchidas: number
+}
+
 export interface DashboardData {
   resumo: DashboardResumo
   vagas_por_status: VagaPorStatus[]
+  vagas_ativas_por_setor: VagaPorSetor[]
   vagas_atrasadas: VagaAtrasada[]
   funil_etapas: FunilEtapa[]
   candidaturas_vs_cadastrados: CandidaturaVsCadastrado[]
+  vagas_series: VagaSeriePonto[]
   tempo_medio_por_status: TempoMedioStatus[]
   tempo_medio_preenchimento: number | null
   cobrancas: Cobrancas

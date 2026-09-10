@@ -28,6 +28,23 @@ body {
   margin: 0;
 }
 
+/* Recharts põe tabindex no wrapper/surface/camadas e o browser desenha um
+   contorno preto ao clicar no gráfico — sem valor de acessibilidade aqui. */
+[class*='recharts-']:focus,
+[class*='recharts-']:focus-visible,
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-wrapper *:focus,
+.recharts-wrapper *:focus-visible {
+  outline: none !important;
+}
+
+/* Recharts pinta o texto da legenda com a cor da série — texto deve usar
+   tinta neutra, a identidade fica na bolinha colorida ao lado. */
+.recharts-legend-item-text {
+  color: #52514e !important;
+}
+
 .scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
