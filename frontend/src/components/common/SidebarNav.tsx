@@ -6,7 +6,6 @@ import {
   List,
   Plus,
   Settings,
-  UserPlus,
 } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
@@ -35,7 +34,8 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
       extraActive: pathname.startsWith(`${base}/pessoas`),
     },
     { to: '/tarefas', label: 'Tarefas', icon: CheckSquare },
-    { to: `${base}/listagem`, label: 'Listagem', icon: List },
+    // RH acessa a Listagem dentro de Configurações → Dados; SETOR não tem Configurações
+    ...(isRh ? [] : [{ to: `${base}/listagem`, label: 'Listagem', icon: List }]),
     { to: '/relatorios', label: 'Relatórios', icon: FileBarChart },
     ...(isRh ? [{ to: '/config', label: 'Configurações', icon: Settings }] : []),
   ]
@@ -77,7 +77,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
 
       <div className="flex flex-col gap-1.5">
         <ButtonLink
-          to={`${base}/vagas/nova`}
+          to={`${base}/vagas/nova-vaga`}
           onClick={onNavigate}
           size="sm"
           title={collapsed ? 'Nova vaga' : undefined}
@@ -86,19 +86,6 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
           <Plus size={15} />
           {!collapsed && 'Nova vaga'}
         </ButtonLink>
-        {isRh && (
-          <ButtonLink
-            to="/rh/candidatos/novo"
-            onClick={onNavigate}
-            variant="secondary"
-            size="sm"
-            title={collapsed ? 'Novo candidato' : undefined}
-            className={cn('w-full', collapsed && 'px-0')}
-          >
-            <UserPlus size={15} />
-            {!collapsed && 'Novo candidato'}
-          </ButtonLink>
-        )}
       </div>
     </nav>
   )

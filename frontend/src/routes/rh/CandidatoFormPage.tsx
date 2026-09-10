@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { UploadCloud } from 'lucide-react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { FileText, Loader2, Sparkles, UploadCloud } from 'lucide-react'
 import {
   analisarCurriculo,
   createCandidato,
@@ -9,12 +9,21 @@ import {
 } from '../../api/candidatos'
 import { listVagas } from '../../api/vagas'
 import { useToast } from '../../context/ToastContext'
+import { Button, Field, FormModal, Input, Select, Textarea } from '../../components/ui'
 import type { Vaga } from '../../types'
 
 const MAX_CURRICULO_SIZE_BYTES = 10 * 1024 * 1024
+const FORM_ID = 'candidato-form'
+
+function SectionTitle({ children }: { children: ReactNode }) {
+  return (
+    <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">{children}</h2>
+  )
+}
 
 export function CandidatoFormPage() {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const { showToast } = useToast()
   const [searchParams] = useSearchParams()
   const vagaPreselecionada = searchParams.get('vaga')
@@ -41,6 +50,12 @@ export function CandidatoFormPage() {
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const ocupado = uploading || analyzing
+
+  function fechar() {
+    navigate(pathname.replace(/\/novo-candidato\/?$/, '') || '/rh/pessoas')
+  }
 
   useEffect(() => {
     listVagas()
@@ -135,164 +150,176 @@ export function CandidatoFormPage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl p-6">
-      <h1 className="mb-6 text-xl font-semibold text-slate-800">Novo candidato</h1>
-
-      <div className="mb-6 rounded border border-dashed border-slate-300 p-4">
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/pdf"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={uploading || analyzing}
-          className="flex w-full items-center justify-center gap-2 rounded border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-        >
-          <UploadCloud size={16} />
-          {fileName ?? 'Selecionar currículo (PDF) — opcional'}
-        </button>
-        {uploading && <p className="mt-2 text-xs text-slate-500">Enviando currículo...</p>}
-        {analyzing && <p className="mt-2 text-xs text-slate-500">Analisando currículo com IA...</p>}
-        {justificativa && !analyzing && (
-          <p className="mt-2 text-xs text-slate-500">Sugestão da IA: {justificativa}</p>
-        )}
-        {!fileName && !uploading && (
-          <p className="mt-2 text-xs text-slate-400">
-            Sem currículo, é só preencher os campos abaixo manualmente.
-          </p>
-        )}
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="mb-1 block text-sm font-medium text-slate-600">Nome</label>
+    <FormModal
+      title="Novo candidato"
+      description="Anexe um currículo em PDF para preencher automaticamente, ou digite os dados à mão."
+      onClose={fechar}
+      footer={
+        <>
+          <Button type="button" variant="ghost" onClick={fechar}>
+            Cancelar
+          </Button>
+          <Button type="submit" form={FORM_ID} disabled={submitting || ocupado}>
+            {submitting ? 'Salvando...' : 'Cadastrar candidato'}
+          </Button>
+        </>
+      }
+    >
+      <form id={FORM_ID} onSubmit={handleSubmit} className="space-y-5">
+        <div className="rounded-lg border border-slate-200 p-4">
           <input
-            required
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            ref={fileInputRef}
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            className="hidden"
           />
-        </div>
-
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">Email</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">Telefone</label>
-            <input
-              required
-              value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">CPF</label>
-            <input
-              value={cpf}
-              onChange={(e) => setCpf(e.target.value)}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">LinkedIn</label>
-            <input
-              value={linkedinUrl}
-              onChange={(e) => setLinkedinUrl(e.target.value)}
-              placeholder="Opcional"
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">Formação</label>
-            <textarea
-              rows={3}
-              value={perfilFormacao}
-              onChange={(e) => setPerfilFormacao(e.target.value)}
-              placeholder="Formação acadêmica e cursos"
-              className="min-h-[4rem] max-h-[12rem] w-full resize-y rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">Experiência</label>
-            <textarea
-              rows={3}
-              value={perfilExperiencia}
-              onChange={(e) => setPerfilExperiencia(e.target.value)}
-              placeholder="Experiências profissionais relevantes"
-              className="min-h-[4rem] max-h-[12rem] w-full resize-y rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">Habilidades</label>
-            <textarea
-              rows={3}
-              value={perfilHabilidades}
-              onChange={(e) => setPerfilHabilidades(e.target.value)}
-              placeholder="Principais habilidades técnicas e ferramentas"
-              className="min-h-[4rem] max-h-[12rem] w-full resize-y rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">Certificações</label>
-            <textarea
-              rows={3}
-              value={perfilCertificacoes}
-              onChange={(e) => setPerfilCertificacoes(e.target.value)}
-              placeholder="Certificações obtidas"
-              className="min-h-[4rem] max-h-[12rem] w-full resize-y rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-slate-600">Vaga</label>
-          <select
-            required
-            value={vagaId}
-            disabled={Boolean(vagaPreselecionada)}
-            onChange={(e) => setVagaId(e.target.value)}
-            className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500"
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={ocupado}
+            className="group flex w-full flex-col items-center gap-2 rounded-lg border-2 border-dashed border-slate-300 px-4 py-6 text-center transition-colors hover:border-blue-400 hover:bg-blue-50/40 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <option value="" disabled>
-              Selecione uma vaga
-            </option>
-            {vagas.map((vaga) => (
-              <option key={vaga.id} value={vaga.id}>
-                {vaga.titulo}
-              </option>
-            ))}
-          </select>
+            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition-colors group-hover:bg-blue-100 group-hover:text-blue-600">
+              {fileName ? <FileText size={18} /> : <UploadCloud size={18} />}
+            </span>
+            <span className="text-sm font-medium text-slate-700">
+              {fileName ?? 'Selecionar currículo (PDF)'}
+            </span>
+            <span className="text-xs text-slate-400">Opcional · PDF de até 10 MB</span>
+          </button>
+
+          {ocupado && (
+            <p className="mt-3 flex items-center justify-center gap-2 text-xs text-slate-500">
+              <Loader2 size={13} className="animate-spin" />
+              {uploading ? 'Enviando currículo...' : 'Analisando currículo com IA...'}
+            </p>
+          )}
+          {justificativa && !analyzing && (
+            <div className="mt-3 flex gap-2 rounded-md bg-blue-50 px-3 py-2 text-xs text-blue-800">
+              <Sparkles size={14} className="mt-px shrink-0 text-blue-500" />
+              <span>
+                <span className="font-semibold">Sugestão da IA:</span> {justificativa}
+              </span>
+            </div>
+          )}
         </div>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        <section className="space-y-4 border-t border-slate-100 pt-5">
+          <SectionTitle>Contato</SectionTitle>
+          <Field label="Nome" htmlFor="cand-nome">
+            <Input
+              id="cand-nome"
+              required
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+            />
+          </Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Email" htmlFor="cand-email">
+              <Input
+                id="cand-email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Field>
+            <Field label="Telefone" htmlFor="cand-tel">
+              <Input
+                id="cand-tel"
+                required
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
+              />
+            </Field>
+            <Field label="CPF" htmlFor="cand-cpf">
+              <Input id="cand-cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+            </Field>
+            <Field label="LinkedIn" htmlFor="cand-linkedin">
+              <Input
+                id="cand-linkedin"
+                value={linkedinUrl}
+                onChange={(e) => setLinkedinUrl(e.target.value)}
+                placeholder="Opcional"
+              />
+            </Field>
+          </div>
+        </section>
 
-        <button
-          type="submit"
-          disabled={submitting || uploading || analyzing}
-          className="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50"
-        >
-          {submitting ? 'Salvando...' : 'Cadastrar candidato'}
-        </button>
+        <section className="space-y-4 border-t border-slate-100 pt-5">
+          <SectionTitle>Perfil profissional</SectionTitle>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Formação" htmlFor="cand-formacao">
+              <Textarea
+                id="cand-formacao"
+                rows={3}
+                value={perfilFormacao}
+                onChange={(e) => setPerfilFormacao(e.target.value)}
+                placeholder="Formação acadêmica e cursos"
+              />
+            </Field>
+            <Field label="Experiência" htmlFor="cand-exp">
+              <Textarea
+                id="cand-exp"
+                rows={3}
+                value={perfilExperiencia}
+                onChange={(e) => setPerfilExperiencia(e.target.value)}
+                placeholder="Experiências profissionais relevantes"
+              />
+            </Field>
+            <Field label="Habilidades" htmlFor="cand-hab">
+              <Textarea
+                id="cand-hab"
+                rows={3}
+                value={perfilHabilidades}
+                onChange={(e) => setPerfilHabilidades(e.target.value)}
+                placeholder="Principais habilidades técnicas e ferramentas"
+              />
+            </Field>
+            <Field label="Certificações" htmlFor="cand-cert">
+              <Textarea
+                id="cand-cert"
+                rows={3}
+                value={perfilCertificacoes}
+                onChange={(e) => setPerfilCertificacoes(e.target.value)}
+                placeholder="Certificações obtidas"
+              />
+            </Field>
+          </div>
+        </section>
+
+        <section className="border-t border-slate-100 pt-5">
+          <Field
+            label="Vaga"
+            htmlFor="cand-vaga"
+            hint={vagaPreselecionada ? 'Definida pela vaga de origem.' : undefined}
+          >
+            <Select
+              id="cand-vaga"
+              required
+              value={vagaId}
+              disabled={Boolean(vagaPreselecionada)}
+              onChange={(e) => setVagaId(e.target.value)}
+            >
+              <option value="" disabled>
+                Selecione uma vaga
+              </option>
+              {vagas.map((vaga) => (
+                <option key={vaga.id} value={vaga.id}>
+                  {vaga.titulo}
+                </option>
+              ))}
+            </Select>
+          </Field>
+        </section>
+
+        {error && (
+          <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </div>
+        )}
       </form>
-    </div>
+    </FormModal>
   )
 }

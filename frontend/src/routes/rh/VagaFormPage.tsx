@@ -1,15 +1,25 @@
-import { useEffect, useState, type FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { createVaga, listSetores } from '../../api/vagas'
 import { useAuth } from '../../context/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import { MOTIVO_SOLICITACAO_OPCOES } from '../../constants/vagaStatus'
+import { Button, Field, FormModal, Input, Select, Textarea } from '../../components/ui'
 import type { Setor, VagaPrioridade } from '../../types'
+
+const FORM_ID = 'vaga-form'
+
+function SectionTitle({ children }: { children: ReactNode }) {
+  return (
+    <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">{children}</h2>
+  )
+}
 
 export function VagaFormPage() {
   const { me } = useAuth()
   const { showToast } = useToast()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const isRh = me?.role === 'RH'
 
   const [titulo, setTitulo] = useState('')
@@ -26,6 +36,10 @@ export function VagaFormPage() {
   const [dataAlvo, setDataAlvo] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  function fechar() {
+    navigate(pathname.replace(/\/nova-vaga\/?$/, '') || (isRh ? '/rh/vagas' : '/setor/vagas'))
+  }
 
   useEffect(() => {
     if (!isRh) return
@@ -62,150 +76,170 @@ export function VagaFormPage() {
   }
 
   return (
-    <div className="mx-auto max-w-xl p-6">
-      <h1 className="mb-6 text-xl font-semibold text-slate-800">Nova vaga</h1>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="mb-1 block text-sm font-medium text-slate-600">Título</label>
-          <input
-            required
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-          />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-slate-600">Descrição</label>
-          <textarea
-            required
-            rows={4}
-            value={descricao}
-            onChange={(e) => setDescricao(e.target.value)}
-            className="min-h-[6rem] max-h-[20rem] w-full resize-y rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-          />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-sm font-medium text-slate-600">Requisitos</label>
-          <textarea
-            required
-            rows={3}
-            value={requisitos}
-            onChange={(e) => setRequisitos(e.target.value)}
-            className="min-h-[6rem] max-h-[16rem] w-full resize-y rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-          />
-        </div>
-
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">Quantidade de vagas</label>
-            <input
-              type="number"
-              min={1}
+    <FormModal
+      title="Nova vaga"
+      description={
+        isRh
+          ? 'Preencha os dados para abrir a vaga no quadro.'
+          : 'Descreva a necessidade e envie a solicitação para o RH.'
+      }
+      onClose={fechar}
+      footer={
+        <>
+          <Button type="button" variant="ghost" onClick={fechar}>
+            Cancelar
+          </Button>
+          <Button type="submit" form={FORM_ID} disabled={submitting}>
+            {submitting ? 'Salvando...' : isRh ? 'Criar vaga' : 'Enviar solicitação'}
+          </Button>
+        </>
+      }
+    >
+      <form id={FORM_ID} onSubmit={handleSubmit} className="space-y-5">
+        <section className="space-y-4 border-t border-slate-100 pt-5 first:border-0 first:pt-0">
+          <SectionTitle>Descrição</SectionTitle>
+          <Field label="Título" htmlFor="vaga-titulo">
+            <Input
+              id="vaga-titulo"
               required
-              value={quantidadeVagas}
-              onChange={(e) => setQuantidadeVagas(Number(e.target.value))}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
             />
-          </div>
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">Salário</label>
-            <input
-              value={salario}
-              onChange={(e) => setSalario(e.target.value)}
-              placeholder="Opcional"
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          </Field>
+          <Field label="Descrição" htmlFor="vaga-descricao">
+            <Textarea
+              id="vaga-descricao"
+              required
+              rows={4}
+              className="max-h-80 min-h-24"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
             />
-          </div>
-        </div>
+          </Field>
+          <Field label="Requisitos" htmlFor="vaga-requisitos">
+            <Textarea
+              id="vaga-requisitos"
+              required
+              rows={3}
+              className="max-h-64 min-h-24"
+              value={requisitos}
+              onChange={(e) => setRequisitos(e.target.value)}
+            />
+          </Field>
+        </section>
 
-        <div className="flex flex-wrap gap-4">
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">Prioridade</label>
-            <select
-              value={prioridade}
-              onChange={(e) => setPrioridade(Number(e.target.value) as VagaPrioridade)}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            >
-              <option value={1}>Baixa</option>
-              <option value={2}>Média</option>
-              <option value={3}>Alta</option>
-            </select>
+        <section className="space-y-4 border-t border-slate-100 pt-5 first:border-0 first:pt-0">
+          <SectionTitle>Detalhes</SectionTitle>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Quantidade de vagas" htmlFor="vaga-qtd">
+              <Input
+                id="vaga-qtd"
+                type="number"
+                min={1}
+                required
+                value={quantidadeVagas}
+                onChange={(e) => setQuantidadeVagas(Number(e.target.value))}
+              />
+            </Field>
+            <Field label="Salário" htmlFor="vaga-salario">
+              <Input
+                id="vaga-salario"
+                value={salario}
+                onChange={(e) => setSalario(e.target.value)}
+                placeholder="Opcional"
+              />
+            </Field>
+            <Field label="Prioridade" htmlFor="vaga-prioridade">
+              <Select
+                id="vaga-prioridade"
+                value={prioridade}
+                onChange={(e) => setPrioridade(Number(e.target.value) as VagaPrioridade)}
+              >
+                <option value={1}>Baixa</option>
+                <option value={2}>Média</option>
+                <option value={3}>Alta</option>
+              </Select>
+            </Field>
+            <Field label="Motivo" htmlFor="vaga-motivo">
+              <Select
+                id="vaga-motivo"
+                value={motivoSolicitacao}
+                onChange={(e) => setMotivoSolicitacao(e.target.value)}
+              >
+                {MOTIVO_SOLICITACAO_OPCOES.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </Select>
+            </Field>
           </div>
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">Motivo</label>
-            <select
-              value={motivoSolicitacao}
-              onChange={(e) => setMotivoSolicitacao(e.target.value)}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            >
-              {MOTIVO_SOLICITACAO_OPCOES.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <label className="flex items-end gap-2 pb-2 text-sm text-slate-700">
-            <input type="checkbox" checked={urgente} onChange={(e) => setUrgente(e.target.checked)} />
-            Urgente
+          <label className="flex cursor-pointer items-center gap-2.5 rounded-md border border-slate-200 px-3 py-2.5 text-sm text-slate-700 transition-colors hover:bg-slate-50">
+            <input
+              type="checkbox"
+              className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+              checked={urgente}
+              onChange={(e) => setUrgente(e.target.checked)}
+            />
+            <span>
+              <span className="font-medium">Marcar como urgente</span>
+              <span className="block text-xs text-slate-400">
+                Destaca a vaga no quadro e nas cobranças.
+              </span>
+            </span>
           </label>
-        </div>
+        </section>
 
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">Início previsto</label>
-            <input
-              type="date"
-              value={dataInicio}
-              onChange={(e) => setDataInicio(e.target.value)}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
+        <section className="space-y-4 border-t border-slate-100 pt-5 first:border-0 first:pt-0">
+          <SectionTitle>Prazos</SectionTitle>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Início previsto" htmlFor="vaga-inicio">
+              <Input
+                id="vaga-inicio"
+                type="date"
+                value={dataInicio}
+                onChange={(e) => setDataInicio(e.target.value)}
+              />
+            </Field>
+            <Field label="Prazo p/ preencher" htmlFor="vaga-alvo">
+              <Input
+                id="vaga-alvo"
+                type="date"
+                value={dataAlvo}
+                onChange={(e) => setDataAlvo(e.target.value)}
+              />
+            </Field>
           </div>
-          <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-slate-600">Prazo p/ preencher</label>
-            <input
-              type="date"
-              value={dataAlvo}
-              onChange={(e) => setDataAlvo(e.target.value)}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            />
-          </div>
-        </div>
+        </section>
 
         {isRh && (
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">Setor solicitante</label>
-            <select
-              required
-              value={setorId}
-              onChange={(e) => setSetorId(e.target.value)}
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
-            >
-              <option value="" disabled>
-                Selecione um setor
-              </option>
-              {setores.map((setor) => (
-                <option key={setor.id} value={setor.id}>
-                  {setor.nome}
+          <section className="border-t border-slate-100 pt-5">
+            <Field label="Setor solicitante" htmlFor="vaga-setor">
+              <Select
+                id="vaga-setor"
+                required
+                value={setorId}
+                onChange={(e) => setSetorId(e.target.value)}
+              >
+                <option value="" disabled>
+                  Selecione um setor
                 </option>
-              ))}
-            </select>
-          </div>
+                {setores.map((setor) => (
+                  <option key={setor.id} value={setor.id}>
+                    {setor.nome}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+          </section>
         )}
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={submitting}
-          className="rounded bg-slate-800 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50"
-        >
-          {submitting ? 'Salvando...' : isRh ? 'Criar vaga' : 'Enviar solicitação'}
-        </button>
+        {error && (
+          <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </div>
+        )}
       </form>
-    </div>
+    </FormModal>
   )
 }

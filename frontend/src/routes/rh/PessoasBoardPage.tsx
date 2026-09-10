@@ -48,7 +48,7 @@ export function PessoasBoardPage() {
   }
 
   function handleRegistrarCandidato(vaga: Vaga, etapa: EtapaKanban) {
-    navigate(`/rh/candidatos/novo?vaga=${vaga.id}&etapa=${etapa.id}`)
+    navigate(`/rh/pessoas/novo-candidato?vaga=${vaga.id}&etapa=${etapa.id}`)
   }
 
   function handleEtapasChange() {

@@ -13,9 +13,8 @@ import { UsuariosConfig } from './routes/config/UsuariosConfig'
 import { EmpresaConfig } from './routes/config/EmpresaConfig'
 import { VagasBoardPage } from './routes/rh/VagasBoardPage'
 import { PessoasBoardPage } from './routes/rh/PessoasBoardPage'
-import { VagaFormPage as RhVagaFormPage } from './routes/rh/VagaFormPage'
+import { VagaFormPage } from './routes/rh/VagaFormPage'
 import { CandidatoFormPage } from './routes/rh/CandidatoFormPage'
-import { VagaFormPage as SetorVagaFormPage } from './routes/setor/VagaFormPage'
 import { CandidatoModal } from './components/candidato/CandidatoModal'
 import { VagaDetalheModal } from './components/vaga/VagaDetalheModal'
 
@@ -47,18 +46,17 @@ export default function App() {
             <Route path="/rh/vagas" element={<VagasBoardPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
+              <Route path="nova-vaga" element={<VagaFormPage />} />
+              <Route path="novo-candidato" element={<CandidatoFormPage />} />
             </Route>
             <Route path="/rh/pessoas" element={<PessoasBoardPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
-            </Route>
-            <Route path="/rh/vagas/nova" element={<RhVagaFormPage />} />
-            <Route path="/rh/candidatos/novo" element={<CandidatoFormPage />} />
-            <Route path="/rh/listagem" element={<ListagemPage />}>
-              <Route path="candidato/:id" element={<CandidatoModal />} />
-              <Route path="vaga/:id" element={<VagaDetalheModal />} />
+              <Route path="nova-vaga" element={<VagaFormPage />} />
+              <Route path="novo-candidato" element={<CandidatoFormPage />} />
             </Route>
             <Route path="/rh/kanban/*" element={<Navigate to="/rh/pessoas" replace />} />
+            <Route path="/rh/listagem" element={<Navigate to="/config/listagem" replace />} />
 
             <Route path="/config" element={<ConfigLayout />}>
               <Route index element={<Navigate to="/config/etapas" replace />} />
@@ -66,6 +64,12 @@ export default function App() {
               <Route path="setores" element={<SetoresConfig />} />
               <Route path="usuarios" element={<UsuariosConfig />} />
               <Route path="empresa" element={<EmpresaConfig />} />
+              <Route path="listagem" element={<ListagemPage embedded />}>
+                <Route path="candidato/:id" element={<CandidatoModal />} />
+                <Route path="vaga/:id" element={<VagaDetalheModal />} />
+                <Route path="nova-vaga" element={<VagaFormPage />} />
+                <Route path="novo-candidato" element={<CandidatoFormPage />} />
+              </Route>
             </Route>
           </Route>
 
@@ -73,15 +77,17 @@ export default function App() {
             <Route path="/setor/vagas" element={<VagasBoardPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
+              <Route path="nova-vaga" element={<VagaFormPage />} />
             </Route>
             <Route path="/setor/pessoas" element={<PessoasBoardPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
+              <Route path="nova-vaga" element={<VagaFormPage />} />
             </Route>
-            <Route path="/setor/vagas/nova" element={<SetorVagaFormPage />} />
             <Route path="/setor/listagem" element={<ListagemPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
+              <Route path="nova-vaga" element={<VagaFormPage />} />
             </Route>
             <Route path="/setor/kanban/*" element={<Navigate to="/setor/pessoas" replace />} />
           </Route>

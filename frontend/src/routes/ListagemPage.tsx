@@ -12,7 +12,8 @@ import type { Candidato, Vaga } from '../types'
 
 type Aba = 'candidatos' | 'vagas'
 
-export function ListagemPage() {
+/** `embedded`: renderizada dentro de Configurações (sem padding externo próprio). */
+export function ListagemPage({ embedded = false }: { embedded?: boolean }) {
   const location = useLocation()
   const { me } = useAuth()
   const isRh = me?.role === 'RH'
@@ -54,7 +55,7 @@ export function ListagemPage() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-4 p-4 sm:p-6">
+    <div className={clsx('flex h-full flex-col gap-4', !embedded && 'p-4 sm:p-6')}>
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-2">
         <nav className="flex gap-1">
           {abas.map((item) => (

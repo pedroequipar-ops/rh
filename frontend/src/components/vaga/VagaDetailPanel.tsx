@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { Bell, Flame, MessageCircle, Upload, UserPlus, X } from 'lucide-react'
 import clsx from 'clsx'
@@ -58,6 +58,7 @@ interface VagaDetailPanelProps {
 
 export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const qc = useQueryClient()
   const { me } = useAuth()
   const isRh = me?.role === 'RH'
@@ -468,7 +469,11 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               <Button
                 variant="secondary"
                 className="flex-1"
-                onClick={() => navigate(`/rh/candidatos/novo?vaga=${vaga.id}`)}
+                onClick={() =>
+                  navigate(
+                    `${pathname.replace(/\/vaga\/[^/]+$/, '')}/novo-candidato?vaga=${vaga.id}`,
+                  )
+                }
               >
                 <UserPlus size={14} /> Novo candidato
               </Button>
