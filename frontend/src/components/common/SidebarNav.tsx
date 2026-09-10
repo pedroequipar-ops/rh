@@ -1,4 +1,4 @@
-import { KanbanSquare, List, Plus, UserPlus } from 'lucide-react'
+import { Briefcase, List, Plus, UserPlus, Users } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ButtonLink } from '../ui/Button'
@@ -16,7 +16,8 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
   const base = isRh ? '/rh' : '/setor'
 
   const items = [
-    { to: `${base}/kanban`, label: 'Kanban', icon: KanbanSquare },
+    { to: `${base}/vagas`, label: 'Vagas', icon: Briefcase },
+    { to: `${base}/pessoas`, label: 'Pessoas', icon: Users },
     { to: `${base}/listagem`, label: 'Listagem', icon: List },
   ]
 

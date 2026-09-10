@@ -3,10 +3,10 @@ import { AppShell } from './components/common/AppShell'
 import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { LoginPage } from './routes/LoginPage'
 import { ListagemPage } from './routes/ListagemPage'
-import { KanbanPage } from './routes/rh/KanbanPage'
+import { VagasBoardPage } from './routes/rh/VagasBoardPage'
+import { PessoasBoardPage } from './routes/rh/PessoasBoardPage'
 import { VagaFormPage as RhVagaFormPage } from './routes/rh/VagaFormPage'
 import { CandidatoFormPage } from './routes/rh/CandidatoFormPage'
-import { KanbanReadOnlyPage } from './routes/setor/KanbanReadOnlyPage'
 import { VagaFormPage as SetorVagaFormPage } from './routes/setor/VagaFormPage'
 import { CandidatoModal } from './components/candidato/CandidatoModal'
 import { VagaDetalheModal } from './components/vaga/VagaDetalheModal'
@@ -19,7 +19,11 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
           <Route element={<ProtectedRoute allowedRoles={['RH']} />}>
-            <Route path="/rh/kanban" element={<KanbanPage />}>
+            <Route path="/rh/vagas" element={<VagasBoardPage />}>
+              <Route path="candidato/:id" element={<CandidatoModal />} />
+              <Route path="vaga/:id" element={<VagaDetalheModal />} />
+            </Route>
+            <Route path="/rh/pessoas" element={<PessoasBoardPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
             </Route>
@@ -29,10 +33,15 @@ export default function App() {
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
             </Route>
+            <Route path="/rh/kanban/*" element={<Navigate to="/rh/pessoas" replace />} />
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={['SETOR']} />}>
-            <Route path="/setor/kanban" element={<KanbanReadOnlyPage />}>
+            <Route path="/setor/vagas" element={<VagasBoardPage />}>
+              <Route path="candidato/:id" element={<CandidatoModal />} />
+              <Route path="vaga/:id" element={<VagaDetalheModal />} />
+            </Route>
+            <Route path="/setor/pessoas" element={<PessoasBoardPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
             </Route>
@@ -41,6 +50,7 @@ export default function App() {
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
             </Route>
+            <Route path="/setor/kanban/*" element={<Navigate to="/setor/pessoas" replace />} />
           </Route>
         </Route>
       </Route>

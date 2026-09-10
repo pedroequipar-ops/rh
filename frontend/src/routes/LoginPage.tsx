@@ -18,7 +18,7 @@ export function LoginPage() {
     setSubmitting(true)
     try {
       const me = await login(username, password)
-      navigate(me.role === 'RH' ? '/rh/kanban' : '/setor/kanban')
+      navigate(me.role === 'RH' ? '/rh/pessoas' : '/setor/pessoas')
     } catch {
       setError('Usuário ou senha inválidos.')
     } finally {

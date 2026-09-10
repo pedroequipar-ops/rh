@@ -53,7 +53,7 @@ export function VagaFormPage() {
         ...(isRh ? { setor_id: setorId } : {}),
       })
       showToast('Vaga criada com sucesso')
-      navigate(isRh ? '/rh/kanban' : '/setor/kanban')
+      navigate(isRh ? '/rh/vagas' : '/setor/vagas')
     } catch {
       setError('Não foi possível criar a vaga. Confira os campos e tente novamente.')
     } finally {

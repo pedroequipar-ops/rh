@@ -126,7 +126,7 @@ export function CandidatoFormPage() {
     try {
       const candidato = await createCandidato(payload)
       showToast('Candidato cadastrado com sucesso')
-      navigate(`/rh/kanban/candidato/${candidato.id}`)
+      navigate(`/rh/pessoas/candidato/${candidato.id}`)
     } catch {
       setError('Não foi possível salvar o candidato. Confira os campos e tente novamente.')
     } finally {
