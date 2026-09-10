@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Bell, Flame, MessageCircle, UserPlus, X } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { Bell, Flame, MessageCircle, Upload, UserPlus, X } from 'lucide-react'
 import clsx from 'clsx'
 import { ActivityFeed } from '../atividade/ActivityFeed'
+import { BulkCurriculoDropzone } from '../candidato/BulkCurriculoDropzone'
 import { ChatPanel } from '../candidato/ChatPanel'
 import { ConfirmDialog } from '../common/ConfirmDialog'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
@@ -19,6 +21,7 @@ import {
 } from '../../api/hooks/useVagas'
 import { useSetores } from '../../api/hooks/useSetores'
 import { useUsuarios } from '../../api/hooks/useUsuarios'
+import { queryKeys } from '../../api/queryKeys'
 import { useAuth } from '../../context/AuthContext'
 import { notificacaoHref } from '../../lib/notificacaoHref'
 import {
@@ -55,6 +58,7 @@ interface VagaDetailPanelProps {
 
 export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const navigate = useNavigate()
+  const qc = useQueryClient()
   const { me } = useAuth()
   const isRh = me?.role === 'RH'
 
@@ -72,6 +76,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | null>(null)
   const [confirmar, setConfirmar] = useState<VagaStatus | null>(null)
   const [mostrarChat, setMostrarChat] = useState(false)
+  const [importOpen, setImportOpen] = useState(false)
   const [motivoRecusa, setMotivoRecusa] = useState('')
   const [aprovarPrioridade, setAprovarPrioridade] = useState<VagaPrioridade>(vaga.prioridade)
   const [aprovarUrgente, setAprovarUrgente] = useState(vaga.urgente)
@@ -459,13 +464,18 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
       {aba === 'candidatos' && (
         <div className="scrollbar-thin min-h-0 flex-1 space-y-3 overflow-y-auto p-4">
           {podeRegistrarCandidato && (
-            <Button
-              variant="secondary"
-              className="w-full"
-              onClick={() => navigate(`/rh/candidatos/novo?vaga=${vaga.id}`)}
-            >
-              <UserPlus size={14} /> Novo candidato
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                className="flex-1"
+                onClick={() => navigate(`/rh/candidatos/novo?vaga=${vaga.id}`)}
+              >
+                <UserPlus size={14} /> Novo candidato
+              </Button>
+              <Button variant="secondary" className="flex-1" onClick={() => setImportOpen(true)}>
+                <Upload size={14} /> Importar em massa
+              </Button>
+            </div>
           )}
 
           {(vaga.total_por_etapa ?? []).length > 0 && (
@@ -518,6 +528,25 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
             setConfirmar(null)
           }}
           onCancel={() => setConfirmar(null)}
+        />
+      )}
+
+      {importOpen && (
+        <BulkCurriculoDropzone
+          vagaId={vaga.id}
+          cpfsExistentes={
+            new Set(
+              (candidatosQuery.data ?? [])
+                .map((c) => c.cpf.replace(/\D/g, ''))
+                .filter(Boolean),
+            )
+          }
+          onCandidatoCriado={() => {
+            qc.invalidateQueries({ queryKey: queryKeys.vagaCandidatos(vaga.id) })
+            qc.invalidateQueries({ queryKey: queryKeys.candidatosList })
+            qc.invalidateQueries({ queryKey: queryKeys.vaga(vaga.id) })
+          }}
+          onClose={() => setImportOpen(false)}
         />
       )}
     </div>
