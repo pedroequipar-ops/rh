@@ -111,7 +111,10 @@ export function PessoasBoard({
   }
 
   const board = (
-    <div className="scrollbar-thin flex h-full gap-4 overflow-x-auto p-4" onWheel={handleWheel}>
+    <div
+      className="scrollbar-thin flex h-full gap-9 overflow-x-auto p-5"
+      onWheel={handleWheel}
+    >
       {sortedEtapas.map((etapa) => (
         <KanbanColumn
           key={etapa.id}
@@ -146,12 +149,12 @@ export function PessoasBoard({
         {board}
         <DragOverlay dropAnimation={{ duration: 200, easing: 'ease-out' }}>
           {activeVaga && (
-            <div className="w-72 scale-[1.02] rounded-lg border border-slate-200 bg-white p-3 opacity-95 shadow-md">
+            <div className="w-[244px] scale-[1.02] rounded-lg border border-slate-200 bg-white p-2 opacity-95 shadow-md">
               <VagaKanbanCardContent vaga={activeVaga} />
             </div>
           )}
           {activeCandidato && (
-            <div className="w-72 scale-[1.02] rounded-lg border border-slate-200 bg-white p-3 opacity-95 shadow-md">
+            <div className="w-[244px] scale-[1.02] rounded-lg border border-slate-200 bg-white p-2 opacity-95 shadow-md">
               <CandidatoCardContent candidato={activeCandidato} />
             </div>
           )}

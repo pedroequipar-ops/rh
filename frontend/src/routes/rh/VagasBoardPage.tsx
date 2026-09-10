@@ -65,6 +65,7 @@ export function VagasBoardPage() {
               vagas={vagasFiltradas}
               draggable={isRh}
               vagaModalBase={`${base}/vagas/vaga`}
+              novaVagaHref={`${base}/vagas/nova-vaga`}
               onMoveVaga={isRh ? handleMoveVaga : undefined}
             />
           </div>

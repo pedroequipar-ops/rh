@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   DndContext,
   DragOverlay,
@@ -18,15 +19,24 @@ interface VagasBoardProps {
   vagas: Vaga[]
   draggable: boolean
   vagaModalBase: string
+  /** rota da tela de criar vaga; duplo clique na coluna "Solicitada" abre ela */
+  novaVagaHref?: string
   onMoveVaga?: (vagaId: string, status: VagaStatus) => void
 }
 
 /** Board só de vagas: colunas de status. "Em triagem" aparece como chip
  * não-arrastável — quem circula ali é o board Pessoas. */
-export function VagasBoard({ vagas, draggable, vagaModalBase, onMoveVaga }: VagasBoardProps) {
+export function VagasBoard({
+  vagas,
+  draggable,
+  vagaModalBase,
+  novaVagaHref,
+  onMoveVaga,
+}: VagasBoardProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
   const [activeId, setActiveId] = useState<string | null>(null)
   const handleWheel = useHorizontalWheel()
+  const navigate = useNavigate()
 
   const activeVagaId = activeId?.startsWith('vaga:') ? activeId.slice(5) : null
   const activeVaga = activeVagaId ? vagas.find((v) => v.id === activeVagaId) ?? null : null
@@ -52,7 +62,10 @@ export function VagasBoard({ vagas, draggable, vagaModalBase, onMoveVaga }: Vaga
   }
 
   const board = (
-    <div className="scrollbar-thin flex h-full gap-4 overflow-x-auto p-4" onWheel={handleWheel}>
+    <div
+      className="scrollbar-thin flex h-full gap-9 overflow-x-auto p-5"
+      onWheel={handleWheel}
+    >
       {FLUXO_STATUSES.filter((status) => {
         if (!COLUNAS_OCULTAS_SE_VAZIAS.includes(status)) return true
         if (vagas.some((v) => v.status === status)) return true
@@ -64,6 +77,11 @@ export function VagasBoard({ vagas, draggable, vagaModalBase, onMoveVaga }: Vaga
           vagas={vagas.filter((v) => v.status === status)}
           draggable={draggable}
           vagaModalBase={vagaModalBase}
+          onDoubleClick={
+            status === 'SOLICITADA' && novaVagaHref
+              ? () => navigate(novaVagaHref)
+              : undefined
+          }
           aceitaDrop={!!activeVaga && activeVaga.transicoes_disponiveis.includes(status)}
           dropInvalido={
             !!activeVaga &&
@@ -93,7 +111,7 @@ export function VagasBoard({ vagas, draggable, vagaModalBase, onMoveVaga }: Vaga
       {board}
       <DragOverlay dropAnimation={{ duration: 200, easing: 'ease-out' }}>
         {activeVaga && (
-          <div className="w-72 scale-[1.02] rounded-lg border border-slate-200 bg-white p-3 opacity-95 shadow-md">
+          <div className="w-[244px] scale-[1.02] rounded-lg border border-slate-200 bg-white p-2 opacity-95 shadow-md">
             <VagaKanbanCardContent vaga={activeVaga} />
           </div>
         )}

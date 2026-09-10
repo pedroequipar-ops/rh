@@ -37,21 +37,21 @@ export function KanbanColumn({
     <div
       ref={setNodeRef}
       className={clsx(
-        'flex w-72 shrink-0 flex-col gap-2 rounded-lg p-1 transition-fast',
+        'flex w-[244px] shrink-0 flex-col gap-2 rounded-lg p-1 transition-fast',
         isOver && !aceitaVaga && 'bg-slate-100',
         aceitaVaga && !cadastroAqui && 'bg-sky-50/60 ring-1 ring-sky-300',
         aceitaVaga && cadastroAqui && 'bg-emerald-50/60 ring-1 ring-emerald-300',
         aceitaVaga && isOver && (cadastroAqui ? 'bg-emerald-50 ring-2 ring-emerald-400' : 'bg-sky-50 ring-2 ring-sky-400'),
       )}
     >
-      <div className="flex items-center gap-2 px-1.5 py-1">
+      <div className="flex items-center gap-1.5 px-1.5 py-1">
         <span
-          className={clsx('h-2 w-2 shrink-0 rounded-[3px]', !dotIsHex && dot)}
+          className={clsx('h-1.5 w-1.5 shrink-0 rounded-[2px]', !dotIsHex && dot)}
           style={dotIsHex ? { backgroundColor: dot } : undefined}
         />
         <span
           className={clsx(
-            'flex items-center gap-1.5 text-[13px] font-semibold',
+            'flex items-center gap-1.5 text-xs font-semibold',
             etapa.is_saida_negativa ? 'text-red-700' : 'text-slate-700',
           )}
         >
@@ -65,7 +65,7 @@ export function KanbanColumn({
             </span>
           )}
         </span>
-        <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-semibold text-slate-600">
+        <span className="rounded-full bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
           {candidatos.length}
         </span>
       </div>
@@ -90,7 +90,7 @@ export function KanbanColumn({
           />
         ))}
         {candidatos.length === 0 && !vagasNaEtapa?.length && (
-          <p className="px-1 py-2 text-xs text-slate-400">Nenhum candidato</p>
+          <p className="px-1 py-2 text-[11px] text-slate-400">Nenhum candidato</p>
         )}
       </div>
     </div>
