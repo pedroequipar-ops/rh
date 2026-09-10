@@ -36,6 +36,42 @@ def test_me_reflete_role_e_setor(company_factory, setor_factory, user_factory):
 
 
 @pytest.mark.django_db
+def test_rh_edita_nome_da_empresa(company_factory, user_factory):
+    company = company_factory(nome="Antigo Nome")
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = APIClient()
+    client.force_authenticate(user=rh)
+    client.credentials(HTTP_X_COMPANY_ID=str(company.id))
+
+    leitura = client.get("/v1/empresa/")
+    assert leitura.status_code == 200
+    assert leitura.data["nome"] == "Antigo Nome"
+
+    edicao = client.patch("/v1/empresa/", {"nome": "Novo Nome"})
+    assert edicao.status_code == 200
+    company.refresh_from_db()
+    assert company.nome == "Novo Nome"
+
+
+@pytest.mark.django_db
+def test_setor_nao_pode_editar_empresa(company_factory, setor_factory, user_factory):
+    company = company_factory(nome="Nome Original")
+    setor = setor_factory(company=company)
+    setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
+
+    client = APIClient()
+    client.force_authenticate(user=setor_user)
+    client.credentials(HTTP_X_COMPANY_ID=str(company.id))
+
+    response = client.patch("/v1/empresa/", {"nome": "Hackeado"})
+
+    assert response.status_code == 403
+    company.refresh_from_db()
+    assert company.nome == "Nome Original"
+
+
+@pytest.mark.django_db
 def test_setor_altera_a_propria_senha(company_factory, setor_factory, user_factory):
     company = company_factory()
     setor = setor_factory(company=company)

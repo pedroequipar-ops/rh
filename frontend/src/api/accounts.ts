@@ -1,5 +1,15 @@
 import { apiClient, unwrapList } from './client'
-import type { Setor, Usuario } from '../types'
+import type { Empresa, Setor, Usuario } from '../types'
+
+export async function getEmpresa(): Promise<Empresa> {
+  const { data } = await apiClient.get<Empresa>('/empresa/')
+  return data
+}
+
+export async function updateEmpresa(nome: string): Promise<Empresa> {
+  const { data } = await apiClient.patch<Empresa>('/empresa/', { nome })
+  return data
+}
 
 export interface SetorInput {
   nome: string
@@ -17,6 +27,11 @@ export async function updateSetor(id: string, input: SetorInput): Promise<Setor>
 
 export async function deleteSetor(id: string): Promise<void> {
   await apiClient.delete(`/setores/${id}/`)
+}
+
+export async function restaurarSetor(id: string): Promise<Setor> {
+  const { data } = await apiClient.post<Setor>(`/setores/${id}/restaurar/`)
+  return data
 }
 
 export interface UsuarioInput {
@@ -46,6 +61,11 @@ export async function listUsuarios(): Promise<Usuario[]> {
 
 export async function deleteUsuario(id: string): Promise<void> {
   await apiClient.delete(`/usuarios/${id}/`)
+}
+
+export async function restaurarUsuario(id: string): Promise<Usuario> {
+  const { data } = await apiClient.post<Usuario>(`/usuarios/${id}/restaurar/`)
+  return data
 }
 
 export async function alterarMinhaSenha(senhaAtual: string, senhaNova: string): Promise<void> {

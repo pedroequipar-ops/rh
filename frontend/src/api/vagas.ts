@@ -97,6 +97,11 @@ export async function deleteVaga(id: string): Promise<void> {
   await apiClient.delete(`/vagas/${id}/`)
 }
 
+export async function restaurarVaga(id: string): Promise<Vaga> {
+  const { data } = await apiClient.post<Vaga>(`/vagas/${id}/restaurar/`)
+  return data
+}
+
 export async function listCandidatosDaVaga(id: string): Promise<Candidato[]> {
   const { data } = await apiClient.get(`/vagas/${id}/candidatos/`)
   return unwrapList<Candidato>(data)

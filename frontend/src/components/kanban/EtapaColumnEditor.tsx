@@ -21,12 +21,6 @@ import { useToast } from '../../context/ToastContext'
 import type { EtapaKanban } from '../../types'
 import { ConfirmDialog } from '../common/ConfirmDialog'
 
-interface EtapaColumnEditorProps {
-  etapas: EtapaKanban[]
-  onClose: () => void
-  onChange: () => void
-}
-
 function SortableEtapaItem({
   etapa,
   onRename,
@@ -90,7 +84,14 @@ function SortableEtapaItem({
   )
 }
 
-export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEditorProps) {
+interface EtapaListEditorProps {
+  etapas: EtapaKanban[]
+  onChange: () => void
+}
+
+/** Lista arrastável + form de "nova etapa" — miolo compartilhado pelo drawer
+ * rápido do board (`EtapaColumnEditor`) e pela página `/config/etapas`. */
+export function EtapaListEditor({ etapas, onChange }: EtapaListEditorProps) {
   const { showToast } = useToast()
   const [novoNome, setNovoNome] = useState('')
   const [saving, setSaving] = useState(false)
@@ -160,6 +161,61 @@ export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEdit
   }
 
   return (
+    <div className="space-y-4">
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <SortableContext items={ordenadas.map((e) => e.id)} strategy={verticalListSortingStrategy}>
+          <ul className="space-y-2">
+            {ordenadas.map((etapa) => (
+              <SortableEtapaItem
+                key={etapa.id}
+                etapa={etapa}
+                onRename={handleRename}
+                onDelete={setEtapaParaExcluir}
+                onToggleCadastro={handleToggleCadastro}
+              />
+            ))}
+          </ul>
+        </SortableContext>
+      </DndContext>
+
+      <div className="flex gap-2">
+        <input
+          value={novoNome}
+          onChange={(e) => setNovoNome(e.target.value)}
+          placeholder="Nova etapa"
+          className="flex-1 rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
+        />
+        <button
+          onClick={handleAdd}
+          disabled={saving}
+          className="flex items-center gap-1 rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900 disabled:opacity-50"
+        >
+          <Plus size={14} />
+          Adicionar
+        </button>
+      </div>
+
+      {etapaParaExcluir && (
+        <ConfirmDialog
+          title="Excluir etapa"
+          description={`Tem certeza que deseja excluir a etapa "${etapaParaExcluir.nome}"? Essa ação não pode ser desfeita.`}
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setEtapaParaExcluir(null)}
+        />
+      )}
+    </div>
+  )
+}
+
+interface EtapaColumnEditorProps {
+  etapas: EtapaKanban[]
+  onClose: () => void
+  onChange: () => void
+}
+
+/** Drawer rápido, acionado do board Pessoas ("Editar etapas"). */
+export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEditorProps) {
+  return (
     <div className="fixed inset-0 z-40 flex justify-end bg-black/30" onClick={onClose}>
       <div
         className="flex h-full w-96 flex-col bg-white shadow-xl"
@@ -171,51 +227,10 @@ export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEdit
             <X size={18} />
           </button>
         </div>
-
         <div className="flex-1 overflow-y-auto p-4">
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={ordenadas.map((e) => e.id)} strategy={verticalListSortingStrategy}>
-              <ul className="space-y-2">
-                {ordenadas.map((etapa) => (
-                  <SortableEtapaItem
-                    key={etapa.id}
-                    etapa={etapa}
-                    onRename={handleRename}
-                    onDelete={setEtapaParaExcluir}
-                    onToggleCadastro={handleToggleCadastro}
-                  />
-                ))}
-              </ul>
-            </SortableContext>
-          </DndContext>
-        </div>
-
-        <div className="flex gap-2 border-t border-slate-200 p-4">
-          <input
-            value={novoNome}
-            onChange={(e) => setNovoNome(e.target.value)}
-            placeholder="Nova etapa"
-            className="flex-1 rounded border border-slate-300 px-2 py-1.5 text-sm focus:border-slate-500 focus:outline-none"
-          />
-          <button
-            onClick={handleAdd}
-            disabled={saving}
-            className="flex items-center gap-1 rounded bg-slate-800 px-3 py-1.5 text-sm text-white hover:bg-slate-900 disabled:opacity-50"
-          >
-            <Plus size={14} />
-            Adicionar
-          </button>
+          <EtapaListEditor etapas={etapas} onChange={onChange} />
         </div>
       </div>
-
-      {etapaParaExcluir && (
-        <ConfirmDialog
-          title="Excluir etapa"
-          description={`Tem certeza que deseja excluir a etapa "${etapaParaExcluir.nome}"? Essa ação não pode ser desfeita.`}
-          onConfirm={handleConfirmDelete}
-          onCancel={() => setEtapaParaExcluir(null)}
-        />
-      )}
     </div>
   )
 }

@@ -13,6 +13,7 @@ export const queryKeys = {
   etapas: ['etapas'] as const,
   setores: ['setores'] as const,
   usuarios: ['usuarios'] as const,
+  empresa: ['empresa'] as const,
 
   tarefas: ['tarefas'] as const,
   tarefasList: (params: object) => ['tarefas', 'list', params] as const,

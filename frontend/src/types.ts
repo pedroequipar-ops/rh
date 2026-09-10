@@ -5,6 +5,11 @@ export interface Setor {
   nome: string
 }
 
+export interface Empresa {
+  id: string
+  nome: string
+}
+
 export interface Tag {
   id: string
   nome: string

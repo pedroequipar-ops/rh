@@ -5,6 +5,11 @@ import { LoginPage } from './routes/LoginPage'
 import { DashboardPage } from './routes/DashboardPage'
 import { MinhasTarefasPage } from './routes/MinhasTarefasPage'
 import { ListagemPage } from './routes/ListagemPage'
+import { ConfigLayout } from './routes/config/ConfigLayout'
+import { EtapasConfig } from './routes/config/EtapasConfig'
+import { SetoresConfig } from './routes/config/SetoresConfig'
+import { UsuariosConfig } from './routes/config/UsuariosConfig'
+import { EmpresaConfig } from './routes/config/EmpresaConfig'
 import { VagasBoardPage } from './routes/rh/VagasBoardPage'
 import { PessoasBoardPage } from './routes/rh/PessoasBoardPage'
 import { VagaFormPage as RhVagaFormPage } from './routes/rh/VagaFormPage'
@@ -40,6 +45,14 @@ export default function App() {
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
             </Route>
             <Route path="/rh/kanban/*" element={<Navigate to="/rh/pessoas" replace />} />
+
+            <Route path="/config" element={<ConfigLayout />}>
+              <Route index element={<Navigate to="/config/etapas" replace />} />
+              <Route path="etapas" element={<EtapasConfig />} />
+              <Route path="setores" element={<SetoresConfig />} />
+              <Route path="usuarios" element={<UsuariosConfig />} />
+              <Route path="empresa" element={<EmpresaConfig />} />
+            </Route>
           </Route>
 
           <Route element={<ProtectedRoute allowedRoles={['SETOR']} />}>

@@ -15,6 +15,7 @@ import {
   moverVagaEtapa,
   recusarVaga,
   registrarCandidaturas,
+  restaurarVaga,
   transicionarVaga,
   updateVaga,
   type AprovarVagaInput,
@@ -242,7 +243,12 @@ export function useDeleteVaga() {
       qc.invalidateQueries({ queryKey: queryKeys.vagasList })
       showToast('Não foi possível excluir a vaga', 'error')
     },
-    onSuccess: () => showToast('Vaga excluída com sucesso'),
+    onSuccess: (_data, id) =>
+      showToast('Vaga excluída', 'success', {
+        actionLabel: 'Desfazer',
+        onAction: () =>
+          restaurarVaga(id).finally(() => qc.invalidateQueries({ queryKey: queryKeys.vagasList })),
+      }),
     onSettled: () => qc.invalidateQueries({ queryKey: queryKeys.vagasList }),
   })
 }

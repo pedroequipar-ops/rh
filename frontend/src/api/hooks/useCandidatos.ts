@@ -9,6 +9,7 @@ import {
   getCandidato,
   listCandidatos,
   moverEtapa,
+  restaurarCandidato,
   updateCandidato,
   type CandidatoInput,
 } from '../candidatos'
@@ -114,7 +115,14 @@ export function useDeleteCandidato() {
       qc.invalidateQueries({ queryKey: queryKeys.candidatosList })
       showToast('Não foi possível excluir o candidato', 'error')
     },
-    onSuccess: () => showToast('Candidato excluído com sucesso'),
+    onSuccess: (_data, id) =>
+      showToast('Candidato excluído', 'success', {
+        actionLabel: 'Desfazer',
+        onAction: () =>
+          restaurarCandidato(id).finally(() =>
+            qc.invalidateQueries({ queryKey: queryKeys.candidatosList }),
+          ),
+      }),
     onSettled: () => qc.invalidateQueries({ queryKey: queryKeys.candidatosList }),
   })
 }

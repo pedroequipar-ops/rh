@@ -82,6 +82,11 @@ export async function deleteCandidato(id: string): Promise<void> {
   await apiClient.delete(`/candidatos/${id}/`)
 }
 
+export async function restaurarCandidato(id: string): Promise<Candidato> {
+  const { data } = await apiClient.post<Candidato>(`/candidatos/${id}/restaurar/`)
+  return data
+}
+
 export interface CandidatoNotificacaoEtapa {
   id: string
   candidato_id: string

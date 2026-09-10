@@ -1,4 +1,4 @@
-import { Briefcase, CheckSquare, LayoutDashboard, List, Plus, UserPlus, Users } from 'lucide-react'
+import { Briefcase, CheckSquare, LayoutDashboard, List, Plus, Settings, UserPlus, Users } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ButtonLink } from '../ui/Button'
@@ -21,6 +21,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
     { to: `${base}/pessoas`, label: 'Pessoas', icon: Users },
     { to: '/tarefas', label: 'Tarefas', icon: CheckSquare },
     { to: `${base}/listagem`, label: 'Listagem', icon: List },
+    ...(isRh ? [{ to: '/config', label: 'Configurações', icon: Settings }] : []),
   ]
 
   return (

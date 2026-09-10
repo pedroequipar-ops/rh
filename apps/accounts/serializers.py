@@ -1,6 +1,13 @@
 from rest_framework import serializers
 
-from .models import Setor, User
+from .models import Company, Setor, User
+
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ["id", "nome"]
+        read_only_fields = ["id"]
 
 
 class SetorSerializer(serializers.ModelSerializer):

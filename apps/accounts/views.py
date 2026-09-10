@@ -1,6 +1,6 @@
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,12 +11,30 @@ from utils.utils import capture_company_id
 from .models import Setor, User
 from .serializers import (
     AlterarSenhaSerializer,
+    CompanySerializer,
     MeSerializer,
     SetorSerializer,
     UserCreateSerializer,
     UserListSerializer,
     UserUpdateSerializer,
 )
+
+
+class EmpresaView(APIView):
+    """GET/PATCH /v1/empresa/ — dados da empresa do usuário logado."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(CompanySerializer(request.user.company).data)
+
+    def patch(self, request):
+        if request.user.role != User.Role.RH and not request.user.is_superuser:
+            raise PermissionDenied("Apenas RH pode editar os dados da empresa.")
+        serializer = CompanySerializer(request.user.company, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class MeView(APIView):
