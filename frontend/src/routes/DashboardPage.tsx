@@ -15,6 +15,11 @@ function fmtData(iso: string | null): string {
   return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
 }
 
+function fmtHoras(horas: number): string {
+  if (horas >= 24) return `${(horas / 24).toFixed(1)}d`
+  return `${horas.toFixed(1)}h`
+}
+
 export function DashboardPage() {
   const { me } = useAuth()
   const isRh = me?.role === 'RH'
@@ -79,6 +84,15 @@ export function DashboardPage() {
                 value={data.resumo.atrasadas}
                 tone={data.resumo.atrasadas > 0 ? 'danger' : 'default'}
               />
+              <StatCard
+                label="Tempo médio de preenchimento"
+                value={data.tempo_medio_preenchimento != null ? fmtHoras(data.tempo_medio_preenchimento) : '—'}
+              />
+              <StatCard
+                label="Chats aguardando resposta"
+                value={data.chats_sem_resposta}
+                tone={data.chats_sem_resposta > 0 ? 'danger' : 'default'}
+              />
             </div>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -142,6 +156,37 @@ export function DashboardPage() {
                         <span className="shrink-0 text-xs text-slate-400">
                           {item.candidaturas} informadas · {item.cadastrados} cadastradas
                         </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Card>
+
+              <Card className="p-4">
+                <h2 className="mb-3 text-sm font-semibold text-slate-700">Tempo médio por status</h2>
+                <StatusBarList
+                  items={data.tempo_medio_por_status.map((s) => ({
+                    key: s.status,
+                    label: s.status_display,
+                    total: s.horas_media,
+                  }))}
+                  emptyMessage="Ainda sem transições suficientes."
+                />
+              </Card>
+
+              <Card className="p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-slate-700">Cobranças</h2>
+                  <span className="text-xs text-slate-400">{data.cobrancas.total} no total</span>
+                </div>
+                {data.cobrancas.top_vagas.length === 0 ? (
+                  <p className="text-sm text-slate-400">Nenhuma cobrança registrada.</p>
+                ) : (
+                  <div className="flex flex-col gap-1.5">
+                    {data.cobrancas.top_vagas.map((v) => (
+                      <div key={v.id} className="flex items-center justify-between gap-2 text-sm">
+                        <span className="min-w-0 flex-1 truncate text-slate-700">{v.titulo}</span>
+                        <span className="shrink-0 text-xs text-slate-400">{v.total_cobrancas}x</span>
                       </div>
                     ))}
                   </div>

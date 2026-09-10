@@ -38,12 +38,34 @@ export interface CandidaturaVsCadastrado {
   cadastrados: number
 }
 
+export interface TempoMedioStatus {
+  status: VagaStatus
+  status_display: string
+  horas_media: number
+  amostras: number
+}
+
+export interface CobrancaVaga {
+  id: string
+  titulo: string
+  total_cobrancas: number
+}
+
+export interface Cobrancas {
+  total: number
+  top_vagas: CobrancaVaga[]
+}
+
 export interface DashboardData {
   resumo: DashboardResumo
   vagas_por_status: VagaPorStatus[]
   vagas_atrasadas: VagaAtrasada[]
   funil_etapas: FunilEtapa[]
   candidaturas_vs_cadastrados: CandidaturaVsCadastrado[]
+  tempo_medio_por_status: TempoMedioStatus[]
+  tempo_medio_preenchimento: number | null
+  cobrancas: Cobrancas
+  chats_sem_resposta: number
 }
 
 export interface DashboardFiltro {

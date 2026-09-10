@@ -1,14 +1,17 @@
-from django.db.models import Count, Q
+from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F, Q, Sum, Window
+from django.db.models.functions import Lead
 
 from apps.candidatos.models import Candidato
+from apps.chat.models import ChatMensagem
 from apps.vagas import services as vagas_services
-from apps.vagas.models import Vaga
+from apps.vagas.models import Vaga, VagaHistoricoStatus
 
 S = Vaga.Status
 
 STATUS_ATIVOS = {S.SOLICITADA, S.APROVADA, S.PUBLICADA, S.ENCERRADA, S.EM_TRIAGEM, S.CONGELADA}
 
 LIMITE_ATRASADAS = 10
+LIMITE_TOP_COBRANCAS = 5
 
 
 def _escopo_vagas(company_id, setor_id=None, inicio=None, fim=None):
@@ -85,6 +88,94 @@ def funil_etapas(company_id, setor_id=None) -> list[dict]:
         }
         for r in rows
     ]
+
+
+def tempo_medio_por_status(company_id, setor_id=None) -> list[dict]:
+    """Horas médias que as vagas passam em cada status, medidas pelo
+    intervalo entre transições consecutivas em VagaHistoricoStatus (LEAD por
+    vaga, ordenado por data)."""
+    vagas_qs = _escopo_vagas(company_id, setor_id)
+    historico = (
+        VagaHistoricoStatus.objects.filter(company_id=company_id, vaga__in=vagas_qs)
+        .annotate(
+            proximo_created_at=Window(
+                expression=Lead("created_at"),
+                partition_by=F("vaga_id"),
+                order_by=F("created_at").asc(),
+            )
+        )
+        .values("para_status", "created_at", "proximo_created_at")
+        .order_by("vaga_id", "created_at")
+    )
+
+    somas: dict[str, float] = {}
+    contagens: dict[str, int] = {}
+    for row in historico:
+        status = row["para_status"]
+        if not status or row["proximo_created_at"] is None:
+            continue
+        horas = (row["proximo_created_at"] - row["created_at"]).total_seconds() / 3600
+        somas[status] = somas.get(status, 0.0) + horas
+        contagens[status] = contagens.get(status, 0) + 1
+
+    status_labels = dict(Vaga.Status.choices)
+    return [
+        {
+            "status": status,
+            "status_display": status_labels.get(status, status),
+            "horas_media": round(somas[status] / contagens[status], 1),
+            "amostras": contagens[status],
+        }
+        for status in somas
+    ]
+
+
+def tempo_medio_preenchimento(company_id, setor_id=None) -> float | None:
+    """Horas médias entre a criação da vaga e o fechamento como PREENCHIDA."""
+    qs = _escopo_vagas(company_id, setor_id).filter(status=S.PREENCHIDA, fechada_em__isnull=False)
+    resultado = qs.annotate(
+        duracao=ExpressionWrapper(F("fechada_em") - F("created_at"), output_field=DurationField())
+    ).aggregate(media=Avg("duracao"))
+    media = resultado["media"]
+    return round(media.total_seconds() / 3600, 1) if media else None
+
+
+def cobrancas(company_id, setor_id=None, limite=LIMITE_TOP_COBRANCAS) -> dict:
+    qs = _escopo_vagas(company_id, setor_id)
+    total = qs.aggregate(total=Sum("total_cobrancas"))["total"] or 0
+    top = qs.filter(total_cobrancas__gt=0).order_by("-total_cobrancas")[:limite]
+    return {
+        "total": total,
+        "top_vagas": [
+            {"id": str(v.id), "titulo": v.titulo, "total_cobrancas": v.total_cobrancas} for v in top
+        ],
+    }
+
+
+def chats_sem_resposta(company_id, user_role, setor_id=None) -> int:
+    """Conversas (de vaga ou de candidato) cuja última mensagem foi do "outro
+    lado" (RH↔Setor) e ainda não foi respondida por `user_role`."""
+    from django.db.models import OuterRef, Subquery
+
+    outro_role = "SETOR" if user_role == "RH" else "RH"
+
+    ultima_vaga = ChatMensagem.objects.filter(vaga=OuterRef("pk")).order_by("-created_at")
+    vagas_pendentes = (
+        _escopo_vagas(company_id, setor_id)
+        .annotate(ultimo_autor_role=Subquery(ultima_vaga.values("autor__role")[:1]))
+        .filter(ultimo_autor_role=outro_role)
+        .count()
+    )
+
+    ultima_cand = ChatMensagem.objects.filter(candidato=OuterRef("pk")).order_by("-created_at")
+    candidatos_pendentes = (
+        _escopo_candidatos(company_id, setor_id)
+        .annotate(ultimo_autor_role=Subquery(ultima_cand.values("autor__role")[:1]))
+        .filter(ultimo_autor_role=outro_role)
+        .count()
+    )
+
+    return vagas_pendentes + candidatos_pendentes
 
 
 def candidaturas_vs_cadastrados(company_id, setor_id=None) -> list[dict]:
