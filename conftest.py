@@ -3,6 +3,7 @@ import pytest
 from apps.accounts.tests.factories import CompanyFactory, SetorFactory, UserFactory
 from apps.candidatos.tests.factories import CandidatoFactory
 from apps.chat.tests.factories import ChatMensagemFactory
+from apps.tarefas.tests.factories import TarefaFactory
 from apps.vagas.tests.factories import EtapaKanbanFactory, VagaFactory
 
 
@@ -39,3 +40,8 @@ def candidato_factory():
 @pytest.fixture
 def chat_mensagem_factory():
     return ChatMensagemFactory
+
+
+@pytest.fixture
+def tarefa_factory():
+    return TarefaFactory

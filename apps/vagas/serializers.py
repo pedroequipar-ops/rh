@@ -1,10 +1,11 @@
 from django.db.models import Count
 from rest_framework import serializers
 
-from apps.accounts.models import Setor
-from apps.accounts.serializers import SetorSerializer
+from apps.accounts.models import Setor, User
+from apps.accounts.serializers import SetorSerializer, UsuarioResumoSerializer
 from apps.tags.serializers import TagsField
 from apps.tags.services import get_or_create_tags, registrar_mudanca_tags
+from utils.utils import capture_company_id
 
 from . import services
 from .models import EtapaKanban, Vaga, VagaHistoricoStatus, VagaNotificacao
@@ -56,6 +57,14 @@ class VagaSerializer(serializers.ModelSerializer):
     total_por_etapa = serializers.SerializerMethodField()
     transicoes_disponiveis = serializers.SerializerMethodField()
     tags = TagsField(required=False)
+    responsavel = UsuarioResumoSerializer(read_only=True)
+    responsavel_id = serializers.PrimaryKeyRelatedField(
+        source="responsavel",
+        queryset=User.objects.all(),
+        write_only=True,
+        required=False,
+        allow_null=True,
+    )
 
     class Meta:
         model = Vaga
@@ -69,6 +78,8 @@ class VagaSerializer(serializers.ModelSerializer):
             "setor",
             "setor_id",
             "criado_por",
+            "responsavel",
+            "responsavel_id",
             "status",
             "status_display",
             "status_pre_congelamento",
@@ -161,6 +172,14 @@ class VagaSerializer(serializers.ModelSerializer):
     def _usuario(self):
         request = self.context.get("request")
         return request.user if request else None
+
+    def validate_responsavel_id(self, value):
+        if value is None:
+            return value
+        request = self.context.get("request")
+        if request and str(value.company_id) != capture_company_id(request):
+            raise serializers.ValidationError("Usuário de outra empresa.")
+        return value
 
     def create(self, validated_data):
         nomes = validated_data.pop("tags", None)

@@ -206,6 +206,16 @@ def registrar_edicao(vaga, user):
     atividade_services.registrar(user, "editou", vaga, resumo="editou os dados da vaga")
 
 
+def registrar_mudanca_responsavel(vaga, antes, depois, user):
+    if depois is None:
+        resumo = "removeu o responsável"
+    elif antes is None:
+        resumo = f"definiu {depois.username} como responsável"
+    else:
+        resumo = f"trocou o responsável para {depois.username}"
+    atividade_services.registrar(user, "mudou_responsavel", vaga, resumo=resumo)
+
+
 def registrar_historico(vaga, de_status, para_status, user, observacao=""):
     VagaHistoricoStatus.objects.create(
         company_id=vaga.company_id,

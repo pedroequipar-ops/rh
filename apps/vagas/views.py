@@ -104,6 +104,9 @@ class VagaViewSet(viewsets.ModelViewSet):
         status_param = self.request.query_params.get("status")
         if status_param:
             qs = self.repo.by_status(qs, status_param.split(","))
+        responsavel_param = self.request.query_params.get("responsavel")
+        if responsavel_param:
+            qs = qs.filter(responsavel_id=responsavel_param)
         return qs
 
     def _status_inicial(self, user):
@@ -137,11 +140,19 @@ class VagaViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         if self.request.user.role == "SETOR":
             serializer.validated_data.pop("setor", None)
+        responsavel_mudou = "responsavel" in serializer.validated_data
+        responsavel_antes = serializer.instance.responsavel if responsavel_mudou else None
         vaga = serializer.save()
         services.limpar_alerta_prazo_se_futuro(vaga)
-        # "tags" já loga sua própria entrada (adicionou_tag/removeu_tag) — só
-        # registra "editou" genérico se sobrou algum outro campo no PATCH.
-        if set(serializer.validated_data) - {"tags"}:
+        if responsavel_mudou and vaga.responsavel_id != (
+            responsavel_antes.id if responsavel_antes else None
+        ):
+            services.registrar_mudanca_responsavel(
+                vaga, responsavel_antes, vaga.responsavel, self.request.user
+            )
+        # "tags"/"responsavel" já logam sua própria entrada — só registra
+        # "editou" genérico se sobrou algum outro campo no PATCH.
+        if set(serializer.validated_data) - {"tags", "responsavel"}:
             services.registrar_edicao(vaga, self.request.user)
 
     @action(detail=True, methods=["get"], url_path="candidatos")

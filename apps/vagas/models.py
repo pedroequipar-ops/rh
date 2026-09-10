@@ -67,6 +67,13 @@ class Vaga(TimeStampedModel):
     criado_por = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="vagas_criadas"
     )
+    responsavel = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="vagas_responsavel",
+        null=True,
+        blank=True,
+    )
 
     # Fluxo (pré-triagem)
     status = models.CharField(

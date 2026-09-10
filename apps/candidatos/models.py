@@ -28,6 +28,13 @@ class Candidato(TimeStampedModel):
     cadastrado_por = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="candidatos_cadastrados"
     )
+    responsavel = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="candidatos_responsavel",
+        null=True,
+        blank=True,
+    )
     tags = models.ManyToManyField("tags.Tag", blank=True, related_name="candidatos")
 
     class Meta:

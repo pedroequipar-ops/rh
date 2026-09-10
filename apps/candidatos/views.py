@@ -91,8 +91,13 @@ class CandidatoViewSet(viewsets.ModelViewSet):
             services.excluir_reprovados_vencidos(company_id)
         user = self.request.user
         if user.role == "SETOR":
-            return self.repo.list_by_setor(company_id, user.setor_id)
-        return self.repo.list_by_company(company_id)
+            qs = self.repo.list_by_setor(company_id, user.setor_id)
+        else:
+            qs = self.repo.list_by_company(company_id)
+        responsavel_param = self.request.query_params.get("responsavel")
+        if responsavel_param:
+            qs = qs.filter(responsavel_id=responsavel_param)
+        return qs
 
     def create(self, request, *args, **kwargs):
         curriculo_key = request.data.get("curriculo_key")
@@ -131,10 +136,18 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         )
 
     def perform_update(self, serializer):
+        responsavel_mudou = "responsavel" in serializer.validated_data
+        responsavel_antes = serializer.instance.responsavel if responsavel_mudou else None
         candidato = serializer.save()
-        # "tags" já loga sua própria entrada (adicionou_tag/removeu_tag) — só
-        # registra "editou" genérico se sobrou algum outro campo no PATCH.
-        if set(serializer.validated_data) - {"tags"}:
+        if responsavel_mudou and candidato.responsavel_id != (
+            responsavel_antes.id if responsavel_antes else None
+        ):
+            services.registrar_mudanca_responsavel(
+                candidato, responsavel_antes, candidato.responsavel, self.request.user
+            )
+        # "tags"/"responsavel" já logam sua própria entrada — só registra
+        # "editou" genérico se sobrou algum outro campo no PATCH.
+        if set(serializer.validated_data) - {"tags", "responsavel"}:
             services.registrar_edicao(candidato, self.request.user)
 
     def destroy(self, request, *args, **kwargs):

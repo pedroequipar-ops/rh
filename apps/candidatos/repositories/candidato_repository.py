@@ -6,13 +6,13 @@ from ..models import Candidato
 
 class CandidatoRepository(ICandidatoRepository):
     def get_by_id(self, candidato_id, company_id):
-        return Candidato.objects.select_related("vaga", "vaga__setor", "etapa_atual").get(
-            id=candidato_id, company_id=company_id
-        )
+        return Candidato.objects.select_related(
+            "vaga", "vaga__setor", "etapa_atual", "responsavel"
+        ).get(id=candidato_id, company_id=company_id)
 
     def list_by_company(self, company_id):
         return Candidato.objects.filter(company_id=company_id).select_related(
-            "vaga", "vaga__setor", "etapa_atual"
+            "vaga", "vaga__setor", "etapa_atual", "responsavel"
         )
 
     def list_by_setor(self, company_id, setor_id):

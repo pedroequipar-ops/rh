@@ -2,10 +2,13 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import URLValidator
 from rest_framework import serializers
 
+from apps.accounts.models import User
+from apps.accounts.serializers import UsuarioResumoSerializer
 from apps.tags.serializers import TagsField
 from apps.tags.services import get_or_create_tags, registrar_mudanca_tags
 from apps.vagas.models import EtapaKanban, Vaga
 from apps.vagas.serializers import EtapaAtualSerializer, VagaResumoSerializer
+from utils.utils import capture_company_id
 
 from .models import Candidato, CandidatoNotificacao
 
@@ -25,10 +28,26 @@ class CandidatoSerializer(serializers.ModelSerializer):
     cadastrado_por = serializers.CharField(source="cadastrado_por.username", read_only=True)
     linkedin_url = serializers.CharField(required=False, allow_blank=True)
     tags = TagsField(required=False)
+    responsavel = UsuarioResumoSerializer(read_only=True)
+    responsavel_id = serializers.PrimaryKeyRelatedField(
+        source="responsavel",
+        queryset=User.objects.all(),
+        write_only=True,
+        required=False,
+        allow_null=True,
+    )
 
     def _usuario(self):
         request = self.context.get("request")
         return request.user if request else None
+
+    def validate_responsavel_id(self, value):
+        if value is None:
+            return value
+        request = self.context.get("request")
+        if request and str(value.company_id) != capture_company_id(request):
+            raise serializers.ValidationError("Usuário de outra empresa.")
+        return value
 
     def create(self, validated_data):
         nomes = validated_data.pop("tags", None)
@@ -82,6 +101,8 @@ class CandidatoSerializer(serializers.ModelSerializer):
             "curriculo_key",
             "curriculo_content_type",
             "cadastrado_por",
+            "responsavel",
+            "responsavel_id",
             "tags",
             "created_at",
             "updated_at",

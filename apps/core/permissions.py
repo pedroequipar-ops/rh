@@ -34,6 +34,10 @@ ROLE_PERMISSIONS = {
         "candidatos.curriculo_url",
         "candidatos.mensagens",
         "candidatos.mover_etapa",
+        "tarefas.view",
+        "tarefas.create",
+        "tarefas.edit",
+        "tarefas.delete",
     },
     "SETOR": {
         "setores.view",
@@ -48,6 +52,10 @@ ROLE_PERMISSIONS = {
         "candidatos.view",
         "candidatos.curriculo_url",
         "candidatos.mensagens",
+        "tarefas.view",
+        "tarefas.create",
+        "tarefas.edit",
+        "tarefas.delete",
     },
 }
 

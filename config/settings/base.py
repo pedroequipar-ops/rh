@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "apps.tags",
     "apps.atividade",
     "apps.dashboard",
+    "apps.tarefas",
 ]
 
 MIDDLEWARE = [

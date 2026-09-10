@@ -10,6 +10,14 @@ class SetorSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at", "updated_at"]
 
 
+class UsuarioResumoSerializer(serializers.ModelSerializer):
+    """Resumo leve de usuário — usado como `responsavel` aninhado em vaga/candidato/tarefa."""
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "first_name", "last_name"]
+
+
 class UserCreateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
     setor_id = serializers.PrimaryKeyRelatedField(source="setor", queryset=Setor.objects.all())

@@ -34,6 +34,16 @@ def registrar_edicao(candidato, user):
     atividade_services.registrar(user, "editou", candidato, resumo="editou os dados do candidato")
 
 
+def registrar_mudanca_responsavel(candidato, antes, depois, user):
+    if depois is None:
+        resumo = "removeu o responsável"
+    elif antes is None:
+        resumo = f"definiu {depois.username} como responsável"
+    else:
+        resumo = f"trocou o responsável para {depois.username}"
+    atividade_services.registrar(user, "mudou_responsavel", candidato, resumo=resumo)
+
+
 def registrar_mudanca_etapa(candidato, etapa, user):
     atividade_services.registrar(
         user, "moveu_etapa", candidato, resumo=f'moveu para a etapa "{etapa.nome}"'
