@@ -1,15 +1,14 @@
 import {
-  Briefcase,
   CheckSquare,
   FileBarChart,
+  KanbanSquare,
   LayoutDashboard,
   List,
   Plus,
   Settings,
   UserPlus,
-  Users,
 } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ButtonLink } from '../ui/Button'
 import { cn } from '../ui/cn'
@@ -21,14 +20,20 @@ interface SidebarNavProps {
 
 export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
   const { me } = useAuth()
+  const { pathname } = useLocation()
   if (!me) return null
   const isRh = me.role === 'RH'
   const base = isRh ? '/rh' : '/setor'
 
   const items = [
     { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, end: true },
-    { to: `${base}/vagas`, label: 'Vagas', icon: Briefcase },
-    { to: `${base}/pessoas`, label: 'Pessoas', icon: Users },
+    {
+      to: `${base}/vagas`,
+      label: 'Quadros',
+      icon: KanbanSquare,
+      // "Quadros" abre o board de Vagas; o BoardSwitcher no topo leva pro de Pessoas
+      extraActive: pathname.startsWith(`${base}/pessoas`),
+    },
     { to: '/tarefas', label: 'Tarefas', icon: CheckSquare },
     { to: `${base}/listagem`, label: 'Listagem', icon: List },
     { to: '/relatorios', label: 'Relatórios', icon: FileBarChart },
@@ -38,7 +43,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
   return (
     <nav className="flex flex-col gap-2 overflow-y-auto px-2 py-3">
       <div className="flex flex-col gap-0.5">
-        {items.map(({ to, label, icon: Icon, end }) => (
+        {items.map(({ to, label, icon: Icon, end, extraActive }) => (
           <NavLink
             key={to}
             to={to}
@@ -49,7 +54,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
               cn(
                 'relative flex h-9 items-center gap-2.5 rounded-md px-2.5 text-sm transition-fast',
                 collapsed && 'justify-center px-0',
-                isActive
+                isActive || extraActive
                   ? 'bg-blue-50 font-semibold text-blue-700'
                   : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
               )
@@ -57,7 +62,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
           >
             {({ isActive }) => (
               <>
-                {isActive && (
+                {(isActive || extraActive) && (
                   <span className="absolute bottom-1.5 left-0 top-1.5 w-[3px] rounded-r bg-blue-600" />
                 )}
                 <Icon size={18} className="shrink-0" />
