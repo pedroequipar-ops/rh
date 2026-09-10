@@ -1,11 +1,13 @@
-import { useState } from 'react'
-import { Download, Eye } from 'lucide-react'
-import { baixarRelatorioCsv, previewRelatorio, type RelatorioInput } from '../api/relatorios'
+import { useState, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
+import { ArrowLeft, FileText, X } from 'lucide-react'
+import { gerarRelatorio, type RelatorioGrupoLinha, type RelatorioInput } from '../api/relatorios'
 import { useEtapas } from '../api/hooks/useEtapas'
 import { useSetores } from '../api/hooks/useSetores'
 import { useToast } from '../context/ToastContext'
 import { BuscarButton } from '../components/board/BuscarButton'
-import { Card } from '../components/ui/Card'
+import { Button, Card, Field, Input, Select } from '../components/ui'
+import { baixarRelatorioPdf, type SecaoPdf } from '../lib/relatorioPdf'
 import {
   FILTROS_CANDIDATO_VAZIO,
   FILTROS_VAGA_VAZIO,
@@ -17,45 +19,233 @@ import { MOTIVO_SOLICITACAO_OPCOES, VAGA_STATUS_META, statusLabel } from '../con
 import type { VagaStatus } from '../types'
 
 type Entidade = 'vaga' | 'candidato'
+type Aba = Entidade | 'completo'
+type Opcao = { value: string; label: string }
+type Distribuicao = { label: string; value: number }
 
-function CheckboxGrupo({
+const ABA_LABEL: Record<Aba, string> = { vaga: 'Vagas', candidato: 'Candidatos', completo: 'Completo' }
+
+/** Campos que rendem uma distribuição (contagem por valor) num gráfico. */
+const CAMPOS_CATEGORICOS: Record<Entidade, string[]> = {
+  vaga: ['status', 'setor', 'prioridade', 'motivo_solicitacao', 'urgente', 'atrasada', 'responsavel', 'criado_por'],
+  candidato: ['etapa_atual', 'vaga_setor', 'vaga', 'responsavel', 'cadastrado_por'],
+}
+
+/** Campos numéricos que viram card de soma. */
+const CAMPOS_SOMA: Record<string, string> = {
+  quantidade_vagas: 'Posições em aberto',
+  total_candidatos: 'Total de candidatos',
+}
+
+function distribuir(linhas: Record<string, string>[], campo: string, limite = 10): Distribuicao[] {
+  const cont = new Map<string, number>()
+  for (const l of linhas) {
+    const chave = (l[campo] ?? '').trim() || '—'
+    cont.set(chave, (cont.get(chave) ?? 0) + 1)
+  }
+  const ord = [...cont.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([label, value]) => ({ label, value }))
+  if (ord.length <= limite) return ord
+  const resto = ord.slice(limite).reduce((s, d) => s + d.value, 0)
+  return [...ord.slice(0, limite), { label: 'Outros', value: resto }]
+}
+
+function somar(linhas: Record<string, string>[], campo: string): number {
+  return linhas.reduce((s, l) => {
+    const n = Number.parseFloat((l[campo] ?? '').replace(',', '.'))
+    return s + (Number.isFinite(n) ? n : 0)
+  }, 0)
+}
+
+function contar(linhas: Record<string, string>[], campo: string, valor: string): number {
+  return linhas.filter((l) => (l[campo] ?? '') === valor).length
+}
+
+const labelCampo = (ent: Entidade, valor: string) =>
+  (ent === 'vaga' ? CAMPOS_VAGA : CAMPOS_CANDIDATO).find((c) => c.value === valor)?.label ?? valor
+
+/** Transforma o resultado cru da API (linhas ou grupos) numa seção do PDF —
+ * métricas + distribuições. Devolve null se não veio nada. */
+function computarSecao(
+  ent: Entidade,
+  campos: string[],
+  resultado: Record<string, string>[] | RelatorioGrupoLinha[],
+  agrupamento: string,
+): SecaoPdf | null {
+  const tituloSecao = ent === 'vaga' ? 'Vagas' : 'Candidatos'
+
+  if (agrupamento) {
+    const grupos = resultado as RelatorioGrupoLinha[]
+    if (grupos.length === 0) return null
+    const total = grupos.reduce((s, g) => s + g.total, 0)
+    return {
+      titulo: tituloSecao,
+      metricas: [
+        { label: 'Registros', valor: String(total) },
+        { label: `Grupos por ${labelCampo(ent, agrupamento)}`, valor: String(grupos.length) },
+      ],
+      distribuicoes: [
+        {
+          titulo: `Por ${labelCampo(ent, agrupamento)}`,
+          itens: [...grupos]
+            .map((g) => ({ label: g.grupo, value: g.total }))
+            .sort((a, b) => b.value - a.value),
+        },
+      ],
+    }
+  }
+
+  const linhas = resultado as Record<string, string>[]
+  if (linhas.length === 0) return null
+
+  const metricas = [{ label: 'Registros', valor: String(linhas.length) }]
+  if (ent === 'vaga' && campos.includes('urgente')) {
+    metricas.push({ label: 'Urgentes', valor: String(contar(linhas, 'urgente', 'Sim')) })
+  }
+  if (ent === 'vaga' && campos.includes('atrasada')) {
+    metricas.push({ label: 'Atrasadas', valor: String(contar(linhas, 'atrasada', 'Sim')) })
+  }
+  for (const c of campos) {
+    if (c in CAMPOS_SOMA) {
+      metricas.push({ label: CAMPOS_SOMA[c], valor: somar(linhas, c).toLocaleString('pt-BR') })
+    }
+  }
+
+  const distribuicoes = CAMPOS_CATEGORICOS[ent]
+    .filter((c) => campos.includes(c) && !['urgente', 'atrasada'].includes(c))
+    .map((c) => ({ titulo: `Por ${labelCampo(ent, c)}`, itens: distribuir(linhas, c) }))
+    .filter((d) => d.itens.length > 1)
+
+  return { titulo: tituloSecao, metricas, distribuicoes }
+}
+
+function Secao({ titulo, aside, children }: { titulo: string; aside?: ReactNode; children: ReactNode }) {
+  return (
+    <section className="border-t border-slate-100 pt-4 first:border-0 first:pt-0">
+      <div className="mb-2 flex min-h-6 items-center justify-between gap-2">
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-400">{titulo}</h2>
+        {aside}
+      </div>
+      {children}
+    </section>
+  )
+}
+
+function Checks({
   opcoes,
   selecionados,
   onToggle,
+  colunas = 3,
 }: {
-  opcoes: { value: string; label: string }[]
+  opcoes: Opcao[]
   selecionados: string[]
   onToggle: (value: string) => void
+  colunas?: 2 | 3
 }) {
+  if (opcoes.length === 0) {
+    return <p className="text-xs text-slate-400">Nada disponível.</p>
+  }
   return (
-    <div className="flex flex-wrap gap-x-3 gap-y-1">
-      {opcoes.map((opcao) => (
-        <label key={opcao.value} className="flex items-center gap-1.5 text-sm text-slate-700">
+    <div
+      className={
+        colunas === 2
+          ? 'grid grid-cols-1 gap-x-2 gap-y-0.5 sm:grid-cols-2'
+          : 'grid grid-cols-2 gap-x-2 gap-y-0.5 sm:grid-cols-3'
+      }
+    >
+      {opcoes.map((o) => (
+        <label
+          key={o.value}
+          className="flex cursor-pointer items-center gap-2 rounded px-1.5 py-1 text-sm text-slate-700 hover:bg-slate-50"
+        >
           <input
             type="checkbox"
-            checked={selecionados.includes(opcao.value)}
-            onChange={() => onToggle(opcao.value)}
-            className="h-3.5 w-3.5 rounded border-slate-300"
+            checked={selecionados.includes(o.value)}
+            onChange={() => onToggle(o.value)}
+            className="h-4 w-4 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
           />
-          {opcao.label}
+          <span className="truncate">{o.label}</span>
         </label>
       ))}
     </div>
   )
 }
 
-const STATUS_OPCOES = (Object.keys(VAGA_STATUS_META) as VagaStatus[]).map((s) => ({
+function ChipButton({
+  children,
+  onClick,
+  tone = 'neutral',
+}: {
+  children: ReactNode
+  onClick: () => void
+  tone?: 'neutral' | 'danger'
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={
+        tone === 'danger'
+          ? 'inline-flex items-center gap-1 rounded-full border border-transparent px-2 py-0.5 text-[11px] font-medium text-slate-400 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600'
+          : 'inline-flex items-center gap-1 rounded-full border border-transparent px-2 py-0.5 text-[11px] font-medium text-blue-600 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700'
+      }
+    >
+      {children}
+    </button>
+  )
+}
+
+function SubFiltro({
+  label,
+  children,
+  opcoes,
+  selecionados,
+  onSetTodos,
+}: {
+  label: string
+  children: ReactNode
+  opcoes?: Opcao[]
+  selecionados?: string[]
+  onSetTodos?: (valores: string[]) => void
+}) {
+  const todos = !!opcoes && !!selecionados && opcoes.length > 0 && selecionados.length === opcoes.length
+  return (
+    <div>
+      <div className="mb-1 flex min-h-[18px] items-center justify-between gap-2">
+        <p className="text-[11px] font-medium text-slate-500">{label}</p>
+        {onSetTodos && opcoes && opcoes.length > 0 && (
+          <ChipButton
+            tone={todos ? 'danger' : 'neutral'}
+            onClick={() => onSetTodos(todos ? [] : opcoes.map((o) => o.value))}
+          >
+            {todos ? (
+              <>
+                <X size={11} /> Limpar
+              </>
+            ) : (
+              'Marcar todas'
+            )}
+          </ChipButton>
+        )}
+      </div>
+      {children}
+    </div>
+  )
+}
+
+const STATUS_OPCOES: Opcao[] = (Object.keys(VAGA_STATUS_META) as VagaStatus[]).map((s) => ({
   value: s,
   label: statusLabel(s),
 }))
-const MOTIVO_OPCOES = MOTIVO_SOLICITACAO_OPCOES.filter((o) => o.value)
+const MOTIVO_OPCOES: Opcao[] = MOTIVO_SOLICITACAO_OPCOES.filter((o) => o.value)
 
 export function RelatorioBuilder() {
   const { showToast } = useToast()
   const etapasQuery = useEtapas()
   const setoresQuery = useSetores()
 
-  const [entidade, setEntidade] = useState<Entidade>('vaga')
+  const [aba, setAba] = useState<Aba>('vaga')
   const [camposVaga, setCamposVaga] = useState<string[]>(CAMPOS_VAGA.map((c) => c.value))
   const [camposCandidato, setCamposCandidato] = useState<string[]>(
     CAMPOS_CANDIDATO.map((c) => c.value),
@@ -66,13 +256,15 @@ export function RelatorioBuilder() {
   const [fim, setFim] = useState('')
   const [agrupamento, setAgrupamento] = useState('')
   const [carregando, setCarregando] = useState(false)
-  const [baixando, setBaixando] = useState(false)
-  const [linhas, setLinhas] = useState<Record<string, string>[] | null>(null)
-  const [grupos, setGrupos] = useState<{ grupo: string; total: number }[] | null>(null)
 
+  // no modo "completo" o formulário some; a entidade só serve pra montar o form
+  const entidade: Entidade = aba === 'completo' ? 'vaga' : aba
   const camposDisponiveis: CampoRelatorio[] = entidade === 'vaga' ? CAMPOS_VAGA : CAMPOS_CANDIDATO
   const campos = entidade === 'vaga' ? camposVaga : camposCandidato
   const setCampos = entidade === 'vaga' ? setCamposVaga : setCamposCandidato
+
+  const setorOpcoes: Opcao[] = (setoresQuery.data ?? []).map((s) => ({ value: s.id, label: s.nome }))
+  const etapaOpcoes: Opcao[] = (etapasQuery.data ?? []).map((e) => ({ value: e.id, label: e.nome }))
 
   function toggleCampo(valor: string) {
     setCampos((prev) => (prev.includes(valor) ? prev.filter((v) => v !== valor) : [...prev, valor]))
@@ -118,230 +310,290 @@ export function RelatorioBuilder() {
     }
   }
 
-  async function handlePreview() {
+  function resumoPeriodo(): string {
+    const fmt = (d: string) => d.split('-').reverse().join('/')
+    if (inicio && fim) return `Período de ${fmt(inicio)} a ${fmt(fim)}`
+    if (inicio) return `A partir de ${fmt(inicio)}`
+    if (fim) return `Até ${fmt(fim)}`
+    return 'Todo o período'
+  }
+
+  async function handleGerar() {
     setCarregando(true)
-    setLinhas(null)
-    setGrupos(null)
     try {
-      const resultado = await previewRelatorio(montarInput())
-      if (agrupamento) {
-        setGrupos(resultado as { grupo: string; total: number }[])
+      const geradoEm = `gerado em ${new Date().toLocaleString('pt-BR', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      })}`
+      let dados: Parameters<typeof baixarRelatorioPdf>[0]
+
+      if (aba === 'completo') {
+        const periodo = { inicio: inicio || undefined, fim: fim || undefined }
+        const [rv, rc] = await Promise.all([
+          gerarRelatorio({ entidade: 'vaga', campos: camposVaga, filtros: {}, periodo, modo: 'detalhado' }),
+          gerarRelatorio({
+            entidade: 'candidato',
+            campos: camposCandidato,
+            filtros: {},
+            periodo,
+            modo: 'detalhado',
+          }),
+        ])
+        const secoes = [
+          computarSecao('vaga', camposVaga, rv, ''),
+          computarSecao('candidato', camposCandidato, rc, ''),
+        ].filter((s): s is SecaoPdf => s !== null)
+        if (secoes.length === 0) {
+          showToast('Nenhum registro para o período selecionado', 'error')
+          return
+        }
+        dados = {
+          titulo: 'Relatório completo',
+          meta: [resumoPeriodo(), geradoEm].join(' · '),
+          secoes,
+          nomeArquivo: 'relatorio-completo.pdf',
+        }
       } else {
-        setLinhas(resultado as Record<string, string>[])
+        const ent = aba
+        const resultado = await gerarRelatorio(montarInput())
+        const secao = computarSecao(ent, campos, resultado, agrupamento)
+        if (!secao) {
+          showToast('Nenhum registro para os filtros selecionados', 'error')
+          return
+        }
+        dados = {
+          titulo: `Relatório de ${ABA_LABEL[ent]}`,
+          meta: [
+            resumoPeriodo(),
+            agrupamento && `agrupado por ${labelCampo(ent, agrupamento)}`,
+            geradoEm,
+          ]
+            .filter(Boolean)
+            .join(' · '),
+          secoes: [{ ...secao, titulo: '' }],
+          nomeArquivo: `relatorio-${ent === 'vaga' ? 'vagas' : 'candidatos'}.pdf`,
+        }
       }
+
+      await baixarRelatorioPdf(dados)
     } catch {
-      showToast('Não foi possível gerar a prévia', 'error')
+      showToast('Não foi possível gerar o relatório', 'error')
     } finally {
       setCarregando(false)
     }
   }
 
-  async function handleBaixar() {
-    setBaixando(true)
-    try {
-      await baixarRelatorioCsv(montarInput())
-    } catch {
-      showToast('Não foi possível gerar o CSV', 'error')
-    } finally {
-      setBaixando(false)
-    }
-  }
+  const todosCampos = campos.length === camposDisponiveis.length
 
   return (
     <div className="flex h-full flex-col bg-board">
       <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-5">
-        <h1 className="text-lg font-semibold text-slate-800">Relatório personalizado</h1>
+        <div className="flex items-center gap-3">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-slate-800"
+          >
+            <ArrowLeft size={15} /> Dashboard
+          </Link>
+          <span className="text-slate-300">/</span>
+          <h1 className="text-lg font-semibold text-slate-800">Relatório personalizado</h1>
+        </div>
         <BuscarButton />
       </header>
 
       <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto p-5">
         <div className="mx-auto flex max-w-3xl flex-col gap-4">
-          <Card className="space-y-3 p-4">
-            <div className="flex items-center gap-1.5">
-              {(['vaga', 'candidato'] as Entidade[]).map((e) => (
-                <button
-                  key={e}
-                  onClick={() => setEntidade(e)}
-                  className={
-                    entidade === e
-                      ? 'rounded-full bg-blue-600 px-3 py-1 text-sm font-medium text-white'
-                      : 'rounded-full border border-slate-300 px-3 py-1 text-sm text-slate-600 hover:bg-slate-50'
-                  }
+          <Card className="space-y-4 p-5">
+            <Secao titulo="Tipo de relatório">
+              <div className="inline-flex rounded-lg bg-slate-100 p-0.5">
+                {(['vaga', 'candidato', 'completo'] as Aba[]).map((a) => (
+                  <button
+                    key={a}
+                    type="button"
+                    onClick={() => setAba(a)}
+                    className={
+                      aba === a
+                        ? 'rounded-md bg-white px-3.5 py-1 text-sm font-medium text-slate-800 shadow-sm'
+                        : 'rounded-md px-3.5 py-1 text-sm text-slate-500 transition-colors hover:text-slate-700'
+                    }
+                  >
+                    {ABA_LABEL[a]}
+                  </button>
+                ))}
+              </div>
+              {aba === 'completo' && (
+                <p className="mt-2 text-xs text-slate-400">
+                  Junta Vagas e Candidatos num PDF só, cada um em sua seção. Usa as colunas de cada
+                  aba e o período abaixo.
+                </p>
+              )}
+            </Secao>
+
+            {aba !== 'completo' && (
+            <>
+            <Secao
+              titulo="Colunas do relatório"
+              aside={
+                <ChipButton
+                  tone={todosCampos ? 'danger' : 'neutral'}
+                  onClick={() => setCampos(todosCampos ? [] : camposDisponiveis.map((c) => c.value))}
                 >
-                  {e === 'vaga' ? 'Vagas' : 'Candidatos'}
-                </button>
-              ))}
-            </div>
+                  {todosCampos ? (
+                    <>
+                      <X size={11} /> Limpar
+                    </>
+                  ) : (
+                    'Marcar todas'
+                  )}
+                </ChipButton>
+              }
+            >
+              <Checks opcoes={camposDisponiveis} selecionados={campos} onToggle={toggleCampo} />
+            </Secao>
 
-            <div>
-              <h2 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                Campos
-              </h2>
-              <CheckboxGrupo opcoes={camposDisponiveis} selecionados={campos} onToggle={toggleCampo} />
-            </div>
-
-            <div>
-              <h2 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                Filtros
-              </h2>
+            <Secao titulo="Filtros">
               {entidade === 'vaga' ? (
-                <div className="space-y-2">
-                  <CheckboxGrupo
+                <div className="space-y-3">
+                  <SubFiltro
+                    label="Status"
                     opcoes={STATUS_OPCOES}
                     selecionados={filtrosVaga.status}
-                    onToggle={(v) => toggleVaga('status', v)}
-                  />
-                  <CheckboxGrupo
-                    opcoes={(setoresQuery.data ?? []).map((s) => ({ value: s.id, label: s.nome }))}
+                    onSetTodos={(v) => setFiltrosVaga((p) => ({ ...p, status: v as VagaStatus[] }))}
+                  >
+                    <Checks
+                      opcoes={STATUS_OPCOES}
+                      selecionados={filtrosVaga.status}
+                      onToggle={(v) => toggleVaga('status', v)}
+                    />
+                  </SubFiltro>
+                  <SubFiltro
+                    label="Setor"
+                    opcoes={setorOpcoes}
                     selecionados={filtrosVaga.setor}
-                    onToggle={(v) => toggleVaga('setor', v)}
-                  />
-                  <CheckboxGrupo
+                    onSetTodos={(v) => setFiltrosVaga((p) => ({ ...p, setor: v }))}
+                  >
+                    <Checks
+                      opcoes={setorOpcoes}
+                      selecionados={filtrosVaga.setor}
+                      onToggle={(v) => toggleVaga('setor', v)}
+                    />
+                  </SubFiltro>
+                  <SubFiltro
+                    label="Motivo da solicitação"
                     opcoes={MOTIVO_OPCOES}
                     selecionados={filtrosVaga.motivo}
-                    onToggle={(v) => toggleVaga('motivo', v)}
-                  />
-                  <div className="flex gap-3">
-                    <label className="flex items-center gap-1.5 text-sm text-slate-700">
-                      <input
-                        type="checkbox"
-                        checked={filtrosVaga.urgente}
-                        onChange={(e) => setFiltrosVaga((p) => ({ ...p, urgente: e.target.checked }))}
-                      />
-                      Urgente
-                    </label>
-                    <label className="flex items-center gap-1.5 text-sm text-slate-700">
-                      <input
-                        type="checkbox"
-                        checked={filtrosVaga.atrasada}
-                        onChange={(e) => setFiltrosVaga((p) => ({ ...p, atrasada: e.target.checked }))}
-                      />
-                      Atrasada
-                    </label>
-                  </div>
+                    onSetTodos={(v) => setFiltrosVaga((p) => ({ ...p, motivo: v }))}
+                  >
+                    <Checks
+                      opcoes={MOTIVO_OPCOES}
+                      selecionados={filtrosVaga.motivo}
+                      onToggle={(v) => toggleVaga('motivo', v)}
+                      colunas={2}
+                    />
+                  </SubFiltro>
+                  <SubFiltro label="Sinalizadores">
+                    <div className="flex flex-wrap gap-x-4 gap-y-1">
+                      <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+                        <input
+                          type="checkbox"
+                          checked={filtrosVaga.urgente}
+                          onChange={(e) =>
+                            setFiltrosVaga((p) => ({ ...p, urgente: e.target.checked }))
+                          }
+                          className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        Só urgentes
+                      </label>
+                      <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+                        <input
+                          type="checkbox"
+                          checked={filtrosVaga.atrasada}
+                          onChange={(e) =>
+                            setFiltrosVaga((p) => ({ ...p, atrasada: e.target.checked }))
+                          }
+                          className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        Só atrasadas
+                      </label>
+                    </div>
+                  </SubFiltro>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <CheckboxGrupo
-                    opcoes={(etapasQuery.data ?? []).map((e) => ({ value: e.id, label: e.nome }))}
+                <div className="space-y-3">
+                  <SubFiltro
+                    label="Etapa"
+                    opcoes={etapaOpcoes}
                     selecionados={filtrosCandidato.etapa}
-                    onToggle={(v) => toggleCandidato('etapa', v)}
-                  />
-                  <label className="flex items-center gap-1.5 text-sm text-slate-700">
-                    <input
-                      type="checkbox"
-                      checked={filtrosCandidato.saidaNegativa}
-                      onChange={(e) =>
-                        setFiltrosCandidato((p) => ({ ...p, saidaNegativa: e.target.checked }))
-                      }
+                    onSetTodos={(v) => setFiltrosCandidato((p) => ({ ...p, etapa: v }))}
+                  >
+                    <Checks
+                      opcoes={etapaOpcoes}
+                      selecionados={filtrosCandidato.etapa}
+                      onToggle={(v) => toggleCandidato('etapa', v)}
                     />
-                    Em etapa de saída
-                  </label>
+                  </SubFiltro>
+                  <SubFiltro label="Sinalizadores">
+                    <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+                      <input
+                        type="checkbox"
+                        checked={filtrosCandidato.saidaNegativa}
+                        onChange={(e) =>
+                          setFiltrosCandidato((p) => ({ ...p, saidaNegativa: e.target.checked }))
+                        }
+                        className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      Só em etapa de saída
+                    </label>
+                  </SubFiltro>
                 </div>
               )}
-            </div>
+            </Secao>
+            </>
+            )}
 
-            <div className="flex flex-wrap items-end gap-3">
-              <div>
-                <label className="mb-1 block text-xs font-medium text-slate-500">Período de</label>
-                <input
-                  type="date"
-                  value={inicio}
-                  onChange={(e) => setInicio(e.target.value)}
-                  className="rounded border border-slate-300 px-2 py-1.5 text-sm"
-                />
+            <Secao titulo={aba === 'completo' ? 'Período' : 'Período e agrupamento'}>
+              <div className={aba === 'completo' ? 'grid gap-3 sm:grid-cols-2' : 'grid gap-3 sm:grid-cols-3'}>
+                <Field label="De" htmlFor="rel-inicio">
+                  <Input
+                    id="rel-inicio"
+                    type="date"
+                    value={inicio}
+                    onChange={(e) => setInicio(e.target.value)}
+                  />
+                </Field>
+                <Field label="Até" htmlFor="rel-fim">
+                  <Input
+                    id="rel-fim"
+                    type="date"
+                    value={fim}
+                    onChange={(e) => setFim(e.target.value)}
+                  />
+                </Field>
+                {aba !== 'completo' && (
+                  <Field label="Agrupar por" htmlFor="rel-agrup">
+                    <Select
+                      id="rel-agrup"
+                      value={agrupamento}
+                      onChange={(e) => setAgrupamento(e.target.value)}
+                    >
+                      <option value="">Sem agrupamento</option>
+                      {camposDisponiveis.map((c) => (
+                        <option key={c.value} value={c.value}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </Field>
+                )}
               </div>
-              <div>
-                <label className="mb-1 block text-xs font-medium text-slate-500">até</label>
-                <input
-                  type="date"
-                  value={fim}
-                  onChange={(e) => setFim(e.target.value)}
-                  className="rounded border border-slate-300 px-2 py-1.5 text-sm"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs font-medium text-slate-500">Agrupar por</label>
-                <select
-                  value={agrupamento}
-                  onChange={(e) => setAgrupamento(e.target.value)}
-                  className="rounded border border-slate-300 px-2 py-1.5 text-sm"
-                >
-                  <option value="">Sem agrupamento (linha a linha)</option>
-                  {camposDisponiveis.map((c) => (
-                    <option key={c.value} value={c.value}>
-                      {c.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            </Secao>
 
-            <div className="flex gap-2 pt-1">
-              <button
-                onClick={handlePreview}
-                disabled={carregando}
-                className="flex items-center gap-1.5 rounded border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-              >
-                <Eye size={14} /> {carregando ? 'Carregando...' : 'Visualizar'}
-              </button>
-              <button
-                onClick={handleBaixar}
-                disabled={baixando}
-                className="flex items-center gap-1.5 rounded bg-slate-800 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-900 disabled:opacity-50"
-              >
-                <Download size={14} /> {baixando ? 'Gerando...' : 'Baixar CSV'}
-              </button>
+            <div className="flex justify-end border-t border-slate-100 pt-4">
+              <Button onClick={handleGerar} disabled={carregando}>
+                <FileText size={14} /> {carregando ? 'Gerando...' : 'Gerar relatório em PDF'}
+              </Button>
             </div>
           </Card>
-
-          {(linhas || grupos) && (
-            <Card className="overflow-hidden p-0">
-              <div className="scrollbar-thin max-h-96 overflow-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="sticky top-0 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-                    <tr>
-                      {grupos
-                        ? [
-                            <th key="grupo" className="px-4 py-2">
-                              {camposDisponiveis.find((c) => c.value === agrupamento)?.label ?? 'Grupo'}
-                            </th>,
-                            <th key="total" className="px-4 py-2">
-                              Total
-                            </th>,
-                          ]
-                        : campos.map((c) => (
-                            <th key={c} className="px-4 py-2">
-                              {camposDisponiveis.find((cd) => cd.value === c)?.label ?? c}
-                            </th>
-                          ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {grupos
-                      ? grupos.map((g) => (
-                          <tr key={g.grupo}>
-                            <td className="px-4 py-2">{g.grupo}</td>
-                            <td className="px-4 py-2">{g.total}</td>
-                          </tr>
-                        ))
-                      : linhas?.map((linha, i) => (
-                          <tr key={i}>
-                            {campos.map((c) => (
-                              <td key={c} className="px-4 py-2">
-                                {linha[c]}
-                              </td>
-                            ))}
-                          </tr>
-                        ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="border-t border-slate-100 px-4 py-2 text-xs text-slate-400">
-                Prévia com até 20 linhas — o CSV baixado traz o total.
-              </p>
-            </Card>
-          )}
         </div>
       </div>
     </div>

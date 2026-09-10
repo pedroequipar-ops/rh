@@ -22,20 +22,11 @@ export interface RelatorioGrupoLinha {
   total: number
 }
 
-export async function previewRelatorio(
+/** Relatório completo em JSON — linhas detalhadas ou, com `agrupamento`, a
+ * contagem por grupo. Alimenta os cards e gráficos do builder. */
+export async function gerarRelatorio(
   input: RelatorioInput,
 ): Promise<Record<string, string>[] | RelatorioGrupoLinha[]> {
-  const { data } = await apiClient.post('/relatorios/?preview=1', { ...input, formato: 'json' })
+  const { data } = await apiClient.post('/relatorios/', { ...input, formato: 'json' })
   return data
-}
-
-export async function baixarRelatorioCsv(input: RelatorioInput): Promise<void> {
-  const response = await apiClient.post('/relatorios/', { ...input, formato: 'csv' }, { responseType: 'blob' })
-  const blob = response.data as Blob
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `relatorio-${input.entidade}.csv`
-  a.click()
-  URL.revokeObjectURL(url)
 }
