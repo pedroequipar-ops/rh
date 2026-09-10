@@ -85,6 +85,8 @@ export interface DashboardFiltro {
   inicio?: string
   fim?: string
   setor?: string
+  responsavel?: string
+  prioridade?: number
 }
 
 export async function getDashboard(filtro: DashboardFiltro = {}): Promise<DashboardData> {

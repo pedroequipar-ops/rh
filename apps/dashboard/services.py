@@ -1,6 +1,7 @@
-from datetime import timedelta
+from dataclasses import dataclass
+from datetime import date, timedelta
 
-from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F, Q, Sum, Window
+from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F, Q, QuerySet, Sum, Window
 from django.db.models.functions import Lead, TruncWeek
 from django.utils import timezone
 
@@ -18,26 +19,54 @@ LIMITE_TOP_COBRANCAS = 5
 SEMANAS_SERIE = 8
 
 
-def _escopo_vagas(company_id, setor_id=None, inicio=None, fim=None):
+@dataclass(frozen=True)
+class DashboardFiltros:
+    """Filtros aplicados a um pedido de dashboard. `setor_id`, `responsavel_id`
+    e `prioridade` recortam a população de vagas/candidatos; `inicio`/`fim`
+    recortam por data de criação, e não se aplicam a widgets com janela de
+    tempo própria (série semanal) — ver `aplicar_periodo` em `_escopo_vagas`."""
+
+    setor_id: str | None = None
+    inicio: date | None = None
+    fim: date | None = None
+    responsavel_id: str | None = None
+    prioridade: int | None = None
+
+
+def _escopo_vagas(company_id, filtros: DashboardFiltros, aplicar_periodo: bool = True) -> QuerySet[Vaga]:
     qs = Vaga.objects.filter(company_id=company_id)
-    if setor_id:
-        qs = qs.filter(setor_id=setor_id)
-    if inicio:
-        qs = qs.filter(created_at__date__gte=inicio)
-    if fim:
-        qs = qs.filter(created_at__date__lte=fim)
+    if filtros.setor_id:
+        qs = qs.filter(setor_id=filtros.setor_id)
+    if filtros.responsavel_id:
+        qs = qs.filter(responsavel_id=filtros.responsavel_id)
+    if filtros.prioridade:
+        qs = qs.filter(prioridade=filtros.prioridade)
+    if aplicar_periodo:
+        if filtros.inicio:
+            qs = qs.filter(created_at__date__gte=filtros.inicio)
+        if filtros.fim:
+            qs = qs.filter(created_at__date__lte=filtros.fim)
     return qs
 
 
-def _escopo_candidatos(company_id, setor_id=None):
+def _escopo_candidatos(company_id, filtros: DashboardFiltros, aplicar_periodo: bool = True) -> QuerySet[Candidato]:
     qs = Candidato.objects.filter(company_id=company_id, active=True)
-    if setor_id:
-        qs = qs.filter(vaga__setor_id=setor_id)
+    if filtros.setor_id:
+        qs = qs.filter(vaga__setor_id=filtros.setor_id)
+    if filtros.responsavel_id:
+        qs = qs.filter(vaga__responsavel_id=filtros.responsavel_id)
+    if filtros.prioridade:
+        qs = qs.filter(vaga__prioridade=filtros.prioridade)
+    if aplicar_periodo:
+        if filtros.inicio:
+            qs = qs.filter(created_at__date__gte=filtros.inicio)
+        if filtros.fim:
+            qs = qs.filter(created_at__date__lte=filtros.fim)
     return qs
 
 
-def resumo_vagas(company_id, setor_id=None, inicio=None, fim=None) -> dict:
-    qs = _escopo_vagas(company_id, setor_id, inicio, fim)
+def resumo_vagas(company_id, filtros: DashboardFiltros) -> dict:
+    qs = _escopo_vagas(company_id, filtros)
     return {
         "ativas": qs.filter(status__in=STATUS_ATIVOS).count(),
         "aguardando_aprovacao": qs.filter(status=S.SOLICITADA).count(),
@@ -46,8 +75,8 @@ def resumo_vagas(company_id, setor_id=None, inicio=None, fim=None) -> dict:
     }
 
 
-def vagas_por_status(company_id, setor_id=None, inicio=None, fim=None) -> list[dict]:
-    qs = _escopo_vagas(company_id, setor_id, inicio, fim)
+def vagas_por_status(company_id, filtros: DashboardFiltros) -> list[dict]:
+    qs = _escopo_vagas(company_id, filtros)
     contagem = dict(qs.values_list("status").annotate(total=Count("id")).values_list("status", "total"))
     return [
         {"status": status, "status_display": label, "total": contagem.get(status, 0)}
@@ -55,10 +84,10 @@ def vagas_por_status(company_id, setor_id=None, inicio=None, fim=None) -> list[d
     ]
 
 
-def vagas_ativas_por_setor(company_id, setor_id=None, limite=8) -> list[dict]:
+def vagas_ativas_por_setor(company_id, filtros: DashboardFiltros, limite=8) -> list[dict]:
     """Vagas em status ativo agrupadas por setor, maiores volumes primeiro."""
     qs = (
-        _escopo_vagas(company_id, setor_id)
+        _escopo_vagas(company_id, filtros)
         .filter(status__in=STATUS_ATIVOS)
         .values("setor__nome")
         .annotate(total=Count("id"))
@@ -67,9 +96,9 @@ def vagas_ativas_por_setor(company_id, setor_id=None, limite=8) -> list[dict]:
     return [{"setor": r["setor__nome"], "total": r["total"]} for r in qs]
 
 
-def vagas_atrasadas(company_id, setor_id=None, limite=LIMITE_ATRASADAS) -> list[dict]:
+def vagas_atrasadas(company_id, filtros: DashboardFiltros, limite=LIMITE_ATRASADAS) -> list[dict]:
     qs = (
-        _escopo_vagas(company_id, setor_id)
+        _escopo_vagas(company_id, filtros)
         .filter(vagas_services.atrasada_q())
         .select_related("setor")
         .order_by("data_alvo_preenchimento", "data_inicio_prevista")[:limite]
@@ -87,8 +116,8 @@ def vagas_atrasadas(company_id, setor_id=None, limite=LIMITE_ATRASADAS) -> list[
     ]
 
 
-def funil_etapas(company_id, setor_id=None) -> list[dict]:
-    qs = _escopo_candidatos(company_id, setor_id)
+def funil_etapas(company_id, filtros: DashboardFiltros) -> list[dict]:
+    qs = _escopo_candidatos(company_id, filtros)
     rows = (
         qs.values("etapa_atual__id", "etapa_atual__nome", "etapa_atual__ordem", "etapa_atual__is_saida_negativa")
         .annotate(total=Count("id"))
@@ -106,11 +135,11 @@ def funil_etapas(company_id, setor_id=None) -> list[dict]:
     ]
 
 
-def tempo_medio_por_status(company_id, setor_id=None) -> list[dict]:
+def tempo_medio_por_status(company_id, filtros: DashboardFiltros) -> list[dict]:
     """Horas médias que as vagas passam em cada status, medidas pelo
     intervalo entre transições consecutivas em VagaHistoricoStatus (LEAD por
     vaga, ordenado por data)."""
-    vagas_qs = _escopo_vagas(company_id, setor_id)
+    vagas_qs = _escopo_vagas(company_id, filtros)
     historico = (
         VagaHistoricoStatus.objects.filter(company_id=company_id, vaga__in=vagas_qs)
         .annotate(
@@ -146,9 +175,9 @@ def tempo_medio_por_status(company_id, setor_id=None) -> list[dict]:
     ]
 
 
-def tempo_medio_preenchimento(company_id, setor_id=None) -> float | None:
+def tempo_medio_preenchimento(company_id, filtros: DashboardFiltros) -> float | None:
     """Horas médias entre a criação da vaga e o fechamento como PREENCHIDA."""
-    qs = _escopo_vagas(company_id, setor_id).filter(status=S.PREENCHIDA, fechada_em__isnull=False)
+    qs = _escopo_vagas(company_id, filtros).filter(status=S.PREENCHIDA, fechada_em__isnull=False)
     resultado = qs.annotate(
         duracao=ExpressionWrapper(F("fechada_em") - F("created_at"), output_field=DurationField())
     ).aggregate(media=Avg("duracao"))
@@ -156,8 +185,8 @@ def tempo_medio_preenchimento(company_id, setor_id=None) -> float | None:
     return round(media.total_seconds() / 3600, 1) if media else None
 
 
-def cobrancas(company_id, setor_id=None, limite=LIMITE_TOP_COBRANCAS) -> dict:
-    qs = _escopo_vagas(company_id, setor_id)
+def cobrancas(company_id, filtros: DashboardFiltros, limite=LIMITE_TOP_COBRANCAS) -> dict:
+    qs = _escopo_vagas(company_id, filtros)
     total = qs.aggregate(total=Sum("total_cobrancas"))["total"] or 0
     top = qs.filter(total_cobrancas__gt=0).order_by("-total_cobrancas")[:limite]
     return {
@@ -168,7 +197,7 @@ def cobrancas(company_id, setor_id=None, limite=LIMITE_TOP_COBRANCAS) -> dict:
     }
 
 
-def chats_sem_resposta(company_id, user_role, setor_id=None) -> int:
+def chats_sem_resposta(company_id, user_role, filtros: DashboardFiltros) -> int:
     """Conversas (de vaga ou de candidato) cuja última mensagem foi do "outro
     lado" (RH↔Setor) e ainda não foi respondida por `user_role`."""
     from django.db.models import OuterRef, Subquery
@@ -177,7 +206,7 @@ def chats_sem_resposta(company_id, user_role, setor_id=None) -> int:
 
     ultima_vaga = ChatMensagem.objects.filter(vaga=OuterRef("pk")).order_by("-created_at")
     vagas_pendentes = (
-        _escopo_vagas(company_id, setor_id)
+        _escopo_vagas(company_id, filtros, aplicar_periodo=False)
         .annotate(ultimo_autor_role=Subquery(ultima_vaga.values("autor__role")[:1]))
         .filter(ultimo_autor_role=outro_role)
         .count()
@@ -185,7 +214,7 @@ def chats_sem_resposta(company_id, user_role, setor_id=None) -> int:
 
     ultima_cand = ChatMensagem.objects.filter(candidato=OuterRef("pk")).order_by("-created_at")
     candidatos_pendentes = (
-        _escopo_candidatos(company_id, setor_id)
+        _escopo_candidatos(company_id, filtros, aplicar_periodo=False)
         .annotate(ultimo_autor_role=Subquery(ultima_cand.values("autor__role")[:1]))
         .filter(ultimo_autor_role=outro_role)
         .count()
@@ -194,14 +223,15 @@ def chats_sem_resposta(company_id, user_role, setor_id=None) -> int:
     return vagas_pendentes + candidatos_pendentes
 
 
-def vagas_series(company_id, setor_id=None, semanas=SEMANAS_SERIE) -> list[dict]:
+def vagas_series(company_id, filtros: DashboardFiltros, semanas=SEMANAS_SERIE) -> list[dict]:
     """Vagas criadas x preenchidas por semana (segunda a domingo), nas últimas
-    `semanas` semanas incluindo a atual."""
+    `semanas` semanas incluindo a atual. Período (inicio/fim) não se aplica
+    aqui — a série já tem sua própria janela de tempo fixa."""
     hoje = timezone.localdate()
     semana_atual = hoje - timedelta(days=hoje.weekday())
     baldes = [semana_atual - timedelta(weeks=i) for i in range(semanas - 1, -1, -1)]
     inicio = baldes[0]
-    base = _escopo_vagas(company_id, setor_id)
+    base = _escopo_vagas(company_id, filtros, aplicar_periodo=False)
 
     def _por_semana(qs, campo):
         return {
@@ -226,10 +256,10 @@ def vagas_series(company_id, setor_id=None, semanas=SEMANAS_SERIE) -> list[dict]
     ]
 
 
-def candidaturas_vs_cadastrados(company_id, setor_id=None) -> list[dict]:
+def candidaturas_vs_cadastrados(company_id, filtros: DashboardFiltros) -> list[dict]:
     """Vagas publicadas: candidaturas informadas (`qtd_pessoas_fase`) vs
     pessoas de fato cadastradas (`Candidato`) por vaga."""
-    qs = _escopo_vagas(company_id, setor_id).filter(status=S.PUBLICADA).annotate(
+    qs = _escopo_vagas(company_id, filtros).filter(status=S.PUBLICADA).annotate(
         cadastrados=Count("candidatos", filter=Q(candidatos__active=True))
     )
     return [

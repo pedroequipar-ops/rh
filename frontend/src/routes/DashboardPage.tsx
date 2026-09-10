@@ -1,7 +1,9 @@
 import { Link, useSearchParams } from 'react-router-dom'
+import { FileBarChart } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useDashboard } from '../api/hooks/useDashboard'
 import { useSetores } from '../api/hooks/useSetores'
+import { useUsuarios } from '../api/hooks/useUsuarios'
 import { useConcluirTarefa, useTarefas } from '../api/hooks/useTarefas'
 import { BuscarButton } from '../components/board/BuscarButton'
 import { StatCard } from '../components/dashboard/StatCard'
@@ -25,14 +27,45 @@ function fmtHoras(horas: number): string {
   return `${horas.toFixed(1)}h`
 }
 
+const PERIODO_OPCOES = [
+  { valor: 'todos', label: 'Todo período' },
+  { valor: '7', label: 'Últimos 7 dias' },
+  { valor: '30', label: 'Últimos 30 dias' },
+  { valor: '90', label: 'Últimos 90 dias' },
+]
+
+const PRIORIDADE_OPCOES = [
+  { valor: '3', label: 'Alta' },
+  { valor: '2', label: 'Média' },
+  { valor: '1', label: 'Baixa' },
+]
+
+function periodoParaDatas(periodo: string): { inicio?: string; fim?: string } {
+  const dias = Number(periodo)
+  if (!Number.isFinite(dias) || dias <= 0) return {}
+  const fim = new Date()
+  const inicio = new Date()
+  inicio.setDate(inicio.getDate() - dias)
+  return { inicio: inicio.toISOString().slice(0, 10), fim: fim.toISOString().slice(0, 10) }
+}
+
 export function DashboardPage() {
   const { me } = useAuth()
   const isRh = me?.role === 'RH'
   const [params, setParams] = useSearchParams()
   const setoresQuery = useSetores(isRh)
+  const usuariosQuery = useUsuarios(isRh)
 
   const setorParam = params.get('setor') ?? ''
-  const { data, isLoading } = useDashboard({ setor: setorParam || undefined })
+  const periodoParam = params.get('periodo') ?? 'todos'
+  const responsavelParam = params.get('responsavel') ?? ''
+  const prioridadeParam = params.get('prioridade') ?? ''
+  const { data, isLoading } = useDashboard({
+    setor: setorParam || undefined,
+    responsavel: responsavelParam || undefined,
+    prioridade: prioridadeParam ? Number(prioridadeParam) : undefined,
+    ...periodoParaDatas(periodoParam),
+  })
   const tarefasQuery = useTarefas({ responsavel: me?.id, pendentes: true })
   const concluirTarefa = useConcluirTarefa()
   const tarefasVencendo = [...(tarefasQuery.data ?? [])]
@@ -50,6 +83,27 @@ export function DashboardPage() {
     setParams(updated, { replace: true })
   }
 
+  function setPeriodo(valor: string) {
+    const updated = new URLSearchParams(params)
+    if (valor && valor !== 'todos') updated.set('periodo', valor)
+    else updated.delete('periodo')
+    setParams(updated, { replace: true })
+  }
+
+  function setResponsavel(valor: string) {
+    const updated = new URLSearchParams(params)
+    if (valor) updated.set('responsavel', valor)
+    else updated.delete('responsavel')
+    setParams(updated, { replace: true })
+  }
+
+  function setPrioridade(valor: string) {
+    const updated = new URLSearchParams(params)
+    if (valor) updated.set('prioridade', valor)
+    else updated.delete('prioridade')
+    setParams(updated, { replace: true })
+  }
+
   return (
     <div className="flex h-full flex-col bg-board">
       <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-5">
@@ -57,25 +111,73 @@ export function DashboardPage() {
           {me ? `Olá, ${me.username}` : 'Dashboard'}
         </h1>
         <div className="flex items-center gap-2">
-          {isRh && (
-            <select
-              value={setorParam}
-              onChange={(e) => setSetor(e.target.value)}
-              className="h-8 rounded border border-slate-300 px-2 text-sm text-slate-600 focus:border-slate-500 focus:outline-none"
-            >
-              <option value="">Todos os setores</option>
-              {(setoresQuery.data ?? []).map((setor) => (
-                <option key={setor.id} value={setor.id}>
-                  {setor.nome}
-                </option>
-              ))}
-            </select>
-          )}
+          <Link
+            to="/relatorios"
+            className="flex h-8 items-center gap-1.5 rounded border border-slate-300 px-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-800"
+          >
+            <FileBarChart size={14} />
+            Relatório personalizado
+          </Link>
           <BuscarButton />
         </div>
       </header>
 
-      <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto p-5">
+      <div className="flex shrink-0 flex-wrap items-center gap-2 bg-slate-50/70 px-5 py-1.5 text-xs text-slate-400">
+        <span>Filtros:</span>
+        {isRh && (
+          <select
+            value={setorParam}
+            onChange={(e) => setSetor(e.target.value)}
+            className="h-6 rounded border border-slate-200 bg-white px-1.5 text-xs text-slate-500 focus:border-slate-400 focus:outline-none"
+          >
+            <option value="">Todos os setores</option>
+            {(setoresQuery.data ?? []).map((setor) => (
+              <option key={setor.id} value={setor.id}>
+                {setor.nome}
+              </option>
+            ))}
+          </select>
+        )}
+        {isRh && (
+          <select
+            value={responsavelParam}
+            onChange={(e) => setResponsavel(e.target.value)}
+            className="h-6 rounded border border-slate-200 bg-white px-1.5 text-xs text-slate-500 focus:border-slate-400 focus:outline-none"
+          >
+            <option value="">Todos os responsáveis</option>
+            {(usuariosQuery.data ?? []).map((usuario) => (
+              <option key={usuario.id} value={usuario.id}>
+                {usuario.username}
+              </option>
+            ))}
+          </select>
+        )}
+        <select
+          value={prioridadeParam}
+          onChange={(e) => setPrioridade(e.target.value)}
+          className="h-6 rounded border border-slate-200 bg-white px-1.5 text-xs text-slate-500 focus:border-slate-400 focus:outline-none"
+        >
+          <option value="">Qualquer prioridade</option>
+          {PRIORIDADE_OPCOES.map((opcao) => (
+            <option key={opcao.valor} value={opcao.valor}>
+              {opcao.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={periodoParam}
+          onChange={(e) => setPeriodo(e.target.value)}
+          className="h-6 rounded border border-slate-200 bg-white px-1.5 text-xs text-slate-500 focus:border-slate-400 focus:outline-none"
+        >
+          {PERIODO_OPCOES.map((opcao) => (
+            <option key={opcao.valor} value={opcao.valor}>
+              {opcao.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto px-5 pb-5 pt-2">
         {isLoading || !data ? (
           <p className="text-sm text-slate-400">Carregando...</p>
         ) : (
