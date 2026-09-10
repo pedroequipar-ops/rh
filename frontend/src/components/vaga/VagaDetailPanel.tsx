@@ -5,6 +5,8 @@ import clsx from 'clsx'
 import { ActivityFeed } from '../atividade/ActivityFeed'
 import { ChatPanel } from '../candidato/ChatPanel'
 import { ConfirmDialog } from '../common/ConfirmDialog'
+import { ResponsavelPicker } from '../common/ResponsavelPicker'
+import { TarefasSection } from '../tarefas/TarefasSection'
 import { Badge, Button, InlineEdit, Select, Textarea, Tabs, TagInput } from '../ui'
 import {
   useAprovarVaga,
@@ -16,6 +18,7 @@ import {
   useUpdateVaga,
 } from '../../api/hooks/useVagas'
 import { useSetores } from '../../api/hooks/useSetores'
+import { useUsuarios } from '../../api/hooks/useUsuarios'
 import { useAuth } from '../../context/AuthContext'
 import { notificacaoHref } from '../../lib/notificacaoHref'
 import {
@@ -62,6 +65,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const registrarCandidaturas = useRegistrarCandidaturas()
   const cobrar = useCobrarVaga()
   const setoresQuery = useSetores(isRh)
+  const usuariosQuery = useUsuarios(isRh)
   const candidatosQuery = useCandidatosDaVaga(vaga.id)
 
   const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'atividade'>('detalhes')
@@ -167,6 +171,17 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
             Prioridade {PRIORIDADE_META[vaga.prioridade].label}
           </span>
           {vaga.atrasada && <Badge tone="amber">Atrasada</Badge>}
+          <ResponsavelPicker
+            value={vaga.responsavel}
+            usuarios={
+              isRh
+                ? usuariosQuery.data ?? []
+                : me
+                  ? [{ id: me.id, username: me.username, first_name: '', last_name: '' }]
+                  : []
+            }
+            onChange={(usuarioId) => salvar({ responsavel_id: usuarioId })}
+          />
         </div>
         <TagInput
           tags={vaga.tags}
@@ -423,6 +438,8 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               </div>
             )}
           </div>
+
+          <TarefasSection alvoTipo="VAGA" alvoId={vaga.id} />
 
           <Button
             variant="secondary"

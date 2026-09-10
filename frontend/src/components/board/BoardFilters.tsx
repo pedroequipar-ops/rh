@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { Search, SlidersHorizontal, User, X } from 'lucide-react'
 import { Popover } from '../ui/Popover'
 import { Badge } from '../ui/Badge'
 import { cn } from '../ui/cn'
+import { useAuth } from '../../context/AuthContext'
 import { useTagsList } from '../../api/hooks/useTags'
 import {
   MOTIVO_SOLICITACAO_OPCOES,
@@ -24,6 +25,7 @@ interface BoardFiltersProps {
   setores?: Opcao[]
   etapas?: Opcao[]
   setorNomes?: string[]
+  usuarios?: Opcao[]
 }
 
 function Secao({ titulo, children }: { titulo: string; children: React.ReactNode }) {
@@ -86,8 +88,15 @@ const STATUS_OPCOES: Opcao[] = (Object.keys(VAGA_STATUS_META) as VagaStatus[]).m
 
 const MOTIVO_OPCOES: Opcao[] = MOTIVO_SOLICITACAO_OPCOES.filter((o) => o.value)
 
-export function BoardFilters({ filters, setores = [], etapas = [], setorNomes = [] }: BoardFiltersProps) {
+export function BoardFilters({
+  filters,
+  setores = [],
+  etapas = [],
+  setorNomes = [],
+  usuarios = [],
+}: BoardFiltersProps) {
   const [open, setOpen] = useState(false)
+  const { me } = useAuth()
   const { data: tags = [] } = useTagsList()
   const tagOpcoes: Opcao[] = tags.map((t) => ({ value: t.nome, label: t.nome }))
 
@@ -99,6 +108,7 @@ export function BoardFilters({ filters, setores = [], etapas = [], setorNomes = 
     f.prioridade.forEach((v) => chips.push({ key: `prioridade:${v}`, label: `Prioridade ${PRIORIDADE_META[Number(v) as VagaPrioridade]?.label ?? v}`, onRemove: () => filters.toggleInList('prioridade', v) }))
     f.motivo.forEach((v) => chips.push({ key: `motivo:${v}`, label: MOTIVO_OPCOES.find((m) => m.value === v)?.label ?? v, onRemove: () => filters.toggleInList('motivo', v) }))
     f.tags.forEach((v) => chips.push({ key: `tag:${v}`, label: `#${v}`, onRemove: () => filters.toggleInList('tags', v) }))
+    f.responsavel.forEach((v) => chips.push({ key: `responsavel:${v}`, label: usuarios.find((u) => u.value === v)?.label ?? v, onRemove: () => filters.toggleInList('responsavel', v) }))
     if (f.urgente) chips.push({ key: 'urgente', label: 'Urgente', onRemove: () => filters.setFilter('urgente', false) })
     if (f.atrasada) chips.push({ key: 'atrasada', label: 'Atrasada', onRemove: () => filters.setFilter('atrasada', false) })
   } else {
@@ -106,11 +116,26 @@ export function BoardFilters({ filters, setores = [], etapas = [], setorNomes = 
     f.etapa.forEach((v) => chips.push({ key: `etapa:${v}`, label: etapas.find((e) => e.value === v)?.label ?? v, onRemove: () => filters.toggleInList('etapa', v) }))
     f.setorVaga.forEach((v) => chips.push({ key: `setorVaga:${v}`, label: v, onRemove: () => filters.toggleInList('setorVaga', v) }))
     f.tags.forEach((v) => chips.push({ key: `tag:${v}`, label: `#${v}`, onRemove: () => filters.toggleInList('tags', v) }))
+    f.responsavel.forEach((v) => chips.push({ key: `responsavel:${v}`, label: usuarios.find((u) => u.value === v)?.label ?? v, onRemove: () => filters.toggleInList('responsavel', v) }))
     if (f.saidaNegativa) chips.push({ key: 'saidaNegativa', label: 'Em saída', onRemove: () => filters.setFilter('saidaNegativa', false) })
   }
 
+  const souEu = Boolean(me) && filters.filters.responsavel.length === 1 && filters.filters.responsavel[0] === me?.id
+
   return (
     <div className="flex flex-wrap items-center gap-1.5">
+      {me && (
+        <button
+          onClick={() => filters.toggleInList('responsavel', me.id)}
+          className={cn(
+            'flex items-center gap-1.5 rounded border px-3 py-1.5 text-sm transition-fast',
+            souEu ? 'border-blue-200 bg-blue-50 text-blue-700' : 'border-slate-300 text-slate-700 hover:bg-slate-50',
+          )}
+        >
+          <User size={14} />
+          Meus
+        </button>
+      )}
       <Popover
         open={open}
         onClose={() => setOpen(false)}
@@ -164,6 +189,9 @@ export function BoardFilters({ filters, setores = [], etapas = [], setorNomes = 
               <Secao titulo="Tags">
                 <CheckboxList opcoes={tagOpcoes} selecionados={filters.filters.tags} onToggle={(v) => filters.toggleInList('tags', v)} />
               </Secao>
+              <Secao titulo="Responsável">
+                <CheckboxList opcoes={usuarios} selecionados={filters.filters.responsavel} onToggle={(v) => filters.toggleInList('responsavel', v)} />
+              </Secao>
               <Secao titulo="Outros">
                 <label className="flex items-center gap-1.5 text-sm text-slate-700">
                   <input type="checkbox" checked={filters.filters.urgente} onChange={(e) => filters.setFilter('urgente', e.target.checked)} className="h-3.5 w-3.5 rounded border-slate-300" />
@@ -185,6 +213,9 @@ export function BoardFilters({ filters, setores = [], etapas = [], setorNomes = 
               </Secao>
               <Secao titulo="Tags">
                 <CheckboxList opcoes={tagOpcoes} selecionados={filters.filters.tags} onToggle={(v) => filters.toggleInList('tags', v)} />
+              </Secao>
+              <Secao titulo="Responsável">
+                <CheckboxList opcoes={usuarios} selecionados={filters.filters.responsavel} onToggle={(v) => filters.toggleInList('responsavel', v)} />
               </Secao>
               <Secao titulo="Outros">
                 <label className="flex items-center gap-1.5 text-sm text-slate-700">

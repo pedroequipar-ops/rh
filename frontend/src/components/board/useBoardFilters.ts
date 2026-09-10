@@ -27,7 +27,10 @@ export interface UseBoardFiltersVaga {
   kind: 'vagas'
   filters: FiltrosVaga
   setFilter: <K extends keyof FiltrosVaga>(key: K, value: FiltrosVaga[K]) => void
-  toggleInList: (key: 'status' | 'setor' | 'prioridade' | 'motivo' | 'tags', value: string) => void
+  toggleInList: (
+    key: 'status' | 'setor' | 'prioridade' | 'motivo' | 'tags' | 'responsavel',
+    value: string,
+  ) => void
   clear: () => void
   activeCount: number
   apply: (items: Vaga[]) => Vaga[]
@@ -37,7 +40,7 @@ export interface UseBoardFiltersPessoas {
   kind: 'pessoas'
   filters: FiltrosCandidato
   setFilter: <K extends keyof FiltrosCandidato>(key: K, value: FiltrosCandidato[K]) => void
-  toggleInList: (key: 'etapa' | 'setorVaga' | 'tags', value: string) => void
+  toggleInList: (key: 'etapa' | 'setorVaga' | 'tags' | 'responsavel', value: string) => void
   clear: () => void
   activeCount: number
   apply: (items: Candidato[]) => Candidato[]
@@ -58,7 +61,10 @@ export function useBoardFilters(kind: 'vagas' | 'pessoas'): UseBoardFiltersVaga 
       setParams(updated, { replace: true })
     }
 
-    function toggleInList(key: 'status' | 'setor' | 'prioridade' | 'motivo' | 'tags', value: string) {
+    function toggleInList(
+      key: 'status' | 'setor' | 'prioridade' | 'motivo' | 'tags' | 'responsavel',
+      value: string,
+    ) {
       const atual = filters[key]
       const next = atual.includes(value as never)
         ? atual.filter((v) => v !== value)
@@ -92,7 +98,7 @@ export function useBoardFilters(kind: 'vagas' | 'pessoas'): UseBoardFiltersVaga 
     setParams(updated, { replace: true })
   }
 
-  function toggleInList(key: 'etapa' | 'setorVaga' | 'tags', value: string) {
+  function toggleInList(key: 'etapa' | 'setorVaga' | 'tags' | 'responsavel', value: string) {
     const atual = filters[key]
     const next = atual.includes(value) ? atual.filter((v) => v !== value) : [...atual, value]
     setFilter(key, next)

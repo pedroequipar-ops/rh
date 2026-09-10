@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Briefcase, User } from 'lucide-react'
 import clsx from 'clsx'
 import type { Candidato } from '../../types'
+import { Avatar } from '../ui/Avatar'
 import { Label } from '../ui/Label'
 
 const MAX_TAGS_VISIVEIS = 3
@@ -30,10 +31,15 @@ interface CandidatoCardContentProps {
 export function CandidatoCardContent({ candidato }: CandidatoCardContentProps) {
   return (
     <>
-      <p className="mb-1 flex items-center gap-1.5 text-sm font-medium text-slate-800">
-        <User size={14} className="shrink-0 text-slate-400" />
-        {candidato.nome}
-      </p>
+      <div className="mb-1 flex items-start justify-between gap-2">
+        <p className="flex min-w-0 items-center gap-1.5 text-sm font-medium text-slate-800">
+          <User size={14} className="shrink-0 text-slate-400" />
+          <span className="truncate">{candidato.nome}</span>
+        </p>
+        {candidato.responsavel && (
+          <Avatar name={candidato.responsavel.username} size="sm" className="shrink-0" />
+        )}
+      </div>
       <p className="flex items-center gap-1.5 text-xs text-slate-500">
         <Briefcase size={12} className="shrink-0" />
         {candidato.vaga_titulo}

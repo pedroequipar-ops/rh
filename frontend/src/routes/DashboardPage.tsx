@@ -1,13 +1,19 @@
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useDashboard } from '../api/hooks/useDashboard'
 import { useSetores } from '../api/hooks/useSetores'
+import { useConcluirTarefa, useTarefas } from '../api/hooks/useTarefas'
 import { BuscarButton } from '../components/board/BuscarButton'
 import { StatCard } from '../components/dashboard/StatCard'
 import { StatusBarList } from '../components/dashboard/StatusBarList'
 import { FunnelChart } from '../components/dashboard/FunnelChart'
 import { AtrasadasList } from '../components/dashboard/AtrasadasList'
 import { Card } from '../components/ui/Card'
+
+function fmtData(iso: string | null): string {
+  if (!iso) return ''
+  return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+}
 
 export function DashboardPage() {
   const { me } = useAuth()
@@ -17,6 +23,15 @@ export function DashboardPage() {
 
   const setorParam = params.get('setor') ?? ''
   const { data, isLoading } = useDashboard({ setor: setorParam || undefined })
+  const tarefasQuery = useTarefas({ responsavel: me?.id, pendentes: true })
+  const concluirTarefa = useConcluirTarefa()
+  const tarefasVencendo = [...(tarefasQuery.data ?? [])]
+    .sort((a, b) => {
+      if (!a.due_at) return 1
+      if (!b.due_at) return -1
+      return a.due_at.localeCompare(b.due_at)
+    })
+    .slice(0, 5)
 
   function setSetor(valor: string) {
     const updated = new URLSearchParams(params)
@@ -84,6 +99,33 @@ export function DashboardPage() {
               <Card className="p-4">
                 <h2 className="mb-3 text-sm font-semibold text-slate-700">Prazos vencidos</h2>
                 <AtrasadasList vagas={data.vagas_atrasadas} />
+              </Card>
+
+              <Card className="p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-slate-700">Minhas tarefas (vencendo)</h2>
+                  <Link to="/tarefas" className="text-xs text-blue-600 hover:underline">
+                    Ver todas
+                  </Link>
+                </div>
+                {tarefasQuery.isLoading && <p className="text-sm text-slate-400">Carregando...</p>}
+                {!tarefasQuery.isLoading && tarefasVencendo.length === 0 && (
+                  <p className="text-sm text-slate-400">Nenhuma tarefa vencendo.</p>
+                )}
+                <div className="flex flex-col gap-1.5">
+                  {tarefasVencendo.map((t) => (
+                    <label key={t.id} className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={false}
+                        onChange={() => concluirTarefa.mutate(t.id)}
+                        className="h-3.5 w-3.5 rounded border-slate-300"
+                      />
+                      <span className="min-w-0 flex-1 truncate text-slate-700">{t.titulo}</span>
+                      {t.due_at && <span className="shrink-0 text-xs text-red-500">{fmtData(t.due_at)}</span>}
+                    </label>
+                  ))}
+                </div>
               </Card>
 
               <Card className="p-4">

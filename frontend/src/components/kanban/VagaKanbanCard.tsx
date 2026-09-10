@@ -4,6 +4,7 @@ import { AlarmClock, Bell, Flame, Users } from 'lucide-react'
 import clsx from 'clsx'
 import type { Vaga } from '../../types'
 import { PRIORIDADE_META } from '../../constants/vagaStatus'
+import { Avatar } from '../ui/Avatar'
 import { Label } from '../ui/Label'
 
 const MAX_TAGS_VISIVEIS = 3
@@ -28,7 +29,12 @@ export function VagaKanbanCardContent({ vaga }: { vaga: Vaga }) {
   const prioridade = PRIORIDADE_META[vaga.prioridade]
   return (
     <>
-      <p className="mb-1 text-sm font-medium text-slate-800">{vaga.titulo}</p>
+      <div className="mb-1 flex items-start justify-between gap-2">
+        <p className="min-w-0 text-sm font-medium text-slate-800">{vaga.titulo}</p>
+        {vaga.responsavel && (
+          <Avatar name={vaga.responsavel.username} size="sm" className="shrink-0" />
+        )}
+      </div>
       <p className="text-xs text-slate-500">{vaga.setor.nome}</p>
       <div className="mt-2 flex flex-wrap items-center gap-1.5">
         {vaga.urgente && (

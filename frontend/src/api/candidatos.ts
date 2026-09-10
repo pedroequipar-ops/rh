@@ -43,6 +43,7 @@ export interface CandidatoInput {
   vaga_id: string
   etapa_atual_id?: string
   tags?: string[]
+  responsavel_id?: string | null
 }
 
 export async function createCandidato(input: CandidatoInput): Promise<Candidato> {

@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useEtapas } from '../../api/hooks/useEtapas'
 import { useVagas, useMoverVagaEtapa } from '../../api/hooks/useVagas'
 import { useCandidatos, useMoverEtapaCandidato } from '../../api/hooks/useCandidatos'
+import { useUsuarios } from '../../api/hooks/useUsuarios'
 import { queryKeys } from '../../api/queryKeys'
 import { BoardFilters } from '../../components/board/BoardFilters'
 import { BuscarButton } from '../../components/board/BuscarButton'
@@ -26,6 +27,7 @@ export function PessoasBoardPage() {
   const etapasQuery = useEtapas()
   const vagasQuery = useVagas()
   const candidatosQuery = useCandidatos()
+  const usuariosQuery = useUsuarios(isRh)
   const moverVagaEtapa = useMoverVagaEtapa()
   const moverEtapaCandidato = useMoverEtapaCandidato()
   const filters = useBoardFilters('pessoas')
@@ -72,6 +74,7 @@ export function PessoasBoardPage() {
             filters={filters}
             etapas={etapas.map((e) => ({ value: e.id, label: e.nome }))}
             setorNomes={setorNomes}
+            usuarios={(usuariosQuery.data ?? []).map((u) => ({ value: u.id, label: u.username }))}
           />
           {isRh && (
             <button

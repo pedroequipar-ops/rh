@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useVagas, useTransicionarVaga } from '../../api/hooks/useVagas'
 import { useCandidatos } from '../../api/hooks/useCandidatos'
 import { useSetores } from '../../api/hooks/useSetores'
+import { useUsuarios } from '../../api/hooks/useUsuarios'
 import { BoardFilters } from '../../components/board/BoardFilters'
 import { BuscarButton } from '../../components/board/BuscarButton'
 import { useBoardFilters } from '../../components/board/useBoardFilters'
@@ -18,6 +19,7 @@ export function VagasBoardPage() {
   const vagasQuery = useVagas()
   const candidatosQuery = useCandidatos()
   const setoresQuery = useSetores()
+  const usuariosQuery = useUsuarios(isRh)
   const transicionarVaga = useTransicionarVaga()
   const filters = useBoardFilters('vagas')
 
@@ -46,6 +48,7 @@ export function VagasBoardPage() {
           <BoardFilters
             filters={filters}
             setores={(setoresQuery.data ?? []).map((s) => ({ value: s.id, label: s.nome }))}
+            usuarios={(usuariosQuery.data ?? []).map((u) => ({ value: u.id, label: u.username }))}
           />
           <BuscarButton />
         </div>

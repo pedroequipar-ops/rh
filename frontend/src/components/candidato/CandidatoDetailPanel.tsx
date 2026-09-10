@@ -3,9 +3,13 @@ import { AlarmClock, Bell, FileText, Flame, X } from 'lucide-react'
 import clsx from 'clsx'
 import { ActivityFeed } from '../atividade/ActivityFeed'
 import { ChatPanel } from './ChatPanel'
+import { ResponsavelPicker } from '../common/ResponsavelPicker'
+import { TarefasSection } from '../tarefas/TarefasSection'
 import { InlineEdit, Tabs, TagInput } from '../ui'
 import { useUpdateCandidato } from '../../api/hooks/useCandidatos'
+import { useUsuarios } from '../../api/hooks/useUsuarios'
 import { getCurriculoUrl } from '../../api/candidatos'
+import { useAuth } from '../../context/AuthContext'
 import { PRIORIDADE_META, VAGA_STATUS_META } from '../../constants/vagaStatus'
 import type { CandidatoInput } from '../../api/candidatos'
 import type { Candidato } from '../../types'
@@ -38,7 +42,10 @@ interface CandidatoDetailPanelProps {
 }
 
 export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPanelProps) {
+  const { me } = useAuth()
+  const isRh = me?.role === 'RH'
   const updateCandidato = useUpdateCandidato()
+  const usuariosQuery = useUsuarios(isRh)
   const [aba, setAba] = useState<'perfil' | 'conversa' | 'atividade'>('perfil')
   const [loadingCurriculo, setLoadingCurriculo] = useState(false)
 
@@ -75,9 +82,22 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
         </div>
         <p className="mt-0.5 text-xs text-slate-500">Candidato à vaga: {candidato.vaga_titulo}</p>
         <p className="text-xs text-slate-400">Setor: {candidato.vaga_setor}</p>
-        <span className="mt-2 inline-block rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-          {candidato.etapa_atual.nome}
-        </span>
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          <span className="inline-block rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+            {candidato.etapa_atual.nome}
+          </span>
+          <ResponsavelPicker
+            value={candidato.responsavel}
+            usuarios={
+              isRh
+                ? usuariosQuery.data ?? []
+                : me
+                  ? [{ id: me.id, username: me.username, first_name: '', last_name: '' }]
+                  : []
+            }
+            onChange={(usuarioId) => salvar({ responsavel_id: usuarioId })}
+          />
+        </div>
         <TagInput
           tags={candidato.tags}
           onChange={(nomes) => updateCandidato.mutate({ id: candidato.id, input: { tags: nomes } })}
@@ -208,6 +228,8 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
               </p>
             )}
           </div>
+
+          <TarefasSection alvoTipo="CANDIDATO" alvoId={candidato.id} />
 
           <div className="space-y-3">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">

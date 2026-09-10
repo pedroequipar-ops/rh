@@ -20,6 +20,13 @@ export interface Usuario {
   setor: Setor | null
 }
 
+export interface UsuarioResumo {
+  id: string
+  username: string
+  first_name: string
+  last_name: string
+}
+
 export interface Me {
   id: string
   username: string
@@ -67,6 +74,7 @@ export interface Vaga {
   salario: string | number | null
   setor: Setor
   criado_por?: string
+  responsavel: UsuarioResumo | null
   created_at?: string
 
   status: VagaStatus
@@ -154,6 +162,7 @@ export interface Candidato {
   curriculo_key: string
   curriculo_content_type?: string
   tags: Tag[]
+  responsavel: UsuarioResumo | null
   created_at?: string
 }
 

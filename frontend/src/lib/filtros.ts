@@ -9,6 +9,7 @@ export interface FiltrosVaga {
   atrasada: boolean
   motivo: string[]
   tags: string[]
+  responsavel: string[]
 }
 
 export interface FiltrosCandidato {
@@ -18,10 +19,8 @@ export interface FiltrosCandidato {
   setorVaga: string[]
   saidaNegativa: boolean
   tags: string[]
+  responsavel: string[]
 }
-
-// Nota: "responsavel" só entra quando Vaga/Candidato ganharem o campo real,
-// na Fase 7 — incluir a chave agora sem dado por trás seria filtro morto.
 
 export const FILTROS_VAGA_VAZIO: FiltrosVaga = {
   q: '',
@@ -32,6 +31,7 @@ export const FILTROS_VAGA_VAZIO: FiltrosVaga = {
   atrasada: false,
   motivo: [],
   tags: [],
+  responsavel: [],
 }
 
 export const FILTROS_CANDIDATO_VAZIO: FiltrosCandidato = {
@@ -41,6 +41,7 @@ export const FILTROS_CANDIDATO_VAZIO: FiltrosCandidato = {
   setorVaga: [],
   saidaNegativa: false,
   tags: [],
+  responsavel: [],
 }
 
 /** minúsculo + sem acento, pra busca não sensível a caixa/acentuação. */
@@ -63,6 +64,8 @@ export function predicadoVaga(filtros: FiltrosVaga): (vaga: Vaga) => boolean {
     if (filtros.atrasada && !vaga.atrasada) return false
     if (filtros.motivo.length && !filtros.motivo.includes(vaga.motivo_solicitacao)) return false
     if (filtros.tags.length && !vaga.tags.some((t) => filtros.tags.includes(t.nome))) return false
+    if (filtros.responsavel.length && !(vaga.responsavel && filtros.responsavel.includes(vaga.responsavel.id)))
+      return false
     return true
   }
 }
@@ -76,6 +79,11 @@ export function predicadoCandidato(filtros: FiltrosCandidato): (candidato: Candi
     if (filtros.setorVaga.length && !filtros.setorVaga.includes(candidato.vaga_setor)) return false
     if (filtros.saidaNegativa && !candidato.etapa_atual.is_saida_negativa) return false
     if (filtros.tags.length && !candidato.tags.some((t) => filtros.tags.includes(t.nome))) return false
+    if (
+      filtros.responsavel.length &&
+      !(candidato.responsavel && filtros.responsavel.includes(candidato.responsavel.id))
+    )
+      return false
     return true
   }
 }
@@ -112,6 +120,7 @@ export function filtrosVagaFromParams(params: URLSearchParams): FiltrosVaga {
     atrasada: params.get('atrasada') === '1',
     motivo: paramsToList(params, 'motivo'),
     tags: paramsToList(params, 'tags'),
+    responsavel: paramsToList(params, 'responsavel'),
   }
 }
 
@@ -124,6 +133,7 @@ export function filtrosVagaToParams(filtros: FiltrosVaga, params: URLSearchParam
   setBoolParam(params, 'atrasada', filtros.atrasada)
   setListParam(params, 'motivo', filtros.motivo)
   setListParam(params, 'tags', filtros.tags)
+  setListParam(params, 'responsavel', filtros.responsavel)
 }
 
 export function filtrosCandidatoFromParams(params: URLSearchParams): FiltrosCandidato {
@@ -134,6 +144,7 @@ export function filtrosCandidatoFromParams(params: URLSearchParams): FiltrosCand
     setorVaga: paramsToList(params, 'setorVaga'),
     saidaNegativa: params.get('saidaNegativa') === '1',
     tags: paramsToList(params, 'tags'),
+    responsavel: paramsToList(params, 'responsavel'),
   }
 }
 
@@ -144,4 +155,5 @@ export function filtrosCandidatoToParams(filtros: FiltrosCandidato, params: URLS
   setListParam(params, 'setorVaga', filtros.setorVaga)
   setBoolParam(params, 'saidaNegativa', filtros.saidaNegativa)
   setListParam(params, 'tags', filtros.tags)
+  setListParam(params, 'responsavel', filtros.responsavel)
 }
