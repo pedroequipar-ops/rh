@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "apps.atividade",
     "apps.dashboard",
     "apps.tarefas",
+    "apps.relatorios",
 ]
 
 MIDDLEWARE = [

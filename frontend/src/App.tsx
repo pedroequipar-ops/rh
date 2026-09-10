@@ -4,6 +4,7 @@ import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { LoginPage } from './routes/LoginPage'
 import { DashboardPage } from './routes/DashboardPage'
 import { MinhasTarefasPage } from './routes/MinhasTarefasPage'
+import { RelatorioBuilder } from './routes/RelatorioBuilder'
 import { ListagemPage } from './routes/ListagemPage'
 import { ConfigLayout } from './routes/config/ConfigLayout'
 import { EtapasConfig } from './routes/config/EtapasConfig'
@@ -27,6 +28,7 @@ export default function App() {
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/tarefas" element={<MinhasTarefasPage />} />
+          <Route path="/relatorios" element={<RelatorioBuilder />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
           <Route element={<ProtectedRoute allowedRoles={['RH']} />}>
