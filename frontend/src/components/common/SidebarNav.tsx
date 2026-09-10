@@ -1,12 +1,4 @@
-import {
-  CheckSquare,
-  FileBarChart,
-  KanbanSquare,
-  LayoutDashboard,
-  List,
-  Plus,
-  Settings,
-} from 'lucide-react'
+import { CheckSquare, KanbanSquare, LayoutDashboard, List, Plus, Settings } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { ButtonLink } from '../ui/Button'
@@ -36,7 +28,7 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
     { to: '/tarefas', label: 'Tarefas', icon: CheckSquare },
     // RH acessa a Listagem dentro de Configurações → Dados; SETOR não tem Configurações
     ...(isRh ? [] : [{ to: `${base}/listagem`, label: 'Listagem', icon: List }]),
-    { to: '/relatorios', label: 'Relatórios', icon: FileBarChart },
+    // Relatório personalizado saiu do menu: agora abre por um botão no Dashboard
     ...(isRh ? [{ to: '/config', label: 'Configurações', icon: Settings }] : []),
   ]
 

@@ -99,7 +99,7 @@ export function InlineEdit({
               setError(null)
               setEditing(true)
             }}
-            className="mt-0.5 shrink-0 rounded p-1 text-slate-300 transition-colors hover:bg-slate-100 hover:text-slate-600 group-hover/inline:text-slate-400"
+            className="mt-0.5 shrink-0 rounded p-1 text-slate-400 opacity-0 transition-opacity hover:bg-slate-100 hover:text-slate-600 focus-visible:opacity-100 group-hover/inline:opacity-100"
           >
             <Pencil size={13} />
           </button>
