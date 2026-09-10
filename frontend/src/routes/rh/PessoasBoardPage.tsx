@@ -8,6 +8,7 @@ import { useVagas, useMoverVagaEtapa } from '../../api/hooks/useVagas'
 import { useCandidatos, useMoverEtapaCandidato } from '../../api/hooks/useCandidatos'
 import { queryKeys } from '../../api/queryKeys'
 import { BoardFilters } from '../../components/board/BoardFilters'
+import { BuscarButton } from '../../components/board/BuscarButton'
 import { useBoardFilters } from '../../components/board/useBoardFilters'
 import { BoardSwitcher } from '../../components/kanban/BoardSwitcher'
 import { PessoasBoard } from '../../components/kanban/PessoasBoard'
@@ -55,9 +56,9 @@ export function PessoasBoardPage() {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex flex-wrap items-center justify-between gap-2 px-4 pt-4">
-        <div className="flex items-center gap-3">
+    <div className="flex h-full flex-col bg-board">
+      <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-5">
+        <div className="flex items-center gap-4">
           <h1 className="text-lg font-semibold text-slate-800">Pessoas</h1>
           <BoardSwitcher
             vagasHref={`${base}/vagas`}
@@ -81,8 +82,9 @@ export function PessoasBoardPage() {
               Editar etapas
             </button>
           )}
+          <BuscarButton />
         </div>
-      </div>
+      </header>
 
       <div className="flex min-h-0 flex-1">
         {loading ? (

@@ -4,6 +4,7 @@ import { useVagas, useTransicionarVaga } from '../../api/hooks/useVagas'
 import { useCandidatos } from '../../api/hooks/useCandidatos'
 import { useSetores } from '../../api/hooks/useSetores'
 import { BoardFilters } from '../../components/board/BoardFilters'
+import { BuscarButton } from '../../components/board/BuscarButton'
 import { useBoardFilters } from '../../components/board/useBoardFilters'
 import { BoardSwitcher } from '../../components/kanban/BoardSwitcher'
 import { VagasBoard } from '../../components/kanban/VagasBoard'
@@ -30,22 +31,25 @@ export function VagasBoardPage() {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex flex-wrap items-center gap-3 px-4 pt-4">
-        <h1 className="text-lg font-semibold text-slate-800">Vagas</h1>
-        <BoardSwitcher
-          vagasHref={`${base}/vagas`}
-          pessoasHref={`${base}/pessoas`}
-          totalVagas={vagas.length}
-          totalPessoas={totalPessoas}
-        />
-        <div className="ml-auto">
+    <div className="flex h-full flex-col bg-board">
+      <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-5">
+        <div className="flex items-center gap-4">
+          <h1 className="text-lg font-semibold text-slate-800">Vagas</h1>
+          <BoardSwitcher
+            vagasHref={`${base}/vagas`}
+            pessoasHref={`${base}/pessoas`}
+            totalVagas={vagas.length}
+            totalPessoas={totalPessoas}
+          />
+        </div>
+        <div className="flex items-center gap-2">
           <BoardFilters
             filters={filters}
             setores={(setoresQuery.data ?? []).map((s) => ({ value: s.id, label: s.nome }))}
           />
+          <BuscarButton />
         </div>
-      </div>
+      </header>
 
       <div className="flex min-h-0 flex-1">
         {loading ? (

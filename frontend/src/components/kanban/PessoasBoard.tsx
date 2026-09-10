@@ -146,12 +146,12 @@ export function PessoasBoard({
         {board}
         <DragOverlay dropAnimation={{ duration: 200, easing: 'ease-out' }}>
           {activeVaga && (
-            <div className="w-72 scale-[1.02] rounded-md border border-slate-200 bg-white p-3 opacity-95 shadow-md">
+            <div className="w-72 scale-[1.02] rounded-lg border border-slate-200 bg-white p-3 opacity-95 shadow-md">
               <VagaKanbanCardContent vaga={activeVaga} />
             </div>
           )}
           {activeCandidato && (
-            <div className="w-72 scale-[1.02] rounded-md border border-slate-200 bg-white p-3 opacity-95 shadow-md">
+            <div className="w-72 scale-[1.02] rounded-lg border border-slate-200 bg-white p-3 opacity-95 shadow-md">
               <CandidatoCardContent candidato={activeCandidato} />
             </div>
           )}

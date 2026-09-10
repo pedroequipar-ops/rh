@@ -63,7 +63,7 @@ export function CandidatoCard({ candidato, draggable, candidatoModalBase }: Cand
       onClick={() => navigate(`${candidatoModalBase}/${candidato.id}`)}
       {...(draggable ? { ...listeners, ...attributes } : {})}
       className={clsx(
-        'mb-3 cursor-pointer rounded-md border border-slate-200 bg-white p-3 shadow-sm transition hover:border-slate-300 hover:shadow',
+        'shrink-0 cursor-pointer rounded-lg border border-slate-200 bg-white p-3 shadow-sm transition hover:border-slate-300 hover:shadow',
         draggable && 'cursor-grab active:cursor-grabbing',
         isDragging && 'opacity-60',
       )}

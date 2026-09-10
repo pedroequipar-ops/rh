@@ -4,6 +4,7 @@ import { Sidebar } from './Sidebar'
 import { MobileTopBar } from './MobileTopBar'
 import { CommandPalette } from './CommandPalette'
 import { ShortcutHelp } from './ShortcutHelp'
+import { CommandPaletteProvider } from '../../context/CommandPaletteContext'
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false
@@ -32,16 +33,18 @@ export function AppShell() {
   }, [])
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
-      <Sidebar mobileOpen={mobileNavOpen} onCloseMobile={() => setMobileNavOpen(false)} />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <MobileTopBar onOpenMenu={() => setMobileNavOpen(true)} />
-        <main className="min-h-0 flex-1 overflow-y-auto">
-          <Outlet />
-        </main>
+    <CommandPaletteProvider openPalette={() => setPaletteOpen(true)}>
+      <div className="flex h-screen overflow-hidden bg-slate-50">
+        <Sidebar mobileOpen={mobileNavOpen} onCloseMobile={() => setMobileNavOpen(false)} />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <MobileTopBar onOpenMenu={() => setMobileNavOpen(true)} />
+          <main className="min-h-0 flex-1 overflow-y-auto">
+            <Outlet />
+          </main>
+        </div>
+        {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} />}
+        <ShortcutHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
       </div>
-      {paletteOpen && <CommandPalette onClose={() => setPaletteOpen(false)} />}
-      <ShortcutHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
-    </div>
+    </CommandPaletteProvider>
   )
 }
