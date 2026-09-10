@@ -10,3 +10,12 @@ export function useTagsAutocomplete(q: string) {
     staleTime: 10_000,
   })
 }
+
+/** Todas as tags da empresa (sem termo de busca) — usado pelo facetador de filtro. */
+export function useTagsList() {
+  return useQuery({
+    queryKey: ['tags', 'list'],
+    queryFn: () => buscarTags(''),
+    staleTime: 30_000,
+  })
+}

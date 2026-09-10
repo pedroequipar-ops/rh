@@ -7,6 +7,8 @@ import { useEtapas } from '../../api/hooks/useEtapas'
 import { useVagas, useMoverVagaEtapa } from '../../api/hooks/useVagas'
 import { useCandidatos, useMoverEtapaCandidato } from '../../api/hooks/useCandidatos'
 import { queryKeys } from '../../api/queryKeys'
+import { BoardFilters } from '../../components/board/BoardFilters'
+import { useBoardFilters } from '../../components/board/useBoardFilters'
 import { BoardSwitcher } from '../../components/kanban/BoardSwitcher'
 import { PessoasBoard } from '../../components/kanban/PessoasBoard'
 import { EtapaColumnEditor } from '../../components/kanban/EtapaColumnEditor'
@@ -25,10 +27,13 @@ export function PessoasBoardPage() {
   const candidatosQuery = useCandidatos()
   const moverVagaEtapa = useMoverVagaEtapa()
   const moverEtapaCandidato = useMoverEtapaCandidato()
+  const filters = useBoardFilters('pessoas')
 
   const etapas = etapasQuery.data ?? []
   const vagas = vagasQuery.data ?? []
   const candidatos = candidatosQuery.data ?? []
+  const candidatosFiltrados = filters.apply(candidatos)
+  const setorNomes = [...new Set(candidatos.map((c) => c.vaga_setor))].sort()
   const loading = etapasQuery.isLoading || vagasQuery.isLoading || candidatosQuery.isLoading
 
   function handleMoveCandidato(candidatoId: string, etapaId: string) {
@@ -61,15 +66,22 @@ export function PessoasBoardPage() {
             totalPessoas={candidatos.length}
           />
         </div>
-        {isRh && (
-          <button
-            onClick={() => setEditorOpen(true)}
-            className="flex items-center gap-1.5 rounded border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
-          >
-            <Settings size={14} />
-            Editar etapas
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          <BoardFilters
+            filters={filters}
+            etapas={etapas.map((e) => ({ value: e.id, label: e.nome }))}
+            setorNomes={setorNomes}
+          />
+          {isRh && (
+            <button
+              onClick={() => setEditorOpen(true)}
+              className="flex items-center gap-1.5 rounded border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              <Settings size={14} />
+              Editar etapas
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex min-h-0 flex-1">
@@ -81,7 +93,7 @@ export function PessoasBoardPage() {
           <div className="min-w-0 flex-1 overflow-hidden">
             <PessoasBoard
               etapas={etapas}
-              candidatos={candidatos}
+              candidatos={candidatosFiltrados}
               vagas={vagas}
               draggable={isRh}
               candidatoModalBase={`${base}/pessoas/candidato`}

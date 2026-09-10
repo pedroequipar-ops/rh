@@ -2,6 +2,9 @@ import { Outlet } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useVagas, useTransicionarVaga } from '../../api/hooks/useVagas'
 import { useCandidatos } from '../../api/hooks/useCandidatos'
+import { useSetores } from '../../api/hooks/useSetores'
+import { BoardFilters } from '../../components/board/BoardFilters'
+import { useBoardFilters } from '../../components/board/useBoardFilters'
 import { BoardSwitcher } from '../../components/kanban/BoardSwitcher'
 import { VagasBoard } from '../../components/kanban/VagasBoard'
 import type { VagaStatus } from '../../types'
@@ -13,9 +16,12 @@ export function VagasBoardPage() {
 
   const vagasQuery = useVagas()
   const candidatosQuery = useCandidatos()
+  const setoresQuery = useSetores()
   const transicionarVaga = useTransicionarVaga()
+  const filters = useBoardFilters('vagas')
 
   const vagas = vagasQuery.data ?? []
+  const vagasFiltradas = filters.apply(vagas)
   const totalPessoas = candidatosQuery.data?.length ?? 0
   const loading = vagasQuery.isLoading
 
@@ -33,6 +39,12 @@ export function VagasBoardPage() {
           totalVagas={vagas.length}
           totalPessoas={totalPessoas}
         />
+        <div className="ml-auto">
+          <BoardFilters
+            filters={filters}
+            setores={(setoresQuery.data ?? []).map((s) => ({ value: s.id, label: s.nome }))}
+          />
+        </div>
       </div>
 
       <div className="flex min-h-0 flex-1">
@@ -43,7 +55,7 @@ export function VagasBoardPage() {
         ) : (
           <div className="min-w-0 flex-1 overflow-hidden">
             <VagasBoard
-              vagas={vagas}
+              vagas={vagasFiltradas}
               draggable={isRh}
               vagaModalBase={`${base}/vagas/vaga`}
               onMoveVaga={isRh ? handleMoveVaga : undefined}
