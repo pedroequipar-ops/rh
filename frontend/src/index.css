@@ -11,6 +11,16 @@
   --app-topbar-h: 0px;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  zoom: 90%;
+}
+
 @media (max-width: 767px) {
   :root {
     --app-topbar-h: 56px;

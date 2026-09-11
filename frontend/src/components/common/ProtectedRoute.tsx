@@ -11,7 +11,7 @@ export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center text-slate-500">
+      <div className="flex h-full items-center justify-center text-slate-500">
         Carregando...
       </div>
     )

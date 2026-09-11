@@ -5,6 +5,8 @@ papel do usuário, aplica carimbos automáticos, grava ``VagaHistoricoStatus`` e
 dispara notificações. Espelha o padrão de ``apps/candidatos/services.py``.
 """
 
+from datetime import timedelta
+
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework.exceptions import PermissionDenied, ValidationError
@@ -15,6 +17,8 @@ from apps.atividade import services as atividade_services
 from .models import EtapaKanban, Vaga, VagaCobranca, VagaHistoricoStatus, VagaNotificacao
 
 S = Vaga.Status
+
+HORAS_PARA_EXCLUIR_ENCERRADA = 12
 
 ALLOWED_TRANSITIONS = {
     S.RASCUNHO: {S.SOLICITADA, S.CANCELADA},
@@ -163,6 +167,19 @@ def limpar_alerta_prazo_se_futuro(vaga):
     if not _prazo_estourado(vaga):
         vaga.prazo_alertado_em = None
         vaga.save(update_fields=["prazo_alertado_em", "updated_at"])
+
+
+def excluir_encerradas_vencidas(company_id) -> int:
+    """"Lixeira" da vaga: quem fica em ENCERRADA por mais de 12h é excluída
+    (soft delete). Checado sob demanda (a cada listagem), igual ao padrão de
+    `apps/candidatos/services.excluir_reprovados_vencidos`."""
+    limite = timezone.now() - timedelta(hours=HORAS_PARA_EXCLUIR_ENCERRADA)
+    vencidas = Vaga.objects.filter(
+        company_id=company_id,
+        status=S.ENCERRADA,
+        encerrada_em__lte=limite,
+    )
+    return vencidas.update(active=False, updated_at=timezone.now())
 
 
 def etapa_triagem_inicial(company_id):

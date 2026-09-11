@@ -34,7 +34,7 @@ export function AppShell() {
 
   return (
     <CommandPaletteProvider openPalette={() => setPaletteOpen(true)}>
-      <div className="flex h-screen overflow-hidden bg-slate-50">
+      <div className="flex h-full overflow-hidden bg-slate-50">
         <Sidebar mobileOpen={mobileNavOpen} onCloseMobile={() => setMobileNavOpen(false)} />
         <div className="flex min-w-0 flex-1 flex-col">
           <MobileTopBar onOpenMenu={() => setMobileNavOpen(true)} />

@@ -97,6 +97,8 @@ class VagaViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         company_id = capture_company_id(self.request)
+        if self.action == "list":
+            services.excluir_encerradas_vencidas(company_id)
         user = self.request.user
         if user.role == "SETOR":
             qs = self.repo.list_by_setor(company_id, user.setor_id)

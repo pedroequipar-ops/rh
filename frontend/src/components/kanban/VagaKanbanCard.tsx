@@ -117,15 +117,38 @@ interface VagaKanbanCardProps {
   draggable: boolean
   vagaModalBase: string
   selected?: boolean
+  /** rótulo mínimo — avatar do setor + título numa pill de linha única, pra
+   * listas compactas (ex.: dentro do popover de um VagaStatusChip) */
+  pill?: boolean
 }
 
-export function VagaKanbanCard({ vaga, draggable, vagaModalBase, selected }: VagaKanbanCardProps) {
+export function VagaKanbanCard({ vaga, draggable, vagaModalBase, selected, pill }: VagaKanbanCardProps) {
   const navigate = useNavigate()
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `vaga:${vaga.id}`,
     disabled: !draggable,
   })
   const emTriagem = vaga.status === 'EM_TRIAGEM'
+
+  if (pill) {
+    return (
+      <div
+        ref={setNodeRef}
+        data-vaga-card
+        onClick={() => navigate(`${vagaModalBase}/${vaga.id}`)}
+        {...(draggable ? { ...listeners, ...attributes } : {})}
+        className={clsx(
+          'flex w-full items-center gap-2 rounded-full border border-sky-200 bg-sky-50 py-1.5 pl-1.5 pr-3 shadow-sm transition hover:border-sky-300',
+          draggable && 'cursor-grab active:cursor-grabbing',
+          isDragging && 'opacity-60',
+          selected && 'ring-2 ring-blue-300',
+        )}
+      >
+        <Avatar name={vaga.setor.nome} size="xs" className="shrink-0" />
+        <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-800">{vaga.titulo}</span>
+      </div>
+    )
+  }
 
   return (
     <div

@@ -42,7 +42,7 @@ export function VagaKanbanColumn({
           : undefined
       }
       className={clsx(
-        'flex w-[244px] shrink-0 flex-col gap-2 rounded-lg p-1 transition-fast',
+        'flex w-full min-h-0 flex-1 flex-col gap-2 rounded-lg p-1 transition-fast',
         aceitaDrop && 'bg-sky-50/60 ring-1 ring-sky-300',
         dropInvalido && isOver && 'ring-2 ring-red-300',
         aceitaDrop && isOver && 'bg-sky-50 ring-2 ring-sky-400',

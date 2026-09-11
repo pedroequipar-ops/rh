@@ -35,7 +35,7 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
     dot: 'bg-indigo-500',
   },
   ENCERRADA: {
-    label: 'Candidaturas encerradas',
+    label: 'Lixeira',
     badge: 'bg-slate-200 text-slate-700 border-slate-300',
     dot: 'bg-slate-400',
   },
@@ -66,14 +66,24 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
  * EM_TRIAGEM não entra aqui: nesse status o card da vaga vive nas colunas de
  * etapa de triagem (Triagem, Primeira Entrevista) via `vaga.etapa_atual`.
  */
-export const FLUXO_STATUSES: VagaStatus[] = ['SOLICITADA', 'APROVADA', 'PUBLICADA']
+export const FLUXO_STATUSES: VagaStatus[] = ['SOLICITADA', 'APROVADA', 'PUBLICADA', 'PREENCHIDA']
 
-/** Status de vaga que não viram coluna de status (terminais ou geridos por etapa). */
-export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['EM_TRIAGEM', 'CANCELADA', 'PREENCHIDA']
+/** Status de vaga que não viram coluna de status (terminais ou geridos por etapa,
+ * ou alcançados só pelo dock de Ganho/Perda ao arrastar). */
+export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['EM_TRIAGEM', 'CANCELADA']
 
-/** Status de baixo volume: viram "bolinhas" soltas (canto do board), não
- * coluna cheia — ainda aceitam arraste, só não poluem o kanban. */
+/** Status de baixo volume: viram um chip embaixo da coluna relacionada em vez
+ * de coluna cheia — ainda aceitam arraste, só não poluem o kanban. */
 export const STATUS_ORBS: VagaStatus[] = ['RECUSADA', 'ENCERRADA', 'CONGELADA']
+
+/** Sob qual coluna cheia cada chip de status fica — reflete de onde a
+ * transição normalmente parte (recusa vem de Solicitada, congelamento de
+ * Publicada; a lixeira de encerradas fica junto de Preenchida, fim de linha). */
+export const CHIP_ABAIXO_DA_COLUNA: Partial<Record<VagaStatus, VagaStatus>> = {
+  SOLICITADA: 'RECUSADA',
+  PUBLICADA: 'CONGELADA',
+  PREENCHIDA: 'ENCERRADA',
+}
 
 export function statusLabel(status: VagaStatus): string {
   return VAGA_STATUS_META[status]?.label ?? status
