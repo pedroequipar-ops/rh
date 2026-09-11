@@ -50,6 +50,12 @@ export default function App() {
               <Route path="nova-vaga" element={<VagaFormPage />} />
               <Route path="novo-candidato" element={<CandidatoFormPage />} />
             </Route>
+            <Route path="/rh/triagem" element={<PessoasBoardPage soTriagem />}>
+              <Route path="candidato/:id" element={<CandidatoModal />} />
+              <Route path="vaga/:id" element={<VagaDetalheModal />} />
+              <Route path="nova-vaga" element={<VagaFormPage />} />
+              <Route path="novo-candidato" element={<CandidatoFormPage />} />
+            </Route>
             <Route path="/rh/pessoas" element={<PessoasBoardPage />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
@@ -77,6 +83,11 @@ export default function App() {
 
           <Route element={<ProtectedRoute allowedRoles={['SETOR']} />}>
             <Route path="/setor/vagas" element={<VagasBoardPage />}>
+              <Route path="candidato/:id" element={<CandidatoModal />} />
+              <Route path="vaga/:id" element={<VagaDetalheModal />} />
+              <Route path="nova-vaga" element={<VagaFormPage />} />
+            </Route>
+            <Route path="/setor/triagem" element={<PessoasBoardPage soTriagem />}>
               <Route path="candidato/:id" element={<CandidatoModal />} />
               <Route path="vaga/:id" element={<VagaDetalheModal />} />
               <Route path="nova-vaga" element={<VagaFormPage />} />

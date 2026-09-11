@@ -29,6 +29,7 @@ export function VagasBoardPage() {
   const vagas = vagasQuery.data ?? []
   const vagasFiltradas = filters.apply(vagas)
   const totalPessoas = candidatosQuery.data?.length ?? 0
+  const totalTriagem = vagas.filter((v) => v.status === 'EM_TRIAGEM').length
   const loading = vagasQuery.isLoading
 
   function handleMoveVaga(vagaId: string, status: VagaStatus) {
@@ -42,8 +43,10 @@ export function VagasBoardPage() {
           <h1 className="text-lg font-semibold text-slate-800">Vagas</h1>
           <BoardSwitcher
             vagasHref={`${base}/vagas`}
+            triagemHref={`${base}/triagem`}
             pessoasHref={`${base}/pessoas`}
             totalVagas={vagas.length}
+            totalTriagem={totalTriagem}
             totalPessoas={totalPessoas}
           />
         </div>

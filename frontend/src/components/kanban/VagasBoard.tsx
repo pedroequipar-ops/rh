@@ -12,11 +12,12 @@ import {
   type DragStartEvent,
 } from '@dnd-kit/core'
 import clsx from 'clsx'
+import { Trash2 } from 'lucide-react'
 import type { Vaga, VagaStatus } from '../../types'
 import { CHIP_ABAIXO_DA_COLUNA, FLUXO_STATUSES, STATUS_ORBS } from '../../constants/vagaStatus'
 import { Avatar } from '../ui/Avatar'
 import { useHorizontalWheel } from './useHorizontalWheel'
-import { VagaGanhoPerdaDock } from './VagaGanhoPerdaDock'
+import { VagaGanhoPerdaDock, type DockAlvoConfig } from './VagaGanhoPerdaDock'
 import { VagaKanbanCardContent } from './VagaKanbanCard'
 import { VagaKanbanColumn } from './VagaKanbanColumn'
 import { VagaStatusChip } from './VagaStatusChip'
@@ -24,6 +25,11 @@ import { VagaStatusChip } from './VagaStatusChip'
 /** Alvos de drop compactos (chips/dock) que não são coluna — o preview
  * arrastado encolhe pra um chip pequeno em cima deles. */
 const ALVOS_COMPACTOS: VagaStatus[] = [...STATUS_ORBS, 'PREENCHIDA', 'ENCERRADA']
+
+/** "Avançar" (→ PREENCHIDA) não entra aqui: nenhuma vaga visível neste board
+ * (Solicitada/Aprovada/Publicada) tem essa transição disponível — só quem
+ * está EM_TRIAGEM chega a Preenchida, e essas vagas vivem no board Triagem. */
+const DOCK_ALVOS: DockAlvoConfig[] = [{ status: 'ENCERRADA', label: 'Lixeira', tone: 'lixeira', icon: Trash2 }]
 
 /** Extrai o status de um id de droppable `status:<STATUS>` ou
  * `status:<STATUS>:lista` (a lista aberta do chip também aceita drop, com o
@@ -175,7 +181,7 @@ export function VagasBoard({
             </div>
           )}
         </DragOverlay>
-        <VagaGanhoPerdaDock visivel={!!activeVaga} />
+        <VagaGanhoPerdaDock visivel={!!activeVaga} alvos={DOCK_ALVOS} />
       </DndContext>
     </div>
   )

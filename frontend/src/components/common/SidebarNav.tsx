@@ -22,8 +22,8 @@ export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
       to: `${base}/vagas`,
       label: 'Quadros',
       icon: KanbanSquare,
-      // "Quadros" abre o board de Vagas; o BoardSwitcher no topo leva pro de Pessoas
-      extraActive: pathname.startsWith(`${base}/pessoas`),
+      // "Quadros" abre o board de Vagas; o BoardSwitcher no topo leva pro de Triagem/Pessoas
+      extraActive: pathname.startsWith(`${base}/pessoas`) || pathname.startsWith(`${base}/triagem`),
     },
     { to: '/tarefas', label: 'Tarefas', icon: CheckSquare },
     // RH acessa a Listagem dentro de Configurações → Dados; SETOR não tem Configurações
