@@ -5,6 +5,7 @@ import {
   type QueryClient,
 } from '@tanstack/react-query'
 import {
+  createCandidato,
   deleteCandidato,
   getCandidato,
   listCandidatos,
@@ -40,6 +41,19 @@ export function useCandidato(id: string | undefined) {
 }
 
 // --- mutations otimistas (portadas de KanbanPage / ListagemPage) -------
+
+export function useCreateCandidato() {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: (input: CandidatoInput) => createCandidato(input),
+    onError: () => showToast('Não foi possível salvar o candidato', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.candidatosList })
+      qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+    },
+  })
+}
 
 export function useMoverEtapaCandidato() {
   const qc = useQueryClient()

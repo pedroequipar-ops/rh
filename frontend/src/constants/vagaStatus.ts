@@ -50,7 +50,7 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
     dot: 'bg-cyan-500',
   },
   CANCELADA: {
-    label: 'Cancelada',
+    label: 'Lixeira',
     badge: 'bg-red-100 text-red-700 border-red-200',
     dot: 'bg-red-500',
   },

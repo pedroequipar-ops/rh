@@ -2,6 +2,7 @@ import { useDroppable } from '@dnd-kit/core'
 import clsx from 'clsx'
 import type { Vaga, VagaStatus } from '../../types'
 import { VAGA_STATUS_META } from '../../constants/vagaStatus'
+import { acoesRapidasVagas } from './vagaAcoesRapidas'
 import { VagaKanbanCard } from './VagaKanbanCard'
 
 interface VagaKanbanColumnProps {
@@ -15,6 +16,7 @@ interface VagaKanbanColumnProps {
   /** duplo clique numa área vazia da coluna (fora de um card) */
   onDoubleClick?: () => void
   selectedVagaId?: string | null
+  onAcaoRapida?: (vagaId: string, status: VagaStatus) => void
 }
 
 export function VagaKanbanColumn({
@@ -26,6 +28,7 @@ export function VagaKanbanColumn({
   dropInvalido,
   onDoubleClick,
   selectedVagaId,
+  onAcaoRapida,
 }: VagaKanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: `status:${status}` })
   const meta = VAGA_STATUS_META[status]
@@ -66,6 +69,8 @@ export function VagaKanbanColumn({
             draggable={draggable}
             vagaModalBase={vagaModalBase}
             selected={vaga.id === selectedVagaId}
+            acoesRapidas={acoesRapidasVagas(vaga)}
+            onAcaoRapida={onAcaoRapida}
           />
         ))}
         {vagas.length === 0 && (

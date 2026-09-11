@@ -12,31 +12,27 @@ import {
   type DragStartEvent,
 } from '@dnd-kit/core'
 import clsx from 'clsx'
-import { Trash2 } from 'lucide-react'
 import type { Vaga, VagaStatus } from '../../types'
 import { CHIP_ABAIXO_DA_COLUNA, FLUXO_STATUSES, STATUS_ORBS } from '../../constants/vagaStatus'
 import { Avatar } from '../ui/Avatar'
 import { useHorizontalWheel } from './useHorizontalWheel'
-import { VagaGanhoPerdaDock, type DockAlvoConfig } from './VagaGanhoPerdaDock'
+import { VagaAvancarDock } from './VagaAvancarDock'
 import { VagaKanbanCardContent } from './VagaKanbanCard'
 import { VagaKanbanColumn } from './VagaKanbanColumn'
 import { VagaStatusChip } from './VagaStatusChip'
 
 /** Alvos de drop compactos (chips/dock) que não são coluna — o preview
  * arrastado encolhe pra um chip pequeno em cima deles. */
-const ALVOS_COMPACTOS: VagaStatus[] = [...STATUS_ORBS, 'PREENCHIDA', 'ENCERRADA']
+const ALVOS_COMPACTOS: VagaStatus[] = [...STATUS_ORBS, 'PREENCHIDA']
 
-/** "Avançar" (→ PREENCHIDA) não entra aqui: nenhuma vaga visível neste board
- * (Solicitada/Aprovada/Publicada) tem essa transição disponível — só quem
- * está EM_TRIAGEM chega a Preenchida, e essas vagas vivem no board Triagem. */
-const DOCK_ALVOS: DockAlvoConfig[] = [{ status: 'ENCERRADA', label: 'Lixeira', tone: 'lixeira', icon: Trash2 }]
-
-/** Extrai o status de um id de droppable `status:<STATUS>` ou
+/** Extrai o status de um id de droppable `status:<STATUS>` (coluna/chip) ou
  * `status:<STATUS>:lista` (a lista aberta do chip também aceita drop, com o
- * mesmo status — ver VagaStatusChip). */
+ * mesmo status — ver VagaStatusChip), ou `avancar:<STATUS>` (dock — ver
+ * VagaAvancarDock, prefixo à parte pra não colidir com o id da coluna). */
 function statusDoDroppable(id: string | null): VagaStatus | null {
-  if (!id?.startsWith('status:')) return null
-  return id.slice(7).split(':')[0] as VagaStatus
+  if (id?.startsWith('status:')) return id.slice(7).split(':')[0] as VagaStatus
+  if (id?.startsWith('avancar:')) return id.slice(8) as VagaStatus
+  return null
 }
 
 interface VagasBoardProps {
@@ -123,6 +119,7 @@ export function VagasBoard({
                 activeVaga.status !== status
               }
               selectedVagaId={selectedVagaId}
+              onAcaoRapida={onMoveVaga}
             />
             {chipStatus && (
               <VagaStatusChip
@@ -181,7 +178,10 @@ export function VagasBoard({
             </div>
           )}
         </DragOverlay>
-        <VagaGanhoPerdaDock visivel={!!activeVaga} alvos={DOCK_ALVOS} />
+        <VagaAvancarDock
+          visivel={!!activeVaga && activeVaga.transicoes_disponiveis.includes('PREENCHIDA')}
+          status="PREENCHIDA"
+        />
       </DndContext>
     </div>
   )

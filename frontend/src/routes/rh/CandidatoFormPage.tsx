@@ -3,10 +3,10 @@ import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { FileText, Loader2, Sparkles, UploadCloud } from 'lucide-react'
 import {
   analisarCurriculo,
-  createCandidato,
   getUploadUrl,
   uploadCurriculo,
 } from '../../api/candidatos'
+import { useCreateCandidato } from '../../api/hooks/useCandidatos'
 import { listVagas } from '../../api/vagas'
 import { useToast } from '../../context/ToastContext'
 import { Button, Field, FormModal, Input, Select, Textarea } from '../../components/ui'
@@ -48,8 +48,8 @@ export function CandidatoFormPage() {
   const [perfilCertificacoes, setPerfilCertificacoes] = useState('')
   const [vagaId, setVagaId] = useState(vagaPreselecionada ?? '')
 
-  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const criarCandidato = useCreateCandidato()
 
   const ocupado = uploading || analyzing
 
@@ -124,7 +124,6 @@ export function CandidatoFormPage() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
     setError(null)
-    setSubmitting(true)
     const payload = {
       nome,
       email,
@@ -140,13 +139,11 @@ export function CandidatoFormPage() {
       ...(etapaDestino ? { etapa_atual_id: etapaDestino } : {}),
     }
     try {
-      const candidato = await createCandidato(payload)
+      const candidato = await criarCandidato.mutateAsync(payload)
       showToast('Candidato cadastrado com sucesso')
       navigate(`/rh/pessoas/candidato/${candidato.id}`)
     } catch {
       setError('Não foi possível salvar o candidato. Confira os campos e tente novamente.')
-    } finally {
-      setSubmitting(false)
     }
   }
 
@@ -160,8 +157,8 @@ export function CandidatoFormPage() {
           <Button type="button" variant="ghost" onClick={fechar}>
             Cancelar
           </Button>
-          <Button type="submit" form={FORM_ID} disabled={submitting || ocupado}>
-            {submitting ? 'Salvando...' : 'Cadastrar candidato'}
+          <Button type="submit" form={FORM_ID} disabled={criarCandidato.isPending || ocupado}>
+            {criarCandidato.isPending ? 'Salvando...' : 'Cadastrar candidato'}
           </Button>
         </>
       }

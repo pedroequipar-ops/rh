@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { createVaga, listSetores } from '../../api/vagas'
+import { listSetores } from '../../api/vagas'
+import { useCreateVaga } from '../../api/hooks/useVagas'
 import { useAuth } from '../../context/AuthContext'
 import { useToast } from '../../context/ToastContext'
 import { MOTIVO_SOLICITACAO_OPCOES } from '../../constants/vagaStatus'
@@ -34,8 +35,8 @@ export function VagaFormPage() {
   const [motivoSolicitacao, setMotivoSolicitacao] = useState('')
   const [dataInicio, setDataInicio] = useState('')
   const [dataAlvo, setDataAlvo] = useState('')
-  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const criarVaga = useCreateVaga()
 
   function fechar() {
     navigate(pathname.replace(/\/nova-vaga\/?$/, '') || (isRh ? '/rh/vagas' : '/setor/vagas'))
@@ -51,9 +52,8 @@ export function VagaFormPage() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
     setError(null)
-    setSubmitting(true)
     try {
-      await createVaga({
+      await criarVaga.mutateAsync({
         titulo,
         descricao,
         requisitos,
@@ -70,8 +70,6 @@ export function VagaFormPage() {
       navigate(isRh ? '/rh/vagas' : '/setor/vagas')
     } catch {
       setError('Não foi possível criar a vaga. Confira os campos e tente novamente.')
-    } finally {
-      setSubmitting(false)
     }
   }
 
@@ -89,8 +87,8 @@ export function VagaFormPage() {
           <Button type="button" variant="ghost" onClick={fechar}>
             Cancelar
           </Button>
-          <Button type="submit" form={FORM_ID} disabled={submitting}>
-            {submitting ? 'Salvando...' : isRh ? 'Criar vaga' : 'Enviar solicitação'}
+          <Button type="submit" form={FORM_ID} disabled={criarVaga.isPending}>
+            {criarVaga.isPending ? 'Salvando...' : isRh ? 'Criar vaga' : 'Enviar solicitação'}
           </Button>
         </>
       }

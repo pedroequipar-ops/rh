@@ -27,7 +27,13 @@ export function AtrasadasList({ vagas }: AtrasadasListProps) {
       {vagas.map((vaga) => (
         <button
           key={vaga.id}
-          onClick={() => navigate(notificacaoHref(me?.role ?? 'RH', 'vaga', vaga.id))}
+          onClick={() =>
+            navigate(
+              notificacaoHref(me?.role ?? 'RH', 'vaga', vaga.id, {
+                emTriagem: vaga.status === 'EM_TRIAGEM',
+              }),
+            )
+          }
           className="flex items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm transition-fast hover:bg-red-50"
         >
           <AlertTriangle size={14} className="shrink-0 text-red-500" />

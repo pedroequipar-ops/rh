@@ -65,7 +65,7 @@ export function CommandPalette({ onClose }: CommandPaletteProps) {
       label: v.titulo,
       sublabel: v.status,
       icon: Briefcase,
-      go: () => navigate(notificacaoHref(me.role, 'vaga', v.id)),
+      go: () => navigate(notificacaoHref(me.role, 'vaga', v.id, { emTriagem: v.status === 'EM_TRIAGEM' })),
     })),
     ...listaResultado.candidatos.map((c) => ({
       key: `candidato:${c.id}`,

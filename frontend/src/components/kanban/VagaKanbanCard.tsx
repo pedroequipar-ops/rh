@@ -1,11 +1,14 @@
+import { useState } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { useNavigate } from 'react-router-dom'
-import { AlarmClock, Bell, Clock, Flame, Users } from 'lucide-react'
+import { AlarmClock, Bell, Clock, Flame, MoreVertical, Users } from 'lucide-react'
 import clsx from 'clsx'
 import type { Vaga, VagaStatus } from '../../types'
 import { Avatar } from '../ui/Avatar'
 import { Label } from '../ui/Label'
+import { Popover } from '../ui/Popover'
 import { tempoDecorrido } from '../../lib/tempoRelativo'
+import type { AcaoRapidaVaga } from './vagaAcoesRapidas'
 
 const MAX_TAGS_VISIVEIS = 3
 
@@ -112,6 +115,64 @@ export function VagaKanbanCardContent({ vaga }: { vaga: Vaga }) {
   )
 }
 
+/** Menu "⋮" no canto do card — só aparece ao passar o mouse (ou fica aberto).
+ * Um clique abre a lista com o nome da ação escrito; só o segundo clique,
+ * numa opção específica, dispara a transição — sem gatilho por acidente. */
+function AcaoRapidaMenu({
+  acoes,
+  onAcao,
+}: {
+  acoes: AcaoRapidaVaga[]
+  onAcao: (status: VagaStatus) => void
+}) {
+  const [open, setOpen] = useState(false)
+  if (acoes.length === 0) return null
+  return (
+    <div
+      className={clsx(
+        'absolute right-1 top-1 transition-opacity',
+        open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100',
+      )}
+      onClick={(e) => e.stopPropagation()}
+      onPointerDown={(e) => e.stopPropagation()}
+    >
+      <Popover
+        open={open}
+        onClose={() => setOpen(false)}
+        align="end"
+        trigger={
+          <button
+            type="button"
+            title="Ações rápidas"
+            onClick={() => setOpen((v) => !v)}
+            className="rounded p-1 text-slate-400 shadow-sm ring-1 ring-inset ring-slate-200 hover:bg-slate-100 hover:text-slate-600"
+          >
+            <MoreVertical size={14} />
+          </button>
+        }
+      >
+        {acoes.map((acao) => (
+          <button
+            key={acao.status}
+            type="button"
+            onClick={() => {
+              setOpen(false)
+              onAcao(acao.status)
+            }}
+            className={clsx(
+              'flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-slate-50',
+              acao.tone === 'avancar' ? 'text-emerald-700' : 'text-red-700',
+            )}
+          >
+            <acao.icon size={14} />
+            {acao.label}
+          </button>
+        ))}
+      </Popover>
+    </div>
+  )
+}
+
 interface VagaKanbanCardProps {
   vaga: Vaga
   draggable: boolean
@@ -120,9 +181,20 @@ interface VagaKanbanCardProps {
   /** rótulo mínimo — avatar do setor + título numa pill de linha única, pra
    * listas compactas (ex.: dentro do popover de um VagaStatusChip) */
   pill?: boolean
+  /** opções do menu ⋮ (Lixeira/Cancelar — ações destrutivas) — omitido = sem menu */
+  acoesRapidas?: AcaoRapidaVaga[]
+  onAcaoRapida?: (vagaId: string, status: VagaStatus) => void
 }
 
-export function VagaKanbanCard({ vaga, draggable, vagaModalBase, selected, pill }: VagaKanbanCardProps) {
+export function VagaKanbanCard({
+  vaga,
+  draggable,
+  vagaModalBase,
+  selected,
+  pill,
+  acoesRapidas,
+  onAcaoRapida,
+}: VagaKanbanCardProps) {
   const navigate = useNavigate()
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: `vaga:${vaga.id}`,
@@ -157,7 +229,7 @@ export function VagaKanbanCard({ vaga, draggable, vagaModalBase, selected, pill 
       onClick={() => navigate(`${vagaModalBase}/${vaga.id}`)}
       {...(draggable ? { ...listeners, ...attributes } : {})}
       className={clsx(
-        'shrink-0 cursor-pointer rounded-lg border bg-white p-2 transition hover:border-slate-300',
+        'group relative shrink-0 cursor-pointer rounded-lg border bg-white p-2 transition hover:border-slate-300',
         emTriagem
           ? 'border-dashed border-slate-300'
           : 'border-slate-200 shadow-sm hover:shadow',
@@ -167,6 +239,12 @@ export function VagaKanbanCard({ vaga, draggable, vagaModalBase, selected, pill 
       )}
     >
       <VagaKanbanCardContent vaga={vaga} />
+      {onAcaoRapida && (
+        <AcaoRapidaMenu
+          acoes={acoesRapidas ?? []}
+          onAcao={(status) => onAcaoRapida(vaga.id, status)}
+        />
+      )}
     </div>
   )
 }

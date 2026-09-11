@@ -7,6 +7,7 @@ import {
 import {
   aprovarVaga,
   cobrarVaga,
+  createVaga,
   deleteVaga,
   getVaga,
   getVagaHistorico,
@@ -67,6 +68,18 @@ export function aplicarVagaNoCache(qc: QueryClient, vaga: Vaga) {
 }
 
 // --- mutations otimistas (portadas de KanbanPage / ListagemPage) -------
+
+export function useCreateVaga() {
+  const qc = useQueryClient()
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: (input: VagaInput) => createVaga(input),
+    onError: () => showToast('Não foi possível criar a vaga', 'error'),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.vagasList })
+    },
+  })
+}
 
 export function useTransicionarVaga() {
   const qc = useQueryClient()

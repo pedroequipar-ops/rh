@@ -5,7 +5,6 @@ import { Bell, Flame, Upload, UserPlus, X } from 'lucide-react'
 import clsx from 'clsx'
 import { BulkCurriculoDropzone } from '../candidato/BulkCurriculoDropzone'
 import { ChatPanel } from '../candidato/ChatPanel'
-import { ConfirmDialog } from '../common/ConfirmDialog'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
 import { TarefasSection } from '../tarefas/TarefasSection'
 import { Badge, Button, InlineEdit, Select, Textarea, Tabs, TagInput } from '../ui'
@@ -16,6 +15,7 @@ import {
   useRecusarVaga,
   useRegistrarCandidaturas,
   useTransicionarVaga,
+  useVagaHistorico,
   useUpdateVaga,
 } from '../../api/hooks/useVagas'
 import { useSetores } from '../../api/hooks/useSetores'
@@ -36,19 +36,31 @@ const ACAO_LABEL: Partial<Record<VagaStatus, string>> = {
   SOLICITADA: 'Enviar solicitação',
   APROVADA: 'Aprovar',
   PUBLICADA: 'Publicar',
-  ENCERRADA: 'Encerrar candidaturas',
   EM_TRIAGEM: 'Iniciar triagem',
-  CONGELADA: 'Congelar',
-  CANCELADA: 'Cancelar vaga',
-  PREENCHIDA: 'Marcar preenchida',
   RECUSADA: 'Recusar',
 }
+
+/** Não viram botão aqui: já dá pra arrastar (chip Congelada, dock Lixeira do
+ * board Vagas, dock Avançar/menu Cancelar do board Triagem). PREENCHIDA é só
+ * arrastando de propósito — Publicada→Preenchida pulando Em Triagem é uma
+ * ação grande demais pra um botão, só o dock Avançar (de Publicada ou de
+ * Triagem) chega lá. */
+const ACOES_SO_POR_DRAG: VagaStatus[] = ['CONGELADA', 'ENCERRADA', 'CANCELADA', 'PREENCHIDA']
 
 const PRIORIDADE_OPCOES = [
   { value: '1', label: 'Baixa' },
   { value: '2', label: 'Média' },
   { value: '3', label: 'Alta' },
 ]
+
+function fmtDataHora(iso: string): string {
+  return new Date(iso).toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
 
 interface VagaDetailPanelProps {
   vaga: Vaga
@@ -71,10 +83,10 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const setoresQuery = useSetores(isRh)
   const usuariosQuery = useUsuarios(isRh)
   const candidatosQuery = useCandidatosDaVaga(vaga.id)
+  const historicoQuery = useVagaHistorico(vaga.id)
 
   const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'chat'>('detalhes')
   const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | null>(null)
-  const [confirmar, setConfirmar] = useState<VagaStatus | null>(null)
   const [importOpen, setImportOpen] = useState(false)
   const [motivoRecusa, setMotivoRecusa] = useState('')
   const [aprovarPrioridade, setAprovarPrioridade] = useState<VagaPrioridade>(vaga.prioridade)
@@ -124,7 +136,12 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   }
 
   const statusMeta = VAGA_STATUS_META[vaga.status]
-  const acoes = vaga.transicoes_disponiveis.filter((s) => s !== 'APROVADA' && s !== 'RECUSADA')
+  const historicoCandidaturas = (historicoQuery.data ?? []).filter((h) =>
+    h.observacao.startsWith('Candidaturas recebidas'),
+  )
+  const acoes = vaga.transicoes_disponiveis.filter(
+    (s) => s !== 'APROVADA' && s !== 'RECUSADA' && !ACOES_SO_POR_DRAG.includes(s),
+  )
   const podeAprovar = vaga.transicoes_disponiveis.includes('APROVADA') && isRh
   const podeRecusar = vaga.transicoes_disponiveis.includes('RECUSADA') && isRh
   const emPessoas = pathname.includes('/pessoas/')
@@ -339,114 +356,131 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
                   type="number"
                   onSave={(v) => registrarCandidaturasRecebidas(Number(v))}
                 />
+                {historicoCandidaturas.length > 0 && (
+                  <ul className="mt-1.5 max-h-28 space-y-0.5 overflow-y-auto text-xs text-slate-500">
+                    {historicoCandidaturas.map((h) => {
+                      const m = h.observacao.match(/:\s*(\d+)(?:\s*\(\+(\d+)\))?/)
+                      const quantidade = m?.[1] ?? h.observacao
+                      const delta = m?.[2]
+                      return (
+                        <li key={h.id} className="flex items-center justify-between gap-2">
+                          <span className="flex items-baseline gap-1">
+                            <span className="font-medium text-slate-700">{quantidade}</span>
+                            {delta && <span className="text-emerald-600">+{delta}</span>}
+                          </span>
+                          <span className="shrink-0 text-slate-400">{fmtDataHora(h.created_at)}</span>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
               </div>
             )}
           </div>
 
-          <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">Ações</h3>
+          <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <div className="space-y-2">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">Ações</h3>
 
-            {acaoPendente === 'aprovar' ? (
-              <form onSubmit={handleAprovar} className="space-y-2">
-                <Select
-                  value={aprovarPrioridade}
-                  onChange={(e) => setAprovarPrioridade(Number(e.target.value) as VagaPrioridade)}
-                >
-                  <option value={1}>Prioridade baixa</option>
-                  <option value={2}>Prioridade média</option>
-                  <option value={3}>Prioridade alta</option>
-                </Select>
-                <label className="flex items-center gap-2 text-sm text-slate-700">
+              {acaoPendente === 'aprovar' ? (
+                <form onSubmit={handleAprovar} className="space-y-2">
+                  <Select
+                    value={aprovarPrioridade}
+                    onChange={(e) => setAprovarPrioridade(Number(e.target.value) as VagaPrioridade)}
+                  >
+                    <option value={1}>Prioridade baixa</option>
+                    <option value={2}>Prioridade média</option>
+                    <option value={3}>Prioridade alta</option>
+                  </Select>
+                  <label className="flex items-center gap-2 text-sm text-slate-700">
+                    <input
+                      type="checkbox"
+                      checked={aprovarUrgente}
+                      onChange={(e) => setAprovarUrgente(e.target.checked)}
+                    />
+                    Urgente
+                  </label>
                   <input
-                    type="checkbox"
-                    checked={aprovarUrgente}
-                    onChange={(e) => setAprovarUrgente(e.target.checked)}
+                    type="date"
+                    value={aprovarDataAlvo}
+                    onChange={(e) => setAprovarDataAlvo(e.target.value)}
+                    className="w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
                   />
-                  Urgente
-                </label>
-                <input
-                  type="date"
-                  value={aprovarDataAlvo}
-                  onChange={(e) => setAprovarDataAlvo(e.target.value)}
-                  className="w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
-                />
-                <div className="flex gap-2">
-                  <Button type="submit" disabled={aprovar.isPending} className="flex-1">
-                    Confirmar
-                  </Button>
-                  <Button type="button" variant="secondary" onClick={() => setAcaoPendente(null)}>
-                    Cancelar
-                  </Button>
-                </div>
-              </form>
-            ) : acaoPendente === 'recusar' ? (
-              <form onSubmit={handleRecusar} className="space-y-2">
-                <Textarea
-                  required
-                  rows={3}
-                  value={motivoRecusa}
-                  onChange={(e) => setMotivoRecusa(e.target.value)}
-                  placeholder="Motivo da recusa"
-                />
-                <div className="flex gap-2">
-                  <Button type="submit" variant="danger" disabled={recusar.isPending} className="flex-1">
-                    Recusar
-                  </Button>
-                  <Button type="button" variant="secondary" onClick={() => setAcaoPendente(null)}>
-                    Cancelar
-                  </Button>
-                </div>
-              </form>
-            ) : (
-              <div className="space-y-1.5">
-                {podeAprovar && (
-                  <Button onClick={abrirAprovar} className="w-full">
-                    Aprovar
-                  </Button>
-                )}
-                {podeRecusar && (
-                  <Button variant="danger" onClick={() => setAcaoPendente('recusar')} className="w-full">
-                    Recusar
-                  </Button>
-                )}
-                {acoes.map((destino) => {
-                  const label =
-                    vaga.status === 'CONGELADA' && destino === vaga.status_pre_congelamento
-                      ? 'Descongelar'
-                      : ACAO_LABEL[destino] ?? statusLabel(destino)
-                  const perigo = destino === 'CANCELADA'
-                  return (
-                    <Button
-                      key={destino}
-                      variant={perigo ? 'danger' : 'secondary'}
-                      disabled={transicionar.isPending}
-                      onClick={() =>
-                        perigo
-                          ? setConfirmar(destino)
-                          : transicionar.mutate({ id: vaga.id, para: destino })
-                      }
-                      className="w-full"
-                    >
-                      {label}
+                  <div className="flex gap-2">
+                    <Button type="submit" disabled={aprovar.isPending} className="flex-1">
+                      Confirmar
                     </Button>
-                  )
-                })}
-                <Button
-                  variant="secondary"
-                  onClick={handleCobrar}
-                  disabled={cobrar.isPending}
-                  className="w-full"
-                >
-                  <Bell size={13} /> Cobrar responsável
-                </Button>
-                {acoes.length === 0 && !podeAprovar && !podeRecusar && (
-                  <p className="text-xs text-slate-400">Sem transições disponíveis.</p>
-                )}
-              </div>
-            )}
-          </div>
+                    <Button type="button" variant="secondary" onClick={() => setAcaoPendente(null)}>
+                      Cancelar
+                    </Button>
+                  </div>
+                </form>
+              ) : acaoPendente === 'recusar' ? (
+                <form onSubmit={handleRecusar} className="space-y-2">
+                  <Textarea
+                    required
+                    rows={3}
+                    value={motivoRecusa}
+                    onChange={(e) => setMotivoRecusa(e.target.value)}
+                    placeholder="Motivo da recusa"
+                  />
+                  <div className="flex gap-2">
+                    <Button type="submit" variant="danger" disabled={recusar.isPending} className="flex-1">
+                      Recusar
+                    </Button>
+                    <Button type="button" variant="secondary" onClick={() => setAcaoPendente(null)}>
+                      Cancelar
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <div className="space-y-1.5">
+                  {podeAprovar && (
+                    <Button onClick={abrirAprovar} className="w-full">
+                      Aprovar
+                    </Button>
+                  )}
+                  {podeRecusar && (
+                    <Button variant="danger" onClick={() => setAcaoPendente('recusar')} className="w-full">
+                      Recusar
+                    </Button>
+                  )}
+                  {acoes.map((destino) => {
+                    const label =
+                      vaga.status === 'CONGELADA' && destino === vaga.status_pre_congelamento
+                        ? 'Descongelar'
+                        : ACAO_LABEL[destino] ?? statusLabel(destino)
+                    return (
+                      <Button
+                        key={destino}
+                        variant="secondary"
+                        disabled={transicionar.isPending}
+                        onClick={() => transicionar.mutate({ id: vaga.id, para: destino })}
+                        className="w-full"
+                      >
+                        {label}
+                      </Button>
+                    )
+                  })}
+                  <Button
+                    variant="secondary"
+                    onClick={handleCobrar}
+                    disabled={cobrar.isPending}
+                    className="w-full"
+                  >
+                    <Bell size={13} /> Cobrar responsável
+                  </Button>
+                  {acoes.length === 0 && !podeAprovar && !podeRecusar && (
+                    <p className="text-xs text-slate-400">Sem transições disponíveis.</p>
+                  )}
+                </div>
+              )}
+            </div>
 
-          <TarefasSection alvoTipo="VAGA" alvoId={vaga.id} />
+            <div className="h-px bg-slate-200" />
+
+            <TarefasSection alvoTipo="VAGA" alvoId={vaga.id} embutido />
+          </div>
         </div>
       )}
 
@@ -492,19 +526,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
         <div className="min-h-0 flex-1">
           <ChatPanel kind="vaga" id={vaga.id} />
         </div>
-      )}
-
-      {confirmar && (
-        <ConfirmDialog
-          title={ACAO_LABEL[confirmar] ?? statusLabel(confirmar)}
-          description={`Confirmar mudança da vaga para "${statusLabel(confirmar)}"?`}
-          confirmLabel="Confirmar"
-          onConfirm={() => {
-            transicionar.mutate({ id: vaga.id, para: confirmar })
-            setConfirmar(null)
-          }}
-          onCancel={() => setConfirmar(null)}
-        />
       )}
 
       {importOpen && (

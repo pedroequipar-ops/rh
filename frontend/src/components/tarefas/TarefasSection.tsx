@@ -15,6 +15,9 @@ import { ConfirmDialog } from '../common/ConfirmDialog'
 interface TarefasSectionProps {
   alvoTipo: TarefaAlvoTipo
   alvoId: string
+  /** Sem moldura própria (borda/fundo/padding) — pra encaixar dentro de um
+   * container que já tem a caixa, em vez de abrir uma caixa separada. */
+  embutido?: boolean
 }
 
 function fmtData(iso: string | null): string {
@@ -28,7 +31,7 @@ function paraInputDate(iso: string | null): string {
 
 /** Bloco "Tarefas" dentro do painel de vaga/candidato: lista + criação
  * inline (título + data) + concluir/editar/excluir. */
-export function TarefasSection({ alvoTipo, alvoId }: TarefasSectionProps) {
+export function TarefasSection({ alvoTipo, alvoId, embutido }: TarefasSectionProps) {
   const tarefasQuery = useTarefas({ alvo_tipo: alvoTipo, alvo_id: alvoId })
   const criar = useCreateTarefa()
   const concluir = useConcluirTarefa()
@@ -77,7 +80,12 @@ export function TarefasSection({ alvoTipo, alvoId }: TarefasSectionProps) {
   }
 
   return (
-    <div className="space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
+    <div
+      className={clsx(
+        'space-y-2',
+        !embutido && 'rounded-lg border border-slate-200 bg-slate-50 p-3',
+      )}
+    >
       <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">Tarefas</h3>
 
       {tarefas.length === 0 && <p className="text-xs text-slate-400">Nenhuma tarefa ainda.</p>}

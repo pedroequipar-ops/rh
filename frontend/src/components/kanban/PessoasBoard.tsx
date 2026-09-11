@@ -8,7 +8,6 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from '@dnd-kit/core'
-import { ArrowRightCircle, XCircle } from 'lucide-react'
 import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
 import { useToast } from '../../context/ToastContext'
 import { QuickActionDock } from '../board/QuickActionDock'
@@ -16,15 +15,8 @@ import { etapaSaidaNegativa, ordenarEtapas, proximaEtapa } from './etapaNav'
 import { useHorizontalWheel } from './useHorizontalWheel'
 import { CandidatoCardContent } from './CandidatoCard'
 import { KanbanColumn } from './KanbanColumn'
-import { VagaGanhoPerdaDock, type DockAlvoConfig } from './VagaGanhoPerdaDock'
+import { VagaAvancarDock } from './VagaAvancarDock'
 import { VagaKanbanCardContent } from './VagaKanbanCard'
-
-/** Só aparece na aba Triagem (onTransicionarVaga presente): EM_TRIAGEM só
- * chega a Preenchida ou Cancelada dali (ver TRANSICOES no backend). */
-const DOCK_ALVOS: DockAlvoConfig[] = [
-  { status: 'CANCELADA', label: 'Cancelar', tone: 'lixeira', icon: XCircle },
-  { status: 'PREENCHIDA', label: 'Avançar', tone: 'avancar', icon: ArrowRightCircle },
-]
 
 interface PessoasBoardProps {
   etapas: EtapaKanban[]
@@ -36,7 +28,8 @@ interface PessoasBoardProps {
   onMoveCandidato?: (candidatoId: string, etapaId: string) => void
   onMoveVagaEtapa?: (vagaId: string, etapaId: string) => void
   onRegistrarCandidato?: (vaga: Vaga, etapa: EtapaKanban) => void
-  /** Presente só na aba Triagem: liga o dock Avançar/Cancelar pra vaga arrastada. */
+  /** Presente só na aba Triagem: liga o menu ⋮ "Cancelar" do card e o dock
+   * de arrastar "Avançar" (→ Preenchida). */
   onTransicionarVaga?: (vagaId: string, status: VagaStatus) => void
   selectedVagaId?: string | null
 }
@@ -84,10 +77,9 @@ export function PessoasBoard({
       const vagaId = activeIdStr.slice(5)
       const vaga = vagas.find((v) => v.id === vagaId)
       if (!vaga || vaga.status !== 'EM_TRIAGEM') return
-      if (overIdStr.startsWith('status:')) {
-        const destino = overIdStr.slice(7) as VagaStatus
-        if (vaga.transicoes_disponiveis.includes(destino)) {
-          onTransicionarVaga?.(vagaId, destino)
+      if (overIdStr === 'avancar:PREENCHIDA') {
+        if (vaga.transicoes_disponiveis.includes('PREENCHIDA')) {
+          onTransicionarVaga?.(vagaId, 'PREENCHIDA')
         }
         return
       }
@@ -151,6 +143,7 @@ export function PessoasBoard({
           aceitaVaga={vagaEmTriagem && !etapa.is_saida_negativa}
           cadastroAqui={etapa.exige_cadastro_completo}
           selectedVagaId={selectedVagaId}
+          onAcaoRapidaVaga={onTransicionarVaga}
         />
       ))}
     </div>
@@ -182,9 +175,7 @@ export function PessoasBoard({
           )}
         </DragOverlay>
         <QuickActionDock visivel={!!activeCandidato} temSaidaNegativa={!!saida} />
-        {onTransicionarVaga && (
-          <VagaGanhoPerdaDock visivel={vagaEmTriagem} alvos={DOCK_ALVOS} />
-        )}
+        {onTransicionarVaga && <VagaAvancarDock visivel={vagaEmTriagem} status="PREENCHIDA" />}
       </DndContext>
     </div>
   )
