@@ -69,20 +69,21 @@ export const VAGA_STATUS_META: Record<VagaStatus, StatusMeta> = {
 export const FLUXO_STATUSES: VagaStatus[] = ['SOLICITADA', 'APROVADA', 'PUBLICADA', 'PREENCHIDA']
 
 /** Status de vaga que não viram coluna de status (terminais ou geridos por etapa,
- * ou alcançados só pelo dock de Ganho/Perda ao arrastar). */
+ * ou alcançados só pelo dock de Avançar/Lixeira ao arrastar). */
 export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['EM_TRIAGEM', 'CANCELADA']
 
 /** Status de baixo volume: viram um chip embaixo da coluna relacionada em vez
- * de coluna cheia — ainda aceitam arraste, só não poluem o kanban. */
-export const STATUS_ORBS: VagaStatus[] = ['RECUSADA', 'ENCERRADA', 'CONGELADA']
+ * de coluna cheia — ainda aceitam arraste, só não poluem o kanban.
+ * ENCERRADA não entra aqui: só é alcançada pelo dock de Avançar/Lixeira e,
+ * uma vez lá, some do board até a exclusão automática em 12h. */
+export const STATUS_ORBS: VagaStatus[] = ['RECUSADA', 'CONGELADA']
 
 /** Sob qual coluna cheia cada chip de status fica — reflete de onde a
  * transição normalmente parte (recusa vem de Solicitada, congelamento de
- * Publicada; a lixeira de encerradas fica junto de Preenchida, fim de linha). */
+ * Publicada). */
 export const CHIP_ABAIXO_DA_COLUNA: Partial<Record<VagaStatus, VagaStatus>> = {
   SOLICITADA: 'RECUSADA',
   PUBLICADA: 'CONGELADA',
-  PREENCHIDA: 'ENCERRADA',
 }
 
 export function statusLabel(status: VagaStatus): string {

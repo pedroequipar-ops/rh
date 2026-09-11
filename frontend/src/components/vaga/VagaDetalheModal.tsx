@@ -21,17 +21,21 @@ function VagaDetalheModalInner({ id }: { id: string }) {
 
   return (
     <DetailPanel onClose={handleClose}>
-      {error && (
-        <div className="flex h-full items-center justify-center p-4 text-sm text-red-500">
-          Não foi possível carregar esta vaga.
-        </div>
+      {(requestClose) => (
+        <>
+          {error && (
+            <div className="flex h-full items-center justify-center p-4 text-sm text-red-500">
+              Não foi possível carregar esta vaga.
+            </div>
+          )}
+          {!error && !vaga && (
+            <div className="flex h-full items-center justify-center p-4 text-sm text-slate-400">
+              Carregando...
+            </div>
+          )}
+          {!error && vaga && <VagaDetailPanel vaga={vaga} onClose={requestClose} />}
+        </>
       )}
-      {!error && !vaga && (
-        <div className="flex h-full items-center justify-center p-4 text-sm text-slate-400">
-          Carregando...
-        </div>
-      )}
-      {!error && vaga && <VagaDetailPanel vaga={vaga} onClose={handleClose} />}
     </DetailPanel>
   )
 }

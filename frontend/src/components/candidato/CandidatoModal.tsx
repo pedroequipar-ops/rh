@@ -21,17 +21,23 @@ function CandidatoModalInner({ id }: { id: string }) {
 
   return (
     <DetailPanel onClose={handleClose}>
-      {error && (
-        <div className="flex h-full items-center justify-center p-4 text-sm text-red-500">
-          Não foi possível carregar este candidato.
-        </div>
+      {(requestClose) => (
+        <>
+          {error && (
+            <div className="flex h-full items-center justify-center p-4 text-sm text-red-500">
+              Não foi possível carregar este candidato.
+            </div>
+          )}
+          {!error && !candidato && (
+            <div className="flex h-full items-center justify-center p-4 text-sm text-slate-400">
+              Carregando...
+            </div>
+          )}
+          {!error && candidato && (
+            <CandidatoDetailPanel candidato={candidato} onClose={requestClose} />
+          )}
+        </>
       )}
-      {!error && !candidato && (
-        <div className="flex h-full items-center justify-center p-4 text-sm text-slate-400">
-          Carregando...
-        </div>
-      )}
-      {!error && candidato && <CandidatoDetailPanel candidato={candidato} onClose={handleClose} />}
     </DetailPanel>
   )
 }

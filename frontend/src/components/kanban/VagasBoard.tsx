@@ -23,7 +23,7 @@ import { VagaStatusChip } from './VagaStatusChip'
 
 /** Alvos de drop compactos (chips/dock) que não são coluna — o preview
  * arrastado encolhe pra um chip pequeno em cima deles. */
-const ALVOS_COMPACTOS: VagaStatus[] = [...STATUS_ORBS, 'PREENCHIDA', 'CANCELADA']
+const ALVOS_COMPACTOS: VagaStatus[] = [...STATUS_ORBS, 'PREENCHIDA', 'ENCERRADA']
 
 /** Extrai o status de um id de droppable `status:<STATUS>` ou
  * `status:<STATUS>:lista` (a lista aberta do chip também aceita drop, com o
@@ -44,10 +44,10 @@ interface VagasBoardProps {
 }
 
 /** Board só de vagas: colunas de status. Vagas em EM_TRIAGEM não aparecem
- * aqui — quem circula ali é o board Pessoas. Recusada/Congelada/Encerrada
- * viram um chip embaixo da coluna de onde normalmente partem (Solicitada/
- * Aprovada/Publicada) em vez de coluna cheia própria; passar o mouse por cima
- * abre a lista (pra dar pra arrastar uma vaga de volta pra fora de lá). */
+ * aqui — quem circula ali é o board Pessoas. Recusada/Congelada viram um
+ * chip embaixo da coluna de onde normalmente partem (Solicitada/Publicada)
+ * em vez de coluna cheia própria; passar o mouse por cima abre a lista (pra
+ * dar pra arrastar uma vaga de volta pra fora de lá). */
 export function VagasBoard({
   vagas,
   draggable,
@@ -175,7 +175,7 @@ export function VagasBoard({
             </div>
           )}
         </DragOverlay>
-        <VagaGanhoPerdaDock visivel={!!activeVaga} activeVaga={activeVaga} />
+        <VagaGanhoPerdaDock visivel={!!activeVaga} />
       </DndContext>
     </div>
   )

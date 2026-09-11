@@ -104,11 +104,6 @@ export function NotificacoesMenu({ collapsed }: { collapsed: boolean }) {
     navigate(notificacaoHref(me!.role, 'vaga', vagaId))
   }
 
-  function handleAbrirVagas() {
-    setOpen(false)
-    navigate(isRh ? '/rh/listagem' : '/setor/listagem')
-  }
-
   const semNotificacoes =
     (!resumoChat || (resumoChat.candidatos.length === 0 && resumoChat.vagas.length === 0)) &&
     notificacoesEtapa.length === 0 &&
@@ -228,7 +223,7 @@ export function NotificacoesMenu({ collapsed }: { collapsed: boolean }) {
                     {notificacoesVaga.map((item) => (
                       <button
                         key={item.id}
-                        onClick={handleAbrirVagas}
+                        onClick={() => handleAbrirVaga(item.vaga_id)}
                         className="flex w-full items-start gap-3 px-4 py-2.5 text-left hover:bg-slate-50"
                       >
                         <Briefcase size={16} className="mt-0.5 shrink-0 text-emerald-600" />

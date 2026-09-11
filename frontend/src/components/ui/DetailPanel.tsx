@@ -1,9 +1,12 @@
-import { useEffect, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { cn } from './cn'
+
+const CLOSE_DURATION_MS = 200
 
 interface DetailPanelProps {
   onClose: () => void
-  children: ReactNode
+  /** Recebe `requestClose`: dispara a animação de saída e só então chama `onClose`. */
+  children: (requestClose: () => void) => ReactNode
   className?: string
 }
 
@@ -11,26 +14,61 @@ interface DetailPanelProps {
  * Shell do painel de detalhe: overlay estreito (com backdrop) no mobile,
  * coluna fixa ao lado do board a partir de `lg`. Quem desenha header/tabs/
  * corpo rolável é o conteúdo (`VagaDetailPanel`/`CandidatoDetailPanel`).
+ *
+ * Anima entrada ao montar e saída antes de desmontar — como o painel é
+ * montado/desmontado pela rota, a saída precisa adiar o `onClose` real até
+ * a transição terminar, daí o `requestClose` repassado via render-prop.
  */
 export function DetailPanel({ onClose, children, className }: DetailPanelProps) {
+  const asideRef = useRef<HTMLElement>(null)
+  const [visible, setVisible] = useState(false)
+  const [closing, setClosing] = useState(false)
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setVisible(true))
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
+  const requestClose = useCallback(() => {
+    if (closing) return
+    setClosing(true)
+    setVisible(false)
+    setTimeout(onClose, CLOSE_DURATION_MS)
+  }, [closing, onClose])
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') requestClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  }, [requestClose])
+
+  useEffect(() => {
+    function onPointerDown(e: MouseEvent) {
+      if (asideRef.current && !asideRef.current.contains(e.target as Node)) requestClose()
+    }
+    document.addEventListener('mousedown', onPointerDown)
+    return () => document.removeEventListener('mousedown', onPointerDown)
+  }, [requestClose])
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-black/30 lg:hidden" onClick={onClose} />
-      <aside
+      <div
         className={cn(
-          'fixed inset-y-0 right-0 z-40 flex w-full max-w-[460px] flex-col border-l border-slate-200 bg-white shadow-xl lg:static lg:z-auto lg:w-[460px] lg:shrink-0 lg:shadow-none',
+          'fixed inset-0 z-40 bg-black/30 transition-opacity duration-200 lg:hidden',
+          visible ? 'opacity-100' : 'opacity-0',
+        )}
+      />
+      <aside
+        ref={asideRef}
+        className={cn(
+          'fixed inset-y-0 right-0 z-40 flex w-full max-w-[460px] flex-col border-l border-slate-200 bg-white shadow-xl transition duration-200 ease-out lg:static lg:z-auto lg:w-[460px] lg:shrink-0 lg:shadow-none',
+          visible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0',
           className,
         )}
       >
-        {children}
+        {children(requestClose)}
       </aside>
     </>
   )
