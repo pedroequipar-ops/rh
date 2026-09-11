@@ -136,9 +136,10 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
 
       {editorOpen && (
         <EtapaColumnEditor
-          etapas={etapasTodas}
+          etapas={etapas}
           onClose={() => setEditorOpen(false)}
           onChange={handleEtapasChange}
+          scopeExigeCadastroCompleto={!soTriagem}
         />
       )}
     </div>

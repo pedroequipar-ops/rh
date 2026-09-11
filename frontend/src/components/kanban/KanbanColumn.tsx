@@ -1,8 +1,7 @@
 import { useDroppable } from '@dnd-kit/core'
 import clsx from 'clsx'
-import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
+import type { Candidato, EtapaKanban, Vaga } from '../../types'
 import { CandidatoCard } from './CandidatoCard'
-import { acoesRapidasTriagem } from './vagaAcoesRapidas'
 import { VagaKanbanCard } from './VagaKanbanCard'
 
 interface KanbanColumnProps {
@@ -18,7 +17,6 @@ interface KanbanColumnProps {
   aceitaVaga?: boolean
   cadastroAqui?: boolean
   selectedVagaId?: string | null
-  onAcaoRapidaVaga?: (vagaId: string, status: VagaStatus) => void
 }
 
 export function KanbanColumn({
@@ -32,7 +30,6 @@ export function KanbanColumn({
   aceitaVaga,
   cadastroAqui,
   selectedVagaId,
-  onAcaoRapidaVaga,
 }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: etapa.id })
   const dot = etapa.is_saida_negativa ? 'bg-red-500' : (etapa.cor ?? 'bg-slate-400')
@@ -85,8 +82,6 @@ export function KanbanColumn({
             draggable={!!vagaDraggable}
             vagaModalBase={vagaModalBase ?? ''}
             selected={vaga.id === selectedVagaId}
-            acoesRapidas={acoesRapidasTriagem(vaga)}
-            onAcaoRapida={onAcaoRapidaVaga}
           />
         ))}
         {candidatos.map((candidato) => (

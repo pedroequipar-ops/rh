@@ -1,4 +1,4 @@
-import { Trash2, XCircle } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import type { ComponentType } from 'react'
 import type { Vaga, VagaStatus } from '../../types'
 
@@ -20,18 +20,6 @@ export function acoesRapidasVagas(vaga: Vaga): AcaoRapidaVaga[] {
     acoes.push({ status: 'ENCERRADA', label: 'Lixeira', tone: 'lixeira', icon: Trash2 })
   } else if (t.includes('CANCELADA')) {
     acoes.push({ status: 'CANCELADA', label: 'Lixeira', tone: 'lixeira', icon: Trash2 })
-  }
-  return acoes
-}
-
-/** Menu ⋮ do card no board Triagem — só Cancelar (destrutivo). "Avançar"
- * (→ Preenchida) fica no dock de arrastar, mesmo raciocínio do board Vagas. */
-export function acoesRapidasTriagem(vaga: Vaga): AcaoRapidaVaga[] {
-  if (vaga.status !== 'EM_TRIAGEM') return []
-  const t = vaga.transicoes_disponiveis
-  const acoes: AcaoRapidaVaga[] = []
-  if (t.includes('CANCELADA')) {
-    acoes.push({ status: 'CANCELADA', label: 'Cancelar', tone: 'lixeira', icon: XCircle })
   }
   return acoes
 }

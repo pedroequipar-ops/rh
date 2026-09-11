@@ -30,7 +30,7 @@ function SortableEtapaItem({
   etapa: EtapaKanban
   onRename: (etapa: EtapaKanban, nome: string) => void
   onDelete: (etapa: EtapaKanban) => void
-  onToggleCadastro: (etapa: EtapaKanban, valor: boolean) => void
+  onToggleCadastro?: (etapa: EtapaKanban, valor: boolean) => void
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: etapa.id,
@@ -72,14 +72,16 @@ function SortableEtapaItem({
           <Trash2 size={14} />
         </button>
       </div>
-      <label className="mt-1 flex items-center gap-1.5 pl-6 text-[11px] text-slate-500">
-        <input
-          type="checkbox"
-          checked={etapa.exige_cadastro_completo}
-          onChange={(e) => onToggleCadastro(etapa, e.target.checked)}
-        />
-        Exige cadastro completo da pessoa
-      </label>
+      {onToggleCadastro && (
+        <label className="mt-1 flex items-center gap-1.5 pl-6 text-[11px] text-slate-500">
+          <input
+            type="checkbox"
+            checked={etapa.exige_cadastro_completo}
+            onChange={(e) => onToggleCadastro(etapa, e.target.checked)}
+          />
+          Exige cadastro completo da pessoa
+        </label>
+      )}
     </li>
   )
 }
@@ -87,11 +89,14 @@ function SortableEtapaItem({
 interface EtapaListEditorProps {
   etapas: EtapaKanban[]
   onChange: () => void
+  /** Quando definido, a lista está travada num board (Triagem ou Pessoas):
+   * some o checkbox de "exige cadastro" e toda etapa nova nasce com esse valor. */
+  scopeExigeCadastroCompleto?: boolean
 }
 
 /** Lista arrastável + form de "nova etapa" — miolo compartilhado pelo drawer
  * rápido do board (`EtapaColumnEditor`) e pela página `/config/etapas`. */
-export function EtapaListEditor({ etapas, onChange }: EtapaListEditorProps) {
+export function EtapaListEditor({ etapas, onChange, scopeExigeCadastroCompleto }: EtapaListEditorProps) {
   const { showToast } = useToast()
   const [novoNome, setNovoNome] = useState('')
   const [saving, setSaving] = useState(false)
@@ -104,7 +109,13 @@ export function EtapaListEditor({ etapas, onChange }: EtapaListEditorProps) {
     if (!novoNome.trim()) return
     setSaving(true)
     try {
-      await createEtapa({ nome: novoNome.trim(), ordem: ordenadas.length })
+      await createEtapa({
+        nome: novoNome.trim(),
+        ordem: ordenadas.length,
+        ...(scopeExigeCadastroCompleto !== undefined
+          ? { exige_cadastro_completo: scopeExigeCadastroCompleto }
+          : {}),
+      })
       setNovoNome('')
       onChange()
       showToast('Etapa criada com sucesso')
@@ -171,7 +182,9 @@ export function EtapaListEditor({ etapas, onChange }: EtapaListEditorProps) {
                 etapa={etapa}
                 onRename={handleRename}
                 onDelete={setEtapaParaExcluir}
-                onToggleCadastro={handleToggleCadastro}
+                onToggleCadastro={
+                  scopeExigeCadastroCompleto === undefined ? handleToggleCadastro : undefined
+                }
               />
             ))}
           </ul>
@@ -211,10 +224,17 @@ interface EtapaColumnEditorProps {
   etapas: EtapaKanban[]
   onClose: () => void
   onChange: () => void
+  scopeExigeCadastroCompleto?: boolean
 }
 
-/** Drawer rápido, acionado do board Pessoas ("Editar etapas"). */
-export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEditorProps) {
+/** Drawer rápido, acionado do board Triagem ou Pessoas ("Editar etapas") —
+ * mostra só as etapas do board atual. */
+export function EtapaColumnEditor({
+  etapas,
+  onClose,
+  onChange,
+  scopeExigeCadastroCompleto,
+}: EtapaColumnEditorProps) {
   return (
     <div className="fixed inset-0 z-40 flex justify-end bg-black/30" onClick={onClose}>
       <div
@@ -228,7 +248,11 @@ export function EtapaColumnEditor({ etapas, onClose, onChange }: EtapaColumnEdit
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
-          <EtapaListEditor etapas={etapas} onChange={onChange} />
+          <EtapaListEditor
+            etapas={etapas}
+            onChange={onChange}
+            scopeExigeCadastroCompleto={scopeExigeCadastroCompleto}
+          />
         </div>
       </div>
     </div>

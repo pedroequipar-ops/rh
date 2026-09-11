@@ -11,7 +11,7 @@ ETAPAS_SEED = [
     ("Prova Prática", False, True),
     ("Entrevista com Gestor", False, True),
     ("Contratado", False, True),
-    ("Reprovado/Cancelada", True, True),
+    ("Lixeira", True, True),
 ]
 
 

@@ -10,8 +10,8 @@ import {
 } from '@dnd-kit/core'
 import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
 import { useToast } from '../../context/ToastContext'
-import { QuickActionDock } from '../board/QuickActionDock'
-import { etapaSaidaNegativa, ordenarEtapas, proximaEtapa } from './etapaNav'
+import { LixeiraDock } from '../board/LixeiraDock'
+import { etapaSaidaNegativa, ordenarEtapas } from './etapaNav'
 import { useHorizontalWheel } from './useHorizontalWheel'
 import { CandidatoCardContent } from './CandidatoCard'
 import { KanbanColumn } from './KanbanColumn'
@@ -28,14 +28,20 @@ interface PessoasBoardProps {
   onMoveCandidato?: (candidatoId: string, etapaId: string) => void
   onMoveVagaEtapa?: (vagaId: string, etapaId: string) => void
   onRegistrarCandidato?: (vaga: Vaga, etapa: EtapaKanban) => void
-  /** Presente só na aba Triagem: liga o menu ⋮ "Cancelar" do card e o dock
-   * de arrastar "Avançar" (→ Preenchida). */
+  /** Presente só na aba Triagem: liga os docks de arrastar "Avançar"
+   * (→ Preenchida) e a lixeira (→ Cancelada). */
   onTransicionarVaga?: (vagaId: string, status: VagaStatus) => void
   selectedVagaId?: string | null
 }
 
 /** Board só de pessoas: colunas de etapa. Vagas EM_TRIAGEM aparecem como card
- * na coluna de `etapa_atual` (pré-cadastro); hospeda o QuickActionDock. */
+ * na coluna de `etapa_atual` (pré-cadastro). Avançar candidato é só arrastar
+ * pra coluna seguinte — todas as etapas de avanço já aparecem no board, sem
+ * precisar de dock. A etapa de saída negativa (Lixeira) não vira coluna cheia
+ * — some da lista de `colunas`; descartar um candidato é arrastar pra cima do
+ * LixeiraDock (bolinha no canto inferior direito, só aparece arrastando). Na
+ * aba Triagem, o mesmo LixeiraDock também aceita o card de vaga (→ Cancelada)
+ * — sem menu ⋮ aqui, mesmo raciocínio de Pessoas. */
 export function PessoasBoard({
   etapas,
   candidatos,
@@ -55,6 +61,7 @@ export function PessoasBoard({
   const { showToast } = useToast()
 
   const sortedEtapas = ordenarEtapas(etapas)
+  const colunas = sortedEtapas.filter((e) => !e.is_saida_negativa)
   const activeVagaId = activeId?.startsWith('vaga:') ? activeId.slice(5) : null
   const activeVaga = activeVagaId ? vagas.find((v) => v.id === activeVagaId) ?? null : null
   const activeCandidato =
@@ -83,6 +90,12 @@ export function PessoasBoard({
         }
         return
       }
+      if (overIdStr === 'acao:lixeira') {
+        if (vaga.transicoes_disponiveis.includes('CANCELADA')) {
+          onTransicionarVaga?.(vagaId, 'CANCELADA')
+        }
+        return
+      }
       const etapa = etapas.find((e) => e.id === overIdStr)
       if (!etapa || etapa.is_saida_negativa) return
       if (etapa.exige_cadastro_completo) {
@@ -96,25 +109,12 @@ export function PessoasBoard({
     const candidato = candidatos.find((c) => c.id === activeIdStr)
     if (!candidato) return
 
-    if (overIdStr === 'acao:ganho') {
-      const destino = proximaEtapa(candidato, etapas)
-      if (!destino) {
-        showToast('Não há próxima etapa pra avançar', 'error')
-        return
-      }
-      onMoveCandidato?.(activeIdStr, destino.id)
-      return
-    }
-
-    if (overIdStr === 'acao:perda') {
+    if (overIdStr === 'acao:lixeira') {
       if (!saida) {
         showToast('Nenhuma etapa de saída configurada', 'error')
         return
       }
-      if (candidato.etapa_atual.id === saida.id) {
-        showToast('Candidato já está na saída', 'error')
-        return
-      }
+      if (candidato.etapa_atual.id === saida.id) return
       onMoveCandidato?.(activeIdStr, saida.id)
       return
     }
@@ -128,7 +128,7 @@ export function PessoasBoard({
       className="scrollbar-thin flex h-full gap-9 overflow-x-auto p-5"
       onWheel={handleWheel}
     >
-      {sortedEtapas.map((etapa) => (
+      {colunas.map((etapa) => (
         <KanbanColumn
           key={etapa.id}
           etapa={etapa}
@@ -143,7 +143,6 @@ export function PessoasBoard({
           aceitaVaga={vagaEmTriagem && !etapa.is_saida_negativa}
           cadastroAqui={etapa.exige_cadastro_completo}
           selectedVagaId={selectedVagaId}
-          onAcaoRapidaVaga={onTransicionarVaga}
         />
       ))}
     </div>
@@ -164,17 +163,17 @@ export function PessoasBoard({
         {board}
         <DragOverlay dropAnimation={{ duration: 200, easing: 'ease-out' }}>
           {activeVaga && (
-            <div className="w-[244px] scale-[1.02] rounded-lg border border-slate-200 bg-white p-2 opacity-95 shadow-md">
+            <div className="w-[244px] origin-top-left scale-[1.02] rounded-lg border border-slate-200 bg-white p-2 opacity-95 shadow-md">
               <VagaKanbanCardContent vaga={activeVaga} />
             </div>
           )}
           {activeCandidato && (
-            <div className="w-[244px] scale-[1.02] rounded-lg border border-slate-200 bg-white p-2 opacity-95 shadow-md">
+            <div className="w-[244px] origin-top-left scale-[1.02] rounded-lg border border-slate-200 bg-white p-2 opacity-95 shadow-md">
               <CandidatoCardContent candidato={activeCandidato} />
             </div>
           )}
         </DragOverlay>
-        <QuickActionDock visivel={!!activeCandidato} temSaidaNegativa={!!saida} />
+        <LixeiraDock visivel={(!!activeCandidato && !!saida) || vagaEmTriagem} />
         {onTransicionarVaga && <VagaAvancarDock visivel={vagaEmTriagem} status="PREENCHIDA" />}
       </DndContext>
     </div>
