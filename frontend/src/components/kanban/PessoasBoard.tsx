@@ -29,8 +29,11 @@ interface PessoasBoardProps {
   onMoveVagaEtapa?: (vagaId: string, etapaId: string) => void
   onRegistrarCandidato?: (vaga: Vaga, etapa: EtapaKanban) => void
   /** Presente só na aba Triagem: liga os docks de arrastar "Avançar"
-   * (→ Preenchida) e a lixeira (→ Cancelada). */
+   * (→ abre cadastro completo) e a lixeira (→ Cancelada). */
   onTransicionarVaga?: (vagaId: string, status: VagaStatus) => void
+  /** Primeira etapa que exige cadastro completo (ex.: Perfil Comportamental)
+   * — é pra ela que o dock "Avançar" manda a vaga na aba Triagem. */
+  etapaCadastroInicial?: EtapaKanban | null
   selectedVagaId?: string | null
 }
 
@@ -41,7 +44,11 @@ interface PessoasBoardProps {
  * — some da lista de `colunas`; descartar um candidato é arrastar pra cima do
  * LixeiraDock (bolinha no canto inferior direito, só aparece arrastando). Na
  * aba Triagem, o mesmo LixeiraDock também aceita o card de vaga (→ Cancelada)
- * — sem menu ⋮ aqui, mesmo raciocínio de Pessoas. */
+ * — sem menu ⋮ aqui, mesmo raciocínio de Pessoas. Só a última coluna
+ * pré-cadastro (a que fica antes de exigir cadastro completo, ex.: Primeira
+ * Entrevista) também ganha o dock "Avançar", que abre o cadastro completo do
+ * candidato direto (`etapaCadastroInicial`) — nas colunas anteriores (ex.:
+ * Triagem) só a lixeira aparece. */
 export function PessoasBoard({
   etapas,
   candidatos,
@@ -53,6 +60,7 @@ export function PessoasBoard({
   onMoveVagaEtapa,
   onRegistrarCandidato,
   onTransicionarVaga,
+  etapaCadastroInicial,
   selectedVagaId,
 }: PessoasBoardProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
@@ -68,6 +76,14 @@ export function PessoasBoard({
     activeId && !activeVagaId ? candidatos.find((c) => c.id === activeId) ?? null : null
   const vagaEmTriagem = activeVaga?.status === 'EM_TRIAGEM'
   const saida = etapaSaidaNegativa(etapas)
+  /** Última coluna pré-cadastro (ex.: Primeira Entrevista) — só arrastando
+   * dela pro dock "Avançar" abre o cadastro completo. Nas colunas anteriores
+   * (ex.: Triagem) o card só tem a lixeira, sem avançar por dock. */
+  const ultimaEtapaPreCadastro = colunas.length > 0 ? colunas[colunas.length - 1] : null
+  const podeAvancarParaCadastro =
+    vagaEmTriagem &&
+    !!ultimaEtapaPreCadastro &&
+    activeVaga?.etapa_atual?.id === ultimaEtapaPreCadastro.id
 
   function handleDragStart(event: DragStartEvent) {
     setActiveId(String(event.active.id))
@@ -84,9 +100,9 @@ export function PessoasBoard({
       const vagaId = activeIdStr.slice(5)
       const vaga = vagas.find((v) => v.id === vagaId)
       if (!vaga || vaga.status !== 'EM_TRIAGEM') return
-      if (overIdStr === 'avancar:PREENCHIDA') {
-        if (vaga.transicoes_disponiveis.includes('PREENCHIDA')) {
-          onTransicionarVaga?.(vagaId, 'PREENCHIDA')
+      if (overIdStr === 'acao:cadastro') {
+        if (etapaCadastroInicial) {
+          onRegistrarCandidato?.(vaga, etapaCadastroInicial)
         }
         return
       }
@@ -173,8 +189,12 @@ export function PessoasBoard({
             </div>
           )}
         </DragOverlay>
-        <LixeiraDock visivel={(!!activeCandidato && !!saida) || vagaEmTriagem} />
-        {onTransicionarVaga && <VagaAvancarDock visivel={vagaEmTriagem} status="PREENCHIDA" />}
+        <div className="pointer-events-none absolute bottom-5 right-5 z-30 flex items-center gap-3">
+          <LixeiraDock bare visivel={(!!activeCandidato && !!saida) || vagaEmTriagem} />
+          {onTransicionarVaga && (
+            <VagaAvancarDock bare visivel={podeAvancarParaCadastro} id="acao:cadastro" />
+          )}
+        </div>
       </DndContext>
     </div>
   )

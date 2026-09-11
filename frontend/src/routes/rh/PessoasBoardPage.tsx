@@ -44,6 +44,10 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
 
   const etapasTodas = etapasQuery.data ?? []
   const etapas = etapasTodas.filter((e) => e.exige_cadastro_completo !== soTriagem)
+  const etapaCadastroInicial =
+    etapasTodas
+      .filter((e) => e.exige_cadastro_completo && !e.is_saida_negativa)
+      .sort((a, b) => a.ordem - b.ordem)[0] ?? null
   const vagas = vagasQuery.data ?? []
   const candidatos = candidatosQuery.data ?? []
   const candidatosFiltrados = filters.apply(candidatos)
@@ -127,6 +131,7 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
               onMoveVagaEtapa={isRh ? handleMoveVagaEtapa : undefined}
               onRegistrarCandidato={isRh ? handleRegistrarCandidato : undefined}
               onTransicionarVaga={isRh && soTriagem ? handleTransicionarVaga : undefined}
+              etapaCadastroInicial={etapaCadastroInicial}
               selectedVagaId={selectedVagaId}
             />
           </div>

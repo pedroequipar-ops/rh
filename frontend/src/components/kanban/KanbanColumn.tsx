@@ -68,7 +68,7 @@ export function KanbanColumn({
           )}
         </span>
         <span className="rounded-full bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600">
-          {candidatos.length}
+          {candidatos.length + (vagasNaEtapa?.length ?? 0)}
         </span>
       </div>
       <div
