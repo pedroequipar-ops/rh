@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { Settings } from 'lucide-react'
+import { Settings, UserPlus, Upload, X } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { useEtapas } from '../../api/hooks/useEtapas'
 import { useVagas, useMoverVagaEtapa, useTransicionarVaga } from '../../api/hooks/useVagas'
@@ -14,6 +14,7 @@ import { useBoardFilters } from '../../components/board/useBoardFilters'
 import { BoardSwitcher } from '../../components/kanban/BoardSwitcher'
 import { PessoasBoard } from '../../components/kanban/PessoasBoard'
 import { EtapaColumnEditor } from '../../components/kanban/EtapaColumnEditor'
+import { BulkCurriculoDropzone } from '../../components/candidato/BulkCurriculoDropzone'
 import { vagaIdFromLocation } from '../../lib/selectedVaga'
 import type { EtapaKanban, Vaga, VagaStatus } from '../../types'
 
@@ -32,6 +33,8 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
   const rotaAtual = soTriagem ? 'triagem' : 'pessoas'
   const selectedVagaId = vagaIdFromLocation(location.pathname, location.search)
   const [editorOpen, setEditorOpen] = useState(false)
+  const [registroAlvo, setRegistroAlvo] = useState<{ vaga: Vaga; etapa: EtapaKanban } | null>(null)
+  const [importAlvo, setImportAlvo] = useState<{ vaga: Vaga; etapa: EtapaKanban } | null>(null)
 
   const etapasQuery = useEtapas()
   const vagasQuery = useVagas()
@@ -55,8 +58,8 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
   const totalTriagem = vagas.filter((v) => v.status === 'EM_TRIAGEM').length
   const loading = etapasQuery.isLoading || vagasQuery.isLoading || candidatosQuery.isLoading
 
-  function handleMoveCandidato(candidatoId: string, etapaId: string) {
-    moverEtapaCandidato.mutate({ id: candidatoId, etapaId })
+  function handleMoveCandidato(candidatoId: string, etapaId: string, motivo?: string) {
+    moverEtapaCandidato.mutate({ id: candidatoId, etapaId, motivo })
   }
 
   function handleMoveVagaEtapa(vagaId: string, etapaId: string) {
@@ -68,7 +71,7 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
   }
 
   function handleRegistrarCandidato(vaga: Vaga, etapa: EtapaKanban) {
-    navigate(`${base}/${rotaAtual}/novo-candidato?vaga=${vaga.id}&etapa=${etapa.id}`)
+    setRegistroAlvo({ vaga, etapa })
   }
 
   function handleEtapasChange() {
@@ -145,6 +148,72 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
           onClose={() => setEditorOpen(false)}
           onChange={handleEtapasChange}
           scopeExigeCadastroCompleto={!soTriagem}
+        />
+      )}
+
+      {registroAlvo && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={() => setRegistroAlvo(null)}
+        >
+          <div
+            className="w-full max-w-sm rounded-lg bg-white p-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-slate-800">
+                Cadastrar em "{registroAlvo.etapa.nome}"
+              </h2>
+              <button
+                onClick={() => setRegistroAlvo(null)}
+                className="text-slate-400 hover:text-slate-700"
+                aria-label="Fechar"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => {
+                  const { vaga, etapa } = registroAlvo
+                  setRegistroAlvo(null)
+                  navigate(`${base}/${rotaAtual}/novo-candidato?vaga=${vaga.id}&etapa=${etapa.id}`)
+                }}
+                className="flex items-center gap-2 rounded border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              >
+                <UserPlus size={15} /> Cadastrar um candidato
+              </button>
+              <button
+                onClick={() => {
+                  setImportAlvo(registroAlvo)
+                  setRegistroAlvo(null)
+                }}
+                className="flex items-center gap-2 rounded border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              >
+                <Upload size={15} /> Importar currículos em massa
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {importAlvo && (
+        <BulkCurriculoDropzone
+          vagaId={importAlvo.vaga.id}
+          etapaId={importAlvo.etapa.id}
+          cpfsExistentes={
+            new Set(
+              candidatos
+                .filter((c) => c.vaga_id === importAlvo.vaga.id)
+                .map((c) => c.cpf.replace(/\D/g, ''))
+                .filter(Boolean),
+            )
+          }
+          onCandidatoCriado={() => {
+            qc.invalidateQueries({ queryKey: queryKeys.vagas })
+            qc.invalidateQueries({ queryKey: queryKeys.candidatos })
+          }}
+          onClose={() => setImportAlvo(null)}
         />
       )}
     </div>

@@ -70,9 +70,10 @@ export async function getCurriculoUrl(id: string): Promise<string> {
   return data.curriculo_url
 }
 
-export async function moverEtapa(id: string, etapaId: string): Promise<Candidato> {
+export async function moverEtapa(id: string, etapaId: string, motivo?: string): Promise<Candidato> {
   const { data } = await apiClient.patch<Candidato>(`/candidatos/${id}/mover-etapa/`, {
     etapa_id: etapaId,
+    ...(motivo ? { motivo } : {}),
   })
   return data
 }

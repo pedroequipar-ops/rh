@@ -261,12 +261,33 @@ def test_mover_para_reprovado_marca_reprovado_em(
     client = _client_for(rh, company)
 
     response = client.patch(
-        f"/v1/candidatos/{candidato.id}/mover-etapa/", {"etapa_id": str(etapa_reprovado.id)}
+        f"/v1/candidatos/{candidato.id}/mover-etapa/",
+        {"etapa_id": str(etapa_reprovado.id), "motivo": "Não atendeu aos requisitos técnicos"},
     )
 
     assert response.status_code == 200
     candidato.refresh_from_db()
     assert candidato.reprovado_em is not None
+    assert candidato.motivo_reprovacao == "Não atendeu aos requisitos técnicos"
+
+
+@pytest.mark.django_db
+def test_mover_para_reprovado_sem_motivo_e_rejeitado(
+    company_factory, user_factory, etapa_factory, candidato_factory
+):
+    company = company_factory()
+    etapa_reprovado = etapa_factory(company=company, nome="Reprovado", is_saida_negativa=True)
+    candidato = candidato_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    response = client.patch(
+        f"/v1/candidatos/{candidato.id}/mover-etapa/", {"etapa_id": str(etapa_reprovado.id)}
+    )
+
+    assert response.status_code == 400
+    candidato.refresh_from_db()
+    assert candidato.reprovado_em is None
 
 
 @pytest.mark.django_db

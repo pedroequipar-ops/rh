@@ -31,8 +31,11 @@ class CandidatoRepository(ICandidatoRepository):
         candidato.soft_delete()
         return candidato
 
-    def mover_etapa(self, candidato, etapa):
+    def mover_etapa(self, candidato, etapa, motivo=""):
         candidato.etapa_atual = etapa
         candidato.reprovado_em = timezone.now() if etapa.is_saida_negativa else None
-        candidato.save(update_fields=["etapa_atual", "reprovado_em", "updated_at"])
+        candidato.motivo_reprovacao = motivo if etapa.is_saida_negativa else ""
+        candidato.save(
+            update_fields=["etapa_atual", "reprovado_em", "motivo_reprovacao", "updated_at"]
+        )
         return candidato

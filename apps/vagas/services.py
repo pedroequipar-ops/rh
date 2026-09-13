@@ -30,7 +30,7 @@ ALLOWED_TRANSITIONS = {
     S.EM_TRIAGEM: {S.PREENCHIDA, S.CANCELADA},
     S.CONGELADA: {S.CANCELADA},
     S.CANCELADA: set(),
-    S.PREENCHIDA: set(),
+    S.PREENCHIDA: {S.EM_TRIAGEM},
 }
 
 # Transições que um usuário SETOR pode disparar (de, para). Todo o resto é RH.
@@ -308,11 +308,14 @@ def aplicar_transicao(vaga, para, user, observacao="", *, extra_fields=None, che
     if stamp and getattr(vaga, stamp) is None:
         setattr(vaga, stamp, now)
         campos[stamp] = now
-    if para == S.EM_TRIAGEM and vaga.etapa_atual_id is None:
+    if para == S.EM_TRIAGEM and (vaga.etapa_atual_id is None or de == S.PREENCHIDA):
         etapa = etapa_triagem_inicial(vaga.company_id)
         if etapa is not None:
             vaga.etapa_atual = etapa
             campos["etapa_atual"] = etapa
+    if de == S.PREENCHIDA and para == S.EM_TRIAGEM:
+        vaga.fechada_em = None
+        campos["fechada_em"] = None
     if para in FECHAMENTO and vaga.fechada_em is None:
         vaga.fechada_em = now
         campos["fechada_em"] = now

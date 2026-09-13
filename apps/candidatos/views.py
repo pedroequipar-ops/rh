@@ -246,20 +246,32 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         except Exception:
             raise NotFound("Etapa não encontrada.")
 
-        candidato = self.repo.mover_etapa(candidato, etapa)
-        _notificar_mudanca_etapa(candidato, etapa, company_id)
+        motivo = serializer.validated_data.get("motivo", "").strip()
+        if etapa.is_saida_negativa and not motivo:
+            raise ValidationError(
+                {"motivo": "Obrigatório informar o motivo ao mover para a lixeira."}
+            )
+
+        candidato = self.repo.mover_etapa(candidato, etapa, motivo)
+        _notificar_mudanca_etapa(candidato, etapa, company_id, motivo)
         services.registrar_mudanca_etapa(candidato, etapa, request.user)
         return Response(CandidatoSerializer(candidato).data)
 
 
-def _notificar_mudanca_etapa(candidato, etapa, company_id):
+def _notificar_mudanca_etapa(candidato, etapa, company_id, motivo=""):
     setor_id = candidato.vaga.setor_id
     if not setor_id:
         return
     destinatarios = User.objects.filter(
         company_id=company_id, role="SETOR", setor_id=setor_id, is_active=True
     )
-    mensagem = f'"{candidato.nome}" mudou para a etapa "{etapa.nome}"'
+    if etapa.is_saida_negativa:
+        mensagem = (
+            f'"{candidato.nome}" não segue mais no processo seletivo '
+            f'da vaga "{candidato.vaga.titulo}". Motivo: {motivo}'
+        )
+    else:
+        mensagem = f'"{candidato.nome}" mudou para a etapa "{etapa.nome}"'
     CandidatoNotificacao.objects.bulk_create(
         [
             CandidatoNotificacao(

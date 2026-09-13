@@ -117,7 +117,7 @@ export function VagaKanbanCardContent({ vaga }: { vaga: Vaga }) {
 
 /** Menu "⋮" no canto do card — só aparece ao passar o mouse (ou fica aberto).
  * Um clique abre a lista com o nome da ação escrito; só o segundo clique,
- * numa opção específica, dispara a transição — sem gatilho por acidente. */
+ * numa opção específica, dispara a ação — sem gatilho por acidente. */
 function AcaoRapidaMenu({
   acoes,
   onAcao,
@@ -159,10 +159,7 @@ function AcaoRapidaMenu({
               setOpen(false)
               onAcao(acao.status)
             }}
-            className={clsx(
-              'flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-slate-50',
-              acao.tone === 'avancar' ? 'text-emerald-700' : 'text-red-700',
-            )}
+            className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-slate-700 hover:bg-slate-50"
           >
             <acao.icon size={14} />
             {acao.label}
@@ -178,10 +175,7 @@ interface VagaKanbanCardProps {
   draggable: boolean
   vagaModalBase: string
   selected?: boolean
-  /** rótulo mínimo — avatar do setor + título numa pill de linha única, pra
-   * listas compactas (ex.: dentro do popover de um VagaStatusChip) */
-  pill?: boolean
-  /** opções do menu ⋮ (Lixeira/Cancelar — ações destrutivas) — omitido = sem menu */
+  /** opções do menu ⋮ (Recusar/Congelar) — omitido = sem menu */
   acoesRapidas?: AcaoRapidaVaga[]
   onAcaoRapida?: (vagaId: string, status: VagaStatus) => void
 }
@@ -191,7 +185,6 @@ export function VagaKanbanCard({
   draggable,
   vagaModalBase,
   selected,
-  pill,
   acoesRapidas,
   onAcaoRapida,
 }: VagaKanbanCardProps) {
@@ -201,26 +194,6 @@ export function VagaKanbanCard({
     disabled: !draggable,
   })
   const emTriagem = vaga.status === 'EM_TRIAGEM'
-
-  if (pill) {
-    return (
-      <div
-        ref={setNodeRef}
-        data-vaga-card
-        onClick={() => navigate(`${vagaModalBase}/${vaga.id}`)}
-        {...(draggable ? { ...listeners, ...attributes } : {})}
-        className={clsx(
-          'flex w-full items-center gap-2 rounded-full border border-sky-200 bg-sky-50 py-1.5 pl-1.5 pr-3 shadow-sm transition hover:border-sky-300',
-          draggable && 'cursor-grab active:cursor-grabbing',
-          isDragging && 'opacity-60',
-          selected && 'ring-2 ring-blue-300',
-        )}
-      >
-        <Avatar name={vaga.setor.nome} size="xs" className="shrink-0" />
-        <span className="min-w-0 flex-1 truncate text-xs font-medium text-slate-800">{vaga.titulo}</span>
-      </div>
-    )
-  }
 
   return (
     <div

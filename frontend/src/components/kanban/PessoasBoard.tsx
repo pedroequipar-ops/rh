@@ -11,6 +11,8 @@ import {
 import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
 import { useToast } from '../../context/ToastContext'
 import { LixeiraDock } from '../board/LixeiraDock'
+import { Trash2 } from 'lucide-react'
+import { MotivoDialog } from './MotivoDialog'
 import { etapaSaidaNegativa, ordenarEtapas } from './etapaNav'
 import { useHorizontalWheel } from './useHorizontalWheel'
 import { CandidatoCardContent } from './CandidatoCard'
@@ -25,7 +27,7 @@ interface PessoasBoardProps {
   draggable: boolean
   candidatoModalBase: string
   vagaModalBase: string
-  onMoveCandidato?: (candidatoId: string, etapaId: string) => void
+  onMoveCandidato?: (candidatoId: string, etapaId: string, motivo?: string) => void
   onMoveVagaEtapa?: (vagaId: string, etapaId: string) => void
   onRegistrarCandidato?: (vaga: Vaga, etapa: EtapaKanban) => void
   /** Presente só na aba Triagem: liga os docks de arrastar "Avançar"
@@ -65,6 +67,11 @@ export function PessoasBoard({
 }: PessoasBoardProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
   const [activeId, setActiveId] = useState<string | null>(null)
+  const [lixeiraAlvo, setLixeiraAlvo] = useState<{
+    candidatoId: string
+    nome: string
+    etapaId: string
+  } | null>(null)
   const handleWheel = useHorizontalWheel()
   const { showToast } = useToast()
 
@@ -131,7 +138,7 @@ export function PessoasBoard({
         return
       }
       if (candidato.etapa_atual.id === saida.id) return
-      onMoveCandidato?.(activeIdStr, saida.id)
+      setLixeiraAlvo({ candidatoId: activeIdStr, nome: candidato.nome, etapaId: saida.id })
       return
     }
 
@@ -196,6 +203,21 @@ export function PessoasBoard({
           )}
         </div>
       </DndContext>
+      {lixeiraAlvo && (
+        <MotivoDialog
+          titulo="Mover pra lixeira"
+          pergunta={`Por que "${lixeiraAlvo.nome}" está saindo do processo?`}
+          contexto="Esse motivo vai pro setor que solicitou a vaga."
+          placeholder="Ex.: não atendeu aos requisitos técnicos da vaga"
+          confirmLabel="Mover pra lixeira"
+          icon={Trash2}
+          onCancelar={() => setLixeiraAlvo(null)}
+          onConfirmar={(motivo) => {
+            onMoveCandidato?.(lixeiraAlvo.candidatoId, lixeiraAlvo.etapaId, motivo)
+            setLixeiraAlvo(null)
+          }}
+        />
+      )}
     </div>
   )
 }
