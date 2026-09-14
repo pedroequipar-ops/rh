@@ -46,7 +46,10 @@ export function VagaStatusChip({
   const aceitaDrop = !!activeVaga && activeVaga.transicoes_disponiveis.includes(status)
   const dropInvalido = !!activeVaga && !aceitaDrop && activeVaga.status !== status
   const open = hover || openStatus === status
-  const visivel = open || !!activeVaga
+  // Só aparece arrastando quando é destino válido pra essa vaga (ex.: chip
+  // Recusada só some destino de Solicitada, Congelada só de Publicada) — uma
+  // vaga Aprovada sendo arrastada não acende nenhum dos dois.
+  const visivel = open || aceitaDrop
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { useVagas, useTransicionarVaga, useRecusarVaga } from '../../api/hooks/useVagas'
+import { useVagas, useTransicionarVaga } from '../../api/hooks/useVagas'
 import { useCandidatos } from '../../api/hooks/useCandidatos'
 import { useSetores } from '../../api/hooks/useSetores'
 import { useUsuarios } from '../../api/hooks/useUsuarios'
@@ -24,7 +24,6 @@ export function VagasBoardPage() {
   const setoresQuery = useSetores()
   const usuariosQuery = useUsuarios(isRh)
   const transicionarVaga = useTransicionarVaga()
-  const recusarVaga = useRecusarVaga()
   const filters = useBoardFilters('vagas')
 
   const vagas = vagasQuery.data ?? []
@@ -35,10 +34,6 @@ export function VagasBoardPage() {
 
   function handleMoveVaga(vagaId: string, status: VagaStatus, observacao?: string) {
     transicionarVaga.mutate({ id: vagaId, para: status, observacao })
-  }
-
-  function handleRecusarVaga(vagaId: string, motivo: string) {
-    recusarVaga.mutate({ id: vagaId, motivo })
   }
 
   return (
@@ -77,7 +72,6 @@ export function VagasBoardPage() {
               vagaModalBase={`${base}/vagas/vaga`}
               novaVagaHref={`${base}/vagas/nova-vaga`}
               onMoveVaga={isRh ? handleMoveVaga : undefined}
-              onRecusarVaga={isRh ? handleRecusarVaga : undefined}
               selectedVagaId={selectedVagaId}
             />
           </div>

@@ -78,6 +78,13 @@ export const STATUS_FORA_DO_FLUXO: VagaStatus[] = ['EM_TRIAGEM', 'CANCELADA']
  * uma vez lá, some do board até a exclusão automática em 12h. */
 export const STATUS_ORBS: VagaStatus[] = ['RECUSADA', 'CONGELADA']
 
+/** Chip de status de baixo volume que fica embaixo de outra coluna (ex.:
+ * Recusada sob Solicitada) em vez de virar coluna cheia própria. */
+export const CHIP_ABAIXO_DA_COLUNA: Partial<Record<VagaStatus, VagaStatus>> = {
+  SOLICITADA: 'RECUSADA',
+  PUBLICADA: 'CONGELADA',
+}
+
 export function statusLabel(status: VagaStatus): string {
   return VAGA_STATUS_META[status]?.label ?? status
 }

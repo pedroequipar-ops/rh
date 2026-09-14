@@ -25,8 +25,8 @@ ALLOWED_TRANSITIONS = {
     S.RASCUNHO: {S.SOLICITADA, S.CANCELADA},
     S.SOLICITADA: {S.APROVADA, S.RECUSADA, S.CANCELADA},
     S.RECUSADA: {S.SOLICITADA, S.CANCELADA},
-    S.APROVADA: {S.PUBLICADA, S.CONGELADA, S.CANCELADA},
-    S.PUBLICADA: {S.ENCERRADA, S.EM_TRIAGEM, S.CONGELADA, S.CANCELADA, S.PREENCHIDA},
+    S.APROVADA: {S.PUBLICADA, S.CANCELADA},
+    S.PUBLICADA: {S.RECUSADA, S.ENCERRADA, S.EM_TRIAGEM, S.CONGELADA, S.CANCELADA, S.PREENCHIDA},
     S.ENCERRADA: {S.EM_TRIAGEM, S.PUBLICADA, S.CANCELADA},
     S.EM_TRIAGEM: {S.PREENCHIDA, S.CANCELADA},
     S.CONGELADA: {S.CANCELADA},
@@ -353,6 +353,18 @@ def aplicar_transicao(vaga, para, user, observacao="", *, extra_fields=None, che
             User.objects.filter(id=vaga.criado_por_id, is_active=True),
             vaga,
             f'Vaga "{vaga.titulo}" foi recusada: {vaga.motivo_recusa or "sem motivo"}',
+        )
+    elif para in STATUS_LIXEIRA:
+        _notificar(
+            vaga.company_id,
+            User.objects.filter(
+                company_id=vaga.company_id,
+                role=User.Role.SETOR,
+                setor_id=vaga.setor_id,
+                is_active=True,
+            ),
+            vaga,
+            f'Vaga "{vaga.titulo}" foi descartada. Motivo: {observacao}',
         )
 
     return vaga

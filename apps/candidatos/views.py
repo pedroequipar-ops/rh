@@ -254,19 +254,22 @@ class CandidatoViewSet(viewsets.ModelViewSet):
             raise ValidationError({"motivo": "Informe o motivo."})
 
         candidato = self.repo.mover_etapa(candidato, etapa)
-        _notificar_mudanca_etapa(candidato, etapa, company_id)
+        _notificar_mudanca_etapa(candidato, etapa, company_id, motivo)
         services.registrar_mudanca_etapa(candidato, etapa, request.user, motivo=motivo)
         return Response(CandidatoSerializer(candidato).data)
 
 
-def _notificar_mudanca_etapa(candidato, etapa, company_id):
+def _notificar_mudanca_etapa(candidato, etapa, company_id, motivo=""):
     setor_id = candidato.vaga.setor_id
     if not setor_id:
         return
     destinatarios = list(
         User.objects.filter(company_id=company_id, role="SETOR", setor_id=setor_id, is_active=True)
     )
-    mensagem = f'"{candidato.nome}" mudou para a etapa "{etapa.nome}"'
+    if etapa.is_saida_negativa:
+        mensagem = f'"{candidato.nome}" foi descartado. Motivo: {motivo}'
+    else:
+        mensagem = f'"{candidato.nome}" mudou para a etapa "{etapa.nome}"'
     CandidatoNotificacao.objects.bulk_create(
         [
             CandidatoNotificacao(
