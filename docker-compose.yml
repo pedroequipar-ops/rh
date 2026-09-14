@@ -94,6 +94,33 @@ services:
       minio:
         condition: service_healthy
 
+  triagem-ia-worker:
+    build:
+      context: .
+      args:
+        REQUIREMENTS_FILE: requirements/development.txt
+    command: sh -c "while true; do python manage.py ingerir_emails_triagem; sleep 120; done"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      REDIS_URL: redis://redis:6379/0
+      REDIS_CHANNELS_URL: redis://redis:6379/1
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      MINIO_ENDPOINT: http://minio:9000
+      DJANGO_SETTINGS_MODULE: config.settings.development
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
   frontend:
     image: node:20-alpine
     working_dir: /app

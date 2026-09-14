@@ -5,6 +5,7 @@ const CONFIG_ITENS = [
   { to: '/config/setores', label: 'Setores' },
   { to: '/config/candidatos', label: 'Candidatos cadastrados' },
   { to: '/config/vagas-ativas', label: 'Vagas ativas' },
+  { to: '/config/triagem-ia', label: 'Triagem por IA' },
 ]
 
 function NavItem({ to, label }: { to: string; label: string }) {

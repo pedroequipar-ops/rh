@@ -4,11 +4,16 @@ from datetime import timedelta
 from django.conf import settings
 from django.utils import timezone
 from django.utils.module_loading import import_string
+from docx import Document as DocxDocument
 from pypdf import PdfReader
 
+from apps.accounts.models import User
 from apps.atividade import services as atividade_services
 from apps.core.logger import LoggerEngine
+from apps.core.notificacoes_ws import publicar_notificacao
+from apps.vagas.models import EtapaKanban, Vaga
 from apps.vagas.repositories.vaga_repository import VagaRepository
+from utils.queue import QueueEngine
 from utils.storage import MinioStorage
 
 from .interfaces.i_curriculo_extractor import CandidatoExtraidoDTO
@@ -16,6 +21,21 @@ from .interfaces.i_curriculo_extractor import CandidatoExtraidoDTO
 log = LoggerEngine(__name__)
 
 DIAS_PARA_EXCLUIR_REPROVADO = 30
+
+# Status de vaga em que criar um Candidato ainda não é permitido / que
+# disparam a auto-transição pra EM_TRIAGEM no primeiro candidato. Compartilhado
+# entre o fluxo manual (views.py) e a Triagem por IA (apps/triagem_ia).
+VAGA_BLOQUEIA_CANDIDATO = {
+    Vaga.Status.RASCUNHO,
+    Vaga.Status.SOLICITADA,
+    Vaga.Status.RECUSADA,
+    Vaga.Status.APROVADA,
+    Vaga.Status.CANCELADA,
+}
+VAGA_ABRE_TRIAGEM = {
+    Vaga.Status.PUBLICADA,
+    Vaga.Status.ENCERRADA,
+}
 
 
 def can_access_candidato(user, candidato) -> bool:
@@ -68,8 +88,130 @@ def _extrair_texto_pdf(conteudo: bytes) -> str:
     return "\n".join(page.extract_text() or "" for page in reader.pages)
 
 
+def _extrair_texto_docx(conteudo: bytes) -> str:
+    documento = DocxDocument(io.BytesIO(conteudo))
+    return "\n".join(paragrafo.text for paragrafo in documento.paragraphs)
+
+
+CONTENT_TYPES_DOCX = {
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/msword",
+}
+
+
+class AnexoNaoSuportadoError(Exception):
+    pass
+
+
+def extrair_texto_anexo(conteudo: bytes, content_type: str) -> str:
+    """Extrai o texto de um currículo em PDF ou .docx. Usado tanto pelo
+    upload manual (sempre PDF) quanto pela Triagem por IA (apps/triagem_ia),
+    que também recebe .docx por e-mail."""
+    if content_type in CONTENT_TYPES_DOCX:
+        return _extrair_texto_docx(conteudo)
+    if content_type == "application/pdf":
+        return _extrair_texto_pdf(conteudo)
+    raise AnexoNaoSuportadoError(f"Tipo de anexo não suportado: {content_type}")
+
+
 class CurriculoExtractionError(Exception):
     pass
+
+
+def etapa_inicial(company_id):
+    """Etapa onde uma pessoa recém-cadastrada entra: a primeira que exige
+    cadastro completo (ex.: Perfil Comportamental). Antes dela quem circula
+    é o card da vaga, não o candidato."""
+    base = EtapaKanban.objects.filter(company_id=company_id, is_saida_negativa=False)
+    etapa = base.filter(exige_cadastro_completo=True).order_by("ordem").first()
+    if etapa is None:
+        etapa = base.filter(nome="Triagem").first()
+    if etapa is None:
+        etapa = base.order_by("ordem").first()
+    return etapa
+
+
+def notificar_mudanca_etapa(candidato, etapa, company_id, motivo=""):
+    from .models import CandidatoNotificacao
+
+    setor_id = candidato.vaga.setor_id
+    if not setor_id:
+        return
+    destinatarios = list(
+        User.objects.filter(company_id=company_id, role="SETOR", setor_id=setor_id, is_active=True)
+    )
+    if etapa.is_saida_negativa:
+        mensagem = f'"{candidato.nome}" foi descartado. Motivo: {motivo}'
+    else:
+        mensagem = f'"{candidato.nome}" mudou para a etapa "{etapa.nome}"'
+    CandidatoNotificacao.objects.bulk_create(
+        [
+            CandidatoNotificacao(
+                company_id=company_id,
+                destinatario=user,
+                candidato=candidato,
+                mensagem=mensagem,
+            )
+            for user in destinatarios
+        ]
+    )
+    for user in destinatarios:
+        publicar_notificacao(
+            user.id,
+            "candidato",
+            {"mensagem": mensagem, "candidato_id": str(candidato.id)},
+        )
+
+
+def criar_candidato(
+    *,
+    company_id,
+    vaga,
+    dados: dict,
+    cadastrado_por,
+    etapa_atual=None,
+    motivo_reprovacao="",
+    reprovado_em=None,
+):
+    """Cria um Candidato "de verdade" fora do fluxo manual de cadastro —
+    usado pela Triagem por IA (apps/triagem_ia) quando o RH decide trazer um
+    currículo pro funil, pro banco de talentos ou descartar. Espelha os
+    mesmos efeitos colaterais de ``CandidatoViewSet.perform_create``."""
+    from .models import Candidato
+
+    etapa = etapa_atual or etapa_inicial(company_id)
+    candidato = Candidato.objects.create(
+        company_id=company_id,
+        vaga=vaga,
+        etapa_atual=etapa,
+        cadastrado_por=cadastrado_por,
+        motivo_reprovacao=motivo_reprovacao,
+        reprovado_em=reprovado_em,
+        **dados,
+    )
+    registrar_cadastro(candidato, cadastrado_por)
+    if etapa is not None and etapa.is_saida_negativa:
+        notificar_mudanca_etapa(candidato, etapa, company_id, motivo_reprovacao)
+    if vaga.status in VAGA_ABRE_TRIAGEM and not vaga.is_banco_talentos:
+        from apps.vagas import services as vagas_services
+
+        vagas_services.aplicar_transicao(
+            vaga,
+            Vaga.Status.EM_TRIAGEM,
+            cadastrado_por,
+            "auto: primeiro candidato cadastrado",
+            checar_papel=False,
+        )
+    QueueEngine().publish(
+        "notifications",
+        {
+            "tipo": "candidato_cadastrado",
+            "candidato_id": str(candidato.id),
+            "vaga_id": str(candidato.vaga_id),
+            "company_id": str(company_id),
+        },
+    )
+    return candidato
 
 
 def extrair_dados_candidato(curriculo_key: str, company_id: str) -> CandidatoExtraidoDTO:

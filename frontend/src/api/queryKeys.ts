@@ -17,4 +17,10 @@ export const queryKeys = {
 
   tarefas: ['tarefas'] as const,
   tarefasList: (params: object) => ['tarefas', 'list', params] as const,
+
+  triagemIa: ['triagem-ia'] as const,
+  triagemIaVaga: (vagaId: string) => ['triagem-ia', 'vaga', vagaId] as const,
+  triagemIaNaoRoteados: ['triagem-ia', 'nao-roteados'] as const,
+  triagemIaConfig: (vagaId?: string) => ['triagem-ia', 'config', vagaId ?? null] as const,
+  caixasEntradaEmail: ['caixa-entrada-email'] as const,
 }

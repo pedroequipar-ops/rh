@@ -9,12 +9,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.accounts.models import User
-from apps.core.notificacoes_ws import publicar_notificacao
 from apps.core.pagination import StandardPagination
 from apps.core.permissions import HasFunctionPermission
 from apps.vagas import services as vagas_services
-from apps.vagas.models import EtapaKanban, Vaga
+from apps.vagas.models import Vaga
 from apps.vagas.repositories.etapa_repository import EtapaRepository
 from utils.queue import QueueEngine
 from utils.storage import MinioStorage
@@ -33,32 +31,6 @@ from .serializers import (
     UploadUrlRequestSerializer,
     UploadUrlResponseSerializer,
 )
-
-
-_VAGA_BLOQUEIA_CANDIDATO = {
-    Vaga.Status.RASCUNHO,
-    Vaga.Status.SOLICITADA,
-    Vaga.Status.RECUSADA,
-    Vaga.Status.APROVADA,
-    Vaga.Status.CANCELADA,
-}
-_VAGA_ABRE_TRIAGEM = {
-    Vaga.Status.PUBLICADA,
-    Vaga.Status.ENCERRADA,
-}
-
-
-def _etapa_inicial(company_id):
-    """Etapa onde uma pessoa recém-cadastrada entra: a primeira que exige
-    cadastro completo (ex.: Perfil Comportamental). Antes dela quem circula
-    é o card da vaga, não o candidato."""
-    base = EtapaKanban.objects.filter(company_id=company_id, is_saida_negativa=False)
-    etapa = base.filter(exige_cadastro_completo=True).order_by("ordem").first()
-    if etapa is None:
-        etapa = base.filter(nome="Triagem").first()
-    if etapa is None:
-        etapa = base.order_by("ordem").first()
-    return etapa
 
 
 def _bucket():
@@ -112,16 +84,16 @@ class CandidatoViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         company_id = capture_company_id(self.request)
         vaga = serializer.validated_data["vaga"]
-        if vaga.status in _VAGA_BLOQUEIA_CANDIDATO:
+        if vaga.status in services.VAGA_BLOQUEIA_CANDIDATO:
             raise ValidationError(
                 {"vaga_id": "Vaga ainda não está recebendo candidaturas."}
             )
         extra = {"company_id": company_id, "cadastrado_por": self.request.user}
         if "etapa_atual" not in serializer.validated_data:
-            extra["etapa_atual"] = _etapa_inicial(company_id)
+            extra["etapa_atual"] = services.etapa_inicial(company_id)
         candidato = serializer.save(**extra)
         services.registrar_cadastro(candidato, self.request.user)
-        if vaga.status in _VAGA_ABRE_TRIAGEM:
+        if vaga.status in services.VAGA_ABRE_TRIAGEM:
             vagas_services.aplicar_transicao(
                 vaga,
                 Vaga.Status.EM_TRIAGEM,
@@ -254,39 +226,9 @@ class CandidatoViewSet(viewsets.ModelViewSet):
             raise ValidationError({"motivo": "Informe o motivo."})
 
         candidato = self.repo.mover_etapa(candidato, etapa)
-        _notificar_mudanca_etapa(candidato, etapa, company_id, motivo)
+        services.notificar_mudanca_etapa(candidato, etapa, company_id, motivo)
         services.registrar_mudanca_etapa(candidato, etapa, request.user, motivo=motivo)
         return Response(CandidatoSerializer(candidato).data)
-
-
-def _notificar_mudanca_etapa(candidato, etapa, company_id, motivo=""):
-    setor_id = candidato.vaga.setor_id
-    if not setor_id:
-        return
-    destinatarios = list(
-        User.objects.filter(company_id=company_id, role="SETOR", setor_id=setor_id, is_active=True)
-    )
-    if etapa.is_saida_negativa:
-        mensagem = f'"{candidato.nome}" foi descartado. Motivo: {motivo}'
-    else:
-        mensagem = f'"{candidato.nome}" mudou para a etapa "{etapa.nome}"'
-    CandidatoNotificacao.objects.bulk_create(
-        [
-            CandidatoNotificacao(
-                company_id=company_id,
-                destinatario=user,
-                candidato=candidato,
-                mensagem=mensagem,
-            )
-            for user in destinatarios
-        ]
-    )
-    for user in destinatarios:
-        publicar_notificacao(
-            user.id,
-            "candidato",
-            {"mensagem": mensagem, "candidato_id": str(candidato.id)},
-        )
 
 
 class CandidatoNotificacaoListView(generics.ListAPIView):

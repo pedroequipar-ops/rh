@@ -4,6 +4,7 @@ from apps.accounts.tests.factories import CompanyFactory, SetorFactory, UserFact
 from apps.candidatos.tests.factories import CandidatoFactory
 from apps.chat.tests.factories import ChatMensagemFactory
 from apps.tarefas.tests.factories import TarefaFactory
+from apps.triagem_ia.tests.factories import CaixaEntradaEmailFactory, CandidatoTriagemIAFactory
 from apps.vagas.tests.factories import EtapaKanbanFactory, VagaFactory
 
 
@@ -45,3 +46,13 @@ def chat_mensagem_factory():
 @pytest.fixture
 def tarefa_factory():
     return TarefaFactory
+
+
+@pytest.fixture
+def caixa_entrada_factory():
+    return CaixaEntradaEmailFactory
+
+
+@pytest.fixture
+def triagem_ia_factory():
+    return CandidatoTriagemIAFactory

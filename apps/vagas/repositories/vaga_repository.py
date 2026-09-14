@@ -19,7 +19,7 @@ class VagaRepository(IVagaRepository):
 
     def list_by_company(self, company_id):
         return (
-            Vaga.objects.filter(company_id=company_id)
+            Vaga.objects.filter(company_id=company_id, is_banco_talentos=False)
             .select_related("setor", "aprovada_por", "etapa_atual", "responsavel")
             .annotate(_n_cand=Count("candidatos", filter=Q(candidatos__active=True)))
             .order_by(*_ORDEM_FLUXO)

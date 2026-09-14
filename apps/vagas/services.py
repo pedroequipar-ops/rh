@@ -9,13 +9,17 @@ from datetime import timedelta
 
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.text import slugify
 from rest_framework.exceptions import PermissionDenied, ValidationError
 
-from apps.accounts.models import User
+from apps.accounts.models import Setor, User
 from apps.atividade import services as atividade_services
 from apps.core.notificacoes_ws import publicar_notificacao
 
 from .models import EtapaKanban, Vaga, VagaCobranca, VagaHistoricoStatus, VagaNotificacao
+
+NOME_SETOR_BANCO_TALENTOS = "Banco de Talentos"
+NOME_VAGA_BANCO_TALENTOS = "Banco de Talentos"
 
 S = Vaga.Status
 
@@ -423,3 +427,38 @@ def cobrar_vaga(vaga, autor, mensagem=""):
         autor, "cobrou_responsavel", vaga, resumo=f"cobrou o responsável ({len(alvos)} pessoa(s))"
     )
     return len(alvos)
+
+
+def garantir_vaga_banco_talentos(company_id, criado_por) -> Vaga:
+    """Vaga "pseudo", uma por empresa, que guarda o Banco de Talentos (ver
+    apps/triagem_ia). Fica sempre PUBLICADA (nunca bloqueia criação de
+    Candidato) e é excluída do board normal em
+    ``VagaRepository.list_by_company``. ``criado_por`` é sempre um usuário RH
+    de verdade (quem clicou a ação), já que essa vaga só nasce sob demanda."""
+    vaga = Vaga.objects.filter(company_id=company_id, is_banco_talentos=True).first()
+    if vaga is not None:
+        return vaga
+
+    setor, _ = Setor.objects.get_or_create(
+        company_id=company_id, nome=NOME_SETOR_BANCO_TALENTOS
+    )
+    return Vaga.objects.create(
+        company_id=company_id,
+        titulo=NOME_VAGA_BANCO_TALENTOS,
+        is_banco_talentos=True,
+        setor=setor,
+        status=Vaga.Status.PUBLICADA,
+        criado_por=criado_por,
+    )
+
+
+def garantir_codigo_email(vaga) -> str:
+    """Gera (uma vez) o código curto usado pra rotear e-mail de candidatura
+    pra essa vaga — ver apps/triagem_ia/services.py."""
+    if vaga.codigo_email:
+        return vaga.codigo_email
+    base = slugify(vaga.titulo)[:40] or "vaga"
+    sufixo = str(vaga.id).replace("-", "")[:4]
+    vaga.codigo_email = f"{base}-{sufixo}"
+    vaga.save(update_fields=["codigo_email", "updated_at"])
+    return vaga.codigo_email

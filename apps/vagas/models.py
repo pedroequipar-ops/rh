@@ -48,6 +48,16 @@ class Vaga(TimeStampedModel):
 
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="vagas")
     titulo = models.CharField(max_length=255)
+    # Vaga "pseudo" única por empresa, criada sob demanda pra guardar o Banco
+    # de Talentos (candidatos triados por IA que não são pra essa vaga, mas
+    # podem servir outra). Reaproveita todo o model/kanban/notificação de
+    # Vaga/Candidato existente em vez de inventar um pool separado — ver
+    # apps/vagas/services.py::garantir_vaga_banco_talentos.
+    is_banco_talentos = models.BooleanField(default=False)
+    # Slug curto usado no roteamento de e-mail da Triagem por IA
+    # (endereço com +tag ou tag [VAGA:...] no assunto). Só preenchido quando
+    # a vaga é publicada; ver apps/triagem_ia/services.py.
+    codigo_email = models.SlugField(max_length=60, blank=True, default="")
     descricao = models.TextField(blank=True, default="")
     requisitos = models.TextField(blank=True, default="")
     quantidade_vagas = models.PositiveIntegerField(default=1)

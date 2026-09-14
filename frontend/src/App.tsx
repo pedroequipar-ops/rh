@@ -12,6 +12,7 @@ import { SetoresConfig } from './routes/config/SetoresConfig'
 import { EmpresaConfig } from './routes/config/EmpresaConfig'
 import { CandidatosConfig } from './routes/config/CandidatosConfig'
 import { VagasAtivasConfig } from './routes/config/VagasAtivasConfig'
+import { TriagemIaConfig } from './routes/config/TriagemIaConfig'
 import { VagasBoardPage } from './routes/rh/VagasBoardPage'
 import { PessoasBoardPage } from './routes/rh/PessoasBoardPage'
 import { VagaFormPage } from './routes/rh/VagaFormPage'
@@ -76,6 +77,7 @@ export default function App() {
                 <Route path="novo-candidato" element={<CandidatoFormPage />} />
               </Route>
               <Route path="vagas-ativas" element={<VagasAtivasConfig />} />
+              <Route path="triagem-ia" element={<TriagemIaConfig />} />
               <Route path="empresa" element={<EmpresaConfig />} />
               <Route path="listagem" element={<Navigate to="/config/setores" replace />} />
             </Route>

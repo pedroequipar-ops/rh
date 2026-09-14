@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "apps.dashboard",
     "apps.tarefas",
     "apps.relatorios",
+    "apps.triagem_ia",
 ]
 
 MIDDLEWARE = [
@@ -173,6 +174,30 @@ CURRICULO_EXTRACTOR_CLASS = env(
 )
 GROQ_API_KEY = env("GROQ_API_KEY", default="")
 GROQ_MODEL = env("GROQ_MODEL", default="openai/gpt-oss-120b")
+
+TRIAGEM_IA_EXTRACTOR_CLASS = env(
+    "TRIAGEM_IA_EXTRACTOR_CLASS",
+    default="apps.candidatos.extractors.groq_triagem_extractor.GroqTriagemIaExtractor",
+)
+# Chave Fernet dedicada pra cifrar a senha da caixa de e-mail da Triagem por
+# IA (apps/triagem_ia/crypto.py) — de propósito, não deriva de SECRET_KEY,
+# pra poder ser rotacionada sem mexer na chave de sessão/JWT.
+TRIAGEM_IA_ENCRYPTION_KEY = env("TRIAGEM_IA_ENCRYPTION_KEY", default="")
+
+# OAuth "Conectar com Google" (Gmail) pra Triagem por IA — Client ID/Secret
+# vêm do Google Cloud Console (Gmail API + tela de consentimento OAuth),
+# REDIRECT_URI precisa estar cadastrada lá, idêntica. Em branco = botão
+# "Conectar com Google" mostra erro amigável em vez de tentar e quebrar.
+GOOGLE_OAUTH_CLIENT_ID = env("GOOGLE_OAUTH_CLIENT_ID", default="")
+GOOGLE_OAUTH_CLIENT_SECRET = env("GOOGLE_OAUTH_CLIENT_SECRET", default="")
+GOOGLE_OAUTH_REDIRECT_URI = env(
+    "GOOGLE_OAUTH_REDIRECT_URI",
+    default="http://localhost:8000/v1/triagem-ia-google/callback/",
+)
+# Pra onde o navegador volta depois do callback do Google.
+TRIAGEM_IA_FRONTEND_URL = env(
+    "TRIAGEM_IA_FRONTEND_URL", default="http://localhost:5173/config/triagem-ia"
+)
 
 LOGS_DIR = BASE_DIR / "logs"
 LOGS_DIR.mkdir(exist_ok=True)

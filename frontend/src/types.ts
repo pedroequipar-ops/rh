@@ -196,6 +196,56 @@ export interface ChatMensagem {
   created_at: string
 }
 
+export type StatusTriagemIA = 'PENDENTE' | 'PROCESSANDO' | 'PRONTO' | 'ERRO' | 'RESOLVIDO'
+
+export interface CandidatoTriagemIA {
+  id: string
+  vaga_id: string | null
+  vaga_titulo: string
+  email_remetente: string
+  nome_remetente: string
+  assunto_email: string
+  nome_extraido: string
+  email_extraido: string
+  telefone_extraido: string
+  cpf_extraido: string
+  linkedin_extraido: string
+  perfil_formacao: string
+  perfil_experiencia: string
+  perfil_habilidades: string
+  perfil_certificacoes: string
+  curriculo_key: string
+  score: number | null
+  justificativa_ia: string
+  destaque: boolean
+  status: StatusTriagemIA
+  erro_detalhe: string
+  candidato_resultante_id: string | null
+  resolvido_em: string | null
+  created_at: string
+}
+
+export interface TriagemIaConfig {
+  caixa_configurada: boolean
+  caixa_usuario: string
+  vaga_codigo_email: string | null
+}
+
+export type ProviderCaixaEntrada = 'IMAP' | 'GOOGLE'
+
+export interface CaixaEntradaEmail {
+  id: string
+  provider: ProviderCaixaEntrada
+  host: string
+  porta: number
+  usar_ssl: boolean
+  usuario: string
+  pasta: string
+  ativo: boolean
+  ultima_verificacao_em: string | null
+  ultimo_erro: string
+}
+
 export interface Paginated<T> {
   count: number
   next: string | null

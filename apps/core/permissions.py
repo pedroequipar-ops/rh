@@ -38,6 +38,8 @@ ROLE_PERMISSIONS = {
         "tarefas.create",
         "tarefas.edit",
         "tarefas.delete",
+        "triagem_ia.view",
+        "triagem_ia.decidir",
     },
     "SETOR": {
         "setores.view",

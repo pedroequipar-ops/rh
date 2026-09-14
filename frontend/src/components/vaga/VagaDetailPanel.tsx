@@ -8,6 +8,7 @@ import { BulkCurriculoDropzone } from '../candidato/BulkCurriculoDropzone'
 import { ChatPanel } from '../candidato/ChatPanel'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
 import { TarefasSection } from '../tarefas/TarefasSection'
+import { TriagemIaPanel } from './TriagemIaPanel'
 import { Badge, Button, IconAction, InlineEdit, Select, Textarea, Tabs, TagInput } from '../ui'
 import {
   useAprovarVaga,
@@ -93,7 +94,9 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const candidatosQuery = useCandidatosDaVaga(vaga.id)
   const historicoQuery = useVagaHistorico(vaga.id)
 
-  const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'chat' | 'atividade'>('detalhes')
+  const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'triagem-ia' | 'chat' | 'atividade'>(
+    'detalhes',
+  )
   const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | 'cobrar' | null>(null)
   const [importOpen, setImportOpen] = useState(false)
   const [motivoRecusa, setMotivoRecusa] = useState('')
@@ -344,6 +347,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
         tabs={[
           { value: 'detalhes', label: 'Detalhes' },
           ...(emPessoas ? [{ value: 'candidatos', label: 'Candidatos' }] : []),
+          ...(isRh ? [{ value: 'triagem-ia', label: 'Triagem IA' }] : []),
           { value: 'chat', label: 'Chat' },
           { value: 'atividade', label: 'Atividade' },
         ]}
@@ -548,6 +552,12 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               <span className="shrink-0 text-xs text-slate-400">{c.etapa_atual.nome}</span>
             </button>
           ))}
+        </div>
+      )}
+
+      {aba === 'triagem-ia' && (
+        <div className="scrollbar-thin min-h-0 flex-1 overflow-y-auto p-4">
+          <TriagemIaPanel vagaId={vaga.id} />
         </div>
       )}
 

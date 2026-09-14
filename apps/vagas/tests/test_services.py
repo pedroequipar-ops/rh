@@ -39,3 +39,48 @@ def test_atrasada_q_tem_paridade_com_prazo_estourado(company_factory, setor_fact
 
     assert encontrado_pelo_q == esperado_por_python
     assert len(esperado_por_python) == 2
+
+
+@pytest.mark.django_db
+def test_garantir_vaga_banco_talentos_e_idempotente(company_factory, user_factory):
+    from apps.accounts.models import User
+
+    company = company_factory()
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    primeira = services.garantir_vaga_banco_talentos(company.id, rh)
+    segunda = services.garantir_vaga_banco_talentos(company.id, rh)
+
+    assert primeira.id == segunda.id
+    assert primeira.is_banco_talentos is True
+    assert primeira.status == Vaga.Status.PUBLICADA
+
+
+@pytest.mark.django_db
+def test_banco_talentos_excluido_do_board(company_factory, setor_factory, vaga_factory, user_factory):
+    from apps.accounts.models import User
+    from apps.vagas.repositories.vaga_repository import VagaRepository
+
+    company = company_factory()
+    setor = setor_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    vaga_normal = vaga_factory(company=company, setor=setor)
+    vaga_pool = services.garantir_vaga_banco_talentos(company.id, rh)
+
+    ids_no_board = set(VagaRepository().list_by_company(company.id).values_list("id", flat=True))
+
+    assert vaga_normal.id in ids_no_board
+    assert vaga_pool.id not in ids_no_board
+
+
+@pytest.mark.django_db
+def test_garantir_codigo_email_gera_uma_vez_so(company_factory, setor_factory, vaga_factory):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    vaga = vaga_factory(company=company, setor=setor, titulo="Analista Financeiro")
+
+    codigo1 = services.garantir_codigo_email(vaga)
+    codigo2 = services.garantir_codigo_email(vaga)
+
+    assert codigo1 == codigo2
+    assert codigo1.startswith("analista-financeiro")
