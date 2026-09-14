@@ -100,6 +100,8 @@ class CandidatoSerializer(serializers.ModelSerializer):
             "ordem",
             "curriculo_key",
             "curriculo_content_type",
+            "reprovado_em",
+            "motivo_reprovacao",
             "cadastrado_por",
             "responsavel",
             "responsavel_id",
@@ -107,7 +109,14 @@ class CandidatoSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "cadastrado_por", "created_at", "updated_at"]
+        read_only_fields = [
+            "id",
+            "cadastrado_por",
+            "reprovado_em",
+            "motivo_reprovacao",
+            "created_at",
+            "updated_at",
+        ]
 
 
 class CandidatoMoverEtapaSerializer(serializers.Serializer):

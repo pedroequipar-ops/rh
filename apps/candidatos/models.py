@@ -25,6 +25,7 @@ class Candidato(TimeStampedModel):
     curriculo_key = models.CharField(max_length=500, blank=True, default="")
     curriculo_content_type = models.CharField(max_length=100, default="application/pdf")
     reprovado_em = models.DateTimeField(null=True, blank=True)
+    motivo_reprovacao = models.TextField(blank=True, default="")
     cadastrado_por = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="candidatos_cadastrados"
     )

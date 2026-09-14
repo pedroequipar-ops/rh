@@ -83,6 +83,7 @@ export function useMoverEtapaCandidato() {
         qc.setQueryData(queryKeys.candidatosList, ctx.listaAnterior)
         qc.setQueryData(queryKeys.candidato(ctx.id), ctx.detalheAnterior)
       }
+      showToast('Não foi possível mover o candidato', 'error')
     },
     onSuccess: (atualizado) => {
       qc.setQueryData<Candidato[]>(queryKeys.candidatosList, (old) =>

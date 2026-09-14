@@ -151,7 +151,7 @@ export function BulkCurriculoDropzone({
           >
             <UploadCloud size={22} className="text-slate-400" />
             <p className="text-sm text-slate-600">Arraste PDFs aqui ou clique para selecionar</p>
-            <p className="text-xs text-slate-400">Até 25MB cada · máx. 30 por importação · até 3 em paralelo</p>
+            <p className="text-xs text-slate-400">Até 25MB cada · máx. 30 por importação, todos em paralelo</p>
           </div>
         </div>
 

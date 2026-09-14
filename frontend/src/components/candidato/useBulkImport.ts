@@ -3,9 +3,9 @@ import { analisarCurriculo, createCandidato, getUploadUrl, uploadCurriculo } fro
 import { pLimit } from '../../lib/pLimit'
 import type { CandidatoExtraido } from '../../types'
 
-const CONCORRENCIA = 3
 const MAX_CURRICULO_SIZE_BYTES = 25 * 1024 * 1024
 const MAX_ARQUIVOS_POR_IMPORTACAO = 30
+const CONCORRENCIA = MAX_ARQUIVOS_POR_IMPORTACAO
 
 export type LinhaStatus =
   | 'fila'
