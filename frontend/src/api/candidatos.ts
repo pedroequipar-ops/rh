@@ -65,6 +65,18 @@ export async function listCandidatos(): Promise<Candidato[]> {
   return fetchAll<Candidato>('/candidatos/')
 }
 
+export interface BuscaCandidatosIaResponse {
+  interpretacao: string
+  resultados: Candidato[]
+}
+
+export async function buscarCandidatosComIa(frase: string): Promise<BuscaCandidatosIaResponse> {
+  const { data } = await apiClient.post<BuscaCandidatosIaResponse>('/candidatos/busca-ia/', {
+    frase,
+  })
+  return data
+}
+
 export async function getCurriculoUrl(id: string): Promise<string> {
   const { data } = await apiClient.get<{ curriculo_url: string }>(`/candidatos/${id}/curriculo-url/`)
   return data.curriculo_url

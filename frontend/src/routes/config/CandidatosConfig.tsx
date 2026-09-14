@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { Trash2 } from 'lucide-react'
 import { useCandidatos, useDeleteCandidato } from '../../api/hooks/useCandidatos'
 import { ConfirmDialog } from '../../components/common/ConfirmDialog'
+import { BuscaCandidatosIa, type BuscaCandidatosIaResultado } from '../../components/candidato/BuscaCandidatosIa'
 import { CandidatosTable } from '../listagem/CandidatosTable'
 import type { Candidato } from '../../types'
 
@@ -13,8 +14,9 @@ export function CandidatosConfig() {
   const [paraExcluir, setParaExcluir] = useState<Candidato | null>(null)
   const [selecionados, setSelecionados] = useState<Set<string>>(new Set())
   const [confirmarExclusaoEmMassa, setConfirmarExclusaoEmMassa] = useState(false)
+  const [buscaIa, setBuscaIa] = useState<BuscaCandidatosIaResultado | null>(null)
 
-  const candidatos = candidatosQuery.data ?? []
+  const candidatos = buscaIa ? buscaIa.resultados : candidatosQuery.data ?? []
 
   function toggleSelecionado(id: string) {
     setSelecionados((prev) => {
@@ -42,7 +44,10 @@ export function CandidatosConfig() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col gap-3">
+      <div className="flex justify-end">
+        <BuscaCandidatosIa onResultado={setBuscaIa} />
+      </div>
       {candidatosQuery.isLoading ? (
         <p className="text-sm text-slate-400">Carregando...</p>
       ) : (

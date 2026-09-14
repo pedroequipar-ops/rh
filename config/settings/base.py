@@ -179,6 +179,11 @@ TRIAGEM_IA_EXTRACTOR_CLASS = env(
     "TRIAGEM_IA_EXTRACTOR_CLASS",
     default="apps.candidatos.extractors.groq_triagem_extractor.GroqTriagemIaExtractor",
 )
+
+CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS = env(
+    "CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS",
+    default="apps.candidatos.extractors.groq_busca_extractor.GroqBuscaCandidatosExtractor",
+)
 # Chave Fernet dedicada pra cifrar a senha da caixa de e-mail da Triagem por
 # IA (apps/triagem_ia/crypto.py) — de propósito, não deriva de SECRET_KEY,
 # pra poder ser rotacionada sem mexer na chave de sessão/JWT.

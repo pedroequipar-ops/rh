@@ -5,6 +5,7 @@ import {
   type QueryClient,
 } from '@tanstack/react-query'
 import {
+  buscarCandidatosComIa,
   createCandidato,
   deleteCandidato,
   getCandidato,
@@ -37,6 +38,14 @@ export function useCandidato(id: string | undefined) {
     queryKey: queryKeys.candidato(id ?? ''),
     queryFn: () => getCandidato(id as string),
     enabled: Boolean(id),
+  })
+}
+
+export function useBuscaCandidatosIa() {
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: (frase: string) => buscarCandidatosComIa(frase),
+    onError: () => showToast('Não foi possível interpretar essa busca agora', 'error'),
   })
 }
 

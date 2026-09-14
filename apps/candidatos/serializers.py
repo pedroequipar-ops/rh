@@ -156,6 +156,10 @@ class CurriculoUrlResponseSerializer(serializers.Serializer):
     curriculo_url = serializers.CharField()
 
 
+class BuscaIaRequestSerializer(serializers.Serializer):
+    frase = serializers.CharField(allow_blank=False, trim_whitespace=True)
+
+
 class CandidatoNotificacaoSerializer(serializers.ModelSerializer):
     candidato_id = serializers.UUIDField(source="candidato.id", read_only=True)
     candidato_nome = serializers.CharField(source="candidato.nome", read_only=True)

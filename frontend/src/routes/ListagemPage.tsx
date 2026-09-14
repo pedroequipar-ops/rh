@@ -6,6 +6,7 @@ import { useVagas, useDeleteVaga } from '../api/hooks/useVagas'
 import { useCandidatos, useDeleteCandidato } from '../api/hooks/useCandidatos'
 import { useAuth } from '../context/AuthContext'
 import { ConfirmDialog } from '../components/common/ConfirmDialog'
+import { BuscaCandidatosIa, type BuscaCandidatosIaResultado } from '../components/candidato/BuscaCandidatosIa'
 import { CandidatosTable } from './listagem/CandidatosTable'
 import { VagasTable } from './listagem/VagasTable'
 import type { Candidato, Vaga } from '../types'
@@ -31,6 +32,7 @@ export function ListagemPage({ embedded = false }: { embedded?: boolean }) {
   const [mostrarEncerradas, setMostrarEncerradas] = useState(false)
   const [vagaParaExcluir, setVagaParaExcluir] = useState<Vaga | null>(null)
   const [candidatoParaExcluir, setCandidatoParaExcluir] = useState<Candidato | null>(null)
+  const [buscaIa, setBuscaIa] = useState<BuscaCandidatosIaResultado | null>(null)
 
   const [params, setParams] = useSearchParams()
   const aba: Aba = params.get('aba') === 'vagas' ? 'vagas' : 'candidatos'
@@ -81,6 +83,7 @@ export function ListagemPage({ embedded = false }: { embedded?: boolean }) {
         </nav>
 
         <div className="flex items-center gap-2">
+          {aba === 'candidatos' && <BuscaCandidatosIa onResultado={setBuscaIa} />}
           {aba === 'vagas' && vagasEncerradas.length > 0 && (
             <button
               onClick={() => setMostrarEncerradas((v) => !v)}
@@ -102,7 +105,7 @@ export function ListagemPage({ embedded = false }: { embedded?: boolean }) {
       <div className="flex min-h-0 flex-1 flex-col">
         {aba === 'candidatos' ? (
           <CandidatosTable
-            candidatos={candidatos}
+            candidatos={buscaIa ? buscaIa.resultados : candidatos}
             basePath={location.pathname}
             isRh={isRh}
             onDelete={setCandidatoParaExcluir}

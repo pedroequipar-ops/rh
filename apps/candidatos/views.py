@@ -24,6 +24,7 @@ from .repositories.candidato_repository import CandidatoRepository
 from .serializers import (
     AnalisarCurriculoRequestSerializer,
     AnalisarCurriculoResponseSerializer,
+    BuscaIaRequestSerializer,
     CandidatoMoverEtapaSerializer,
     CandidatoNotificacaoSerializer,
     CandidatoSerializer,
@@ -54,6 +55,7 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         "curriculo_url": "candidatos.curriculo_url",
         "mover_etapa": "candidatos.mover_etapa",
         "restaurar": "candidatos.delete",
+        "busca_ia": "candidatos.view",
     }
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
@@ -229,6 +231,30 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         services.notificar_mudanca_etapa(candidato, etapa, company_id, motivo)
         services.registrar_mudanca_etapa(candidato, etapa, request.user, motivo=motivo)
         return Response(CandidatoSerializer(candidato).data)
+
+    @action(detail=False, methods=["post"], url_path="busca-ia")
+    def busca_ia(self, request):
+        serializer = BuscaIaRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        company_id = capture_company_id(request)
+
+        try:
+            resultados, interpretacao = services.buscar_candidatos_com_ia(
+                company_id, serializer.validated_data["frase"], base_queryset=self.get_queryset()
+            )
+        except services.BuscaIAError:
+            raise ValidationError(
+                {"detail": "Não foi possível interpretar essa busca agora, tenta de novo."}
+            )
+
+        return Response(
+            {
+                "interpretacao": interpretacao,
+                "resultados": CandidatoSerializer(
+                    resultados, many=True, context=self.get_serializer_context()
+                ).data,
+            }
+        )
 
 
 class CandidatoNotificacaoListView(generics.ListAPIView):

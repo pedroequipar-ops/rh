@@ -6,6 +6,10 @@ from django.utils import timezone
 from rest_framework.test import APIClient
 
 from apps.accounts.models import User
+from apps.candidatos.interfaces.i_busca_ia_extractor import (
+    FiltroBuscaIADTO,
+    IBuscaCandidatosExtractor,
+)
 from apps.candidatos.interfaces.i_curriculo_extractor import (
     CandidatoExtraidoDTO,
     ICurriculoExtractor,
@@ -583,3 +587,113 @@ def test_restaurar_candidato_excluido(company_factory, user_factory, candidato_f
     assert response.status_code == 200
     candidato.refresh_from_db()
     assert candidato.active is True
+
+
+class FakeBuscaExtractorPalavraChave(IBuscaCandidatosExtractor):
+    def interpretar(self, frase, etapas, tags):
+        return FiltroBuscaIADTO(palavras_chave=["excel avançado"], interpretacao="Habilidade contém 'excel avançado'.")
+
+
+class FakeBuscaExtractorEtapaOrdemMin(IBuscaCandidatosExtractor):
+    def interpretar(self, frase, etapas, tags):
+        ordem_triagem = next(e["ordem"] for e in etapas if e["nome"] == "Triagem")
+        return FiltroBuscaIADTO(
+            etapa_ordem_min=ordem_triagem + 1, interpretacao="Já passou da etapa Triagem."
+        )
+
+
+class FakeBuscaExtractorFalha(IBuscaCandidatosExtractor):
+    def interpretar(self, frase, etapas, tags):
+        raise RuntimeError("IA indisponível")
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.candidatos.services.settings.CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS",
+    "apps.candidatos.tests.test_views.FakeBuscaExtractorPalavraChave",
+)
+def test_rh_busca_candidatos_com_ia_por_palavra_chave(
+    company_factory, setor_factory, user_factory, candidato_factory
+):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    com_match = candidato_factory(
+        company=company,
+        vaga__company=company,
+        vaga__setor=setor,
+        perfil_habilidades="Excel avançado, Power BI",
+    )
+    candidato_factory(
+        company=company, vaga__company=company, vaga__setor=setor, perfil_habilidades="Word básico"
+    )
+
+    client = _client_for(rh, company)
+    response = client.post("/v1/candidatos/busca-ia/", {"frase": "quem sabe excel avançado"})
+
+    assert response.status_code == 200
+    assert [item["id"] for item in response.data["resultados"]] == [str(com_match.id)]
+    assert "excel avançado" in response.data["interpretacao"]
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.candidatos.services.settings.CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS",
+    "apps.candidatos.tests.test_views.FakeBuscaExtractorEtapaOrdemMin",
+)
+def test_rh_busca_candidatos_com_ia_por_progresso_no_funil(
+    company_factory, setor_factory, user_factory, etapa_factory, candidato_factory
+):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    triagem = etapa_factory(company=company, nome="Triagem", ordem=1)
+    entrevista = etapa_factory(company=company, nome="Entrevista", ordem=2)
+    avancado = candidato_factory(
+        company=company, vaga__company=company, vaga__setor=setor, etapa_atual=entrevista
+    )
+    candidato_factory(
+        company=company, vaga__company=company, vaga__setor=setor, etapa_atual=triagem
+    )
+
+    client = _client_for(rh, company)
+    response = client.post("/v1/candidatos/busca-ia/", {"frase": "quem já passou da triagem"})
+
+    assert response.status_code == 200
+    assert [item["id"] for item in response.data["resultados"]] == [str(avancado.id)]
+
+
+@pytest.mark.django_db
+def test_setor_so_busca_dentro_do_proprio_setor(
+    company_factory, setor_factory, user_factory, candidato_factory
+):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    outro_setor = setor_factory(company=company)
+    setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
+    candidato_factory(company=company, vaga__company=company, vaga__setor=outro_setor)
+
+    with patch(
+        "apps.candidatos.services.settings.CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS",
+        "apps.candidatos.tests.test_views.FakeBuscaExtractorPalavraChave",
+    ):
+        client = _client_for(setor_user, company)
+        response = client.post("/v1/candidatos/busca-ia/", {"frase": "excel avançado"})
+
+    assert response.status_code == 200
+    assert response.data["resultados"] == []
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.candidatos.services.settings.CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS",
+    "apps.candidatos.tests.test_views.FakeBuscaExtractorFalha",
+)
+def test_busca_ia_com_falha_da_ia_retorna_erro_amigavel(company_factory, user_factory):
+    company = company_factory()
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    response = client.post("/v1/candidatos/busca-ia/", {"frase": "qualquer coisa"})
+
+    assert response.status_code == 400
