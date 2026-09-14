@@ -1,0 +1,906 @@
+2026-09-09 08:26:52,606 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 08:26:52,634 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 08:26:52,636 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 08:26:52,640 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 08:27:26,258 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-09 08:28:04,653 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-09 08:28:04,675 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-09 08:28:04,751 WARNING django.request Unauthorized: /v1/auth/token/refresh/
+2026-09-09 09:11:27,565 WARNING django.request Not Found: /v1/vagas/6fe470a7-606b-4ec1-aa56-d497da8c573f/
+2026-09-09 09:11:29,021 WARNING django.request Not Found: /v1/vagas/61fe902d-14d0-44cc-b975-7151beccc7be/
+2026-09-09 09:11:29,900 WARNING django.request Not Found: /v1/candidatos/f1246dd0-2330-4235-acb4-3775a1badcd9/curriculo-url/
+2026-09-09 09:11:30,199 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 09:11:31,148 WARNING django.request Forbidden: /v1/candidatos/7a551722-9042-446f-9cb6-93409ff40b8c/mover-etapa/
+2026-09-09 09:11:34,350 WARNING django.request Not Found: /v1/candidatos/2d5009df-11c5-4dbd-8f85-ebe53526cbb9/
+2026-09-09 09:11:35,061 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+RuntimeError: IA indisponível
+2026-09-09 09:11:36,976 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 09:11:37,740 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 09:11:37,906 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 09:11:38,397 WARNING django.request Bad Request: /v1/usuarios/9f73c5ab-a813-4ad3-88c1-9dd9d93312b6/
+2026-09-09 09:11:40,555 WARNING django.request Forbidden: /v1/usuarios/96ddd8c1-9e4a-4652-b3ec-1e5255c3410a/
+2026-09-09 09:13:39,894 WARNING django.request Not Found: /v1/vagas/da2dc29a-64c4-4365-97ae-b1a39f299ee4/
+2026-09-09 09:13:41,266 WARNING django.request Not Found: /v1/vagas/3e9f6ade-3db4-4f3e-8dfb-7769d465bbdc/
+2026-09-09 09:13:42,690 WARNING django.request Bad Request: /v1/vagas/346f2c3f-06b5-434a-b0be-f00c9bf0d5dd/recusar/
+2026-09-09 09:13:43,004 WARNING django.request Forbidden: /v1/vagas/a8ca5471-32bd-4959-9313-6ac11cfc3377/aprovar/
+2026-09-09 09:13:43,311 WARNING django.request Bad Request: /v1/vagas/371d09f7-5b3b-4ba4-9527-1b7360cdf0ed/transicionar/
+2026-09-09 09:13:44,909 WARNING django.request Bad Request: /v1/vagas/648c52f1-5032-4cb2-aef9-5debd0a94325/cobrar/
+2026-09-09 09:13:45,214 WARNING django.request Not Found: /v1/vagas/6f7d6667-09b4-40b5-aa7d-5579e876b1a4/cobrar/
+2026-09-09 09:13:46,451 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 09:13:47,197 WARNING django.request Not Found: /v1/candidatos/e2e72f75-7a3e-4f18-aeba-551ba942eabd/curriculo-url/
+2026-09-09 09:13:47,517 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 09:13:48,455 WARNING django.request Forbidden: /v1/candidatos/ff2a65bf-1a8b-4685-9e9d-5b5bf675ef89/mover-etapa/
+2026-09-09 09:13:51,560 WARNING django.request Not Found: /v1/candidatos/4f9bb9d7-b6eb-448b-a01c-f40cd8a47cd9/
+2026-09-09 09:13:52,181 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 09:13:52,521 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 09:13:54,677 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 09:13:55,466 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 09:13:55,639 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 09:13:56,200 WARNING django.request Bad Request: /v1/usuarios/6e52f9af-a957-4164-b6ab-5e32ee401f39/
+2026-09-09 09:13:58,196 WARNING django.request Forbidden: /v1/usuarios/de470337-696a-4574-aa1d-019e2a0436fb/
+2026-09-09 09:14:13,627 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 09:14:14,382 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 09:14:14,542 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 09:14:15,089 WARNING django.request Bad Request: /v1/usuarios/40f25a02-3f80-4550-a70d-1f53d138a46c/
+2026-09-09 09:14:17,095 WARNING django.request Forbidden: /v1/usuarios/e06ae2d3-5281-49bd-9a28-8eed744de7ea/
+2026-09-09 09:14:17,834 WARNING django.request Not Found: /v1/candidatos/4cda8dbf-1cbc-4539-8872-4c4d105fe4e9/curriculo-url/
+2026-09-09 09:14:18,197 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 09:14:19,233 WARNING django.request Forbidden: /v1/candidatos/aaeecde0-392e-493c-be68-8da9b20c8662/mover-etapa/
+2026-09-09 09:14:22,310 WARNING django.request Not Found: /v1/candidatos/e8017fc7-b341-4044-9966-d4d8d8c00223/
+2026-09-09 09:14:22,935 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 09:14:23,275 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 09:14:25,312 WARNING django.request Not Found: /v1/candidatos/a199b5b8-3dd4-4e57-b11e-f3ae6adcc42f/mensagens/
+2026-09-09 09:14:28,358 WARNING django.request Not Found: /v1/vagas/4bdb6f7f-c006-4a03-bfa7-cb12849f24ab/
+2026-09-09 09:14:29,764 WARNING django.request Not Found: /v1/vagas/7cd846c6-75bd-4817-93c0-ee1a34475702/
+2026-09-09 09:14:31,236 WARNING django.request Bad Request: /v1/vagas/98bde8bf-fa55-4d86-a671-0dc89b903532/recusar/
+2026-09-09 09:14:31,552 WARNING django.request Forbidden: /v1/vagas/2bad19ff-96df-4f53-ab90-6b8d89503624/aprovar/
+2026-09-09 09:14:31,860 WARNING django.request Bad Request: /v1/vagas/1309d50e-ba7f-4e32-b61a-c97575e0f5da/transicionar/
+2026-09-09 09:14:33,294 WARNING django.request Bad Request: /v1/vagas/bdf1dc74-d5b5-4645-9827-495aac310cd0/cobrar/
+2026-09-09 09:14:33,597 WARNING django.request Not Found: /v1/vagas/f4f84fef-1634-402d-900e-b0244fad8a0d/cobrar/
+2026-09-09 09:14:34,913 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 09:15:25,924 WARNING django.request Bad Request: /v1/vagas/edcc3fa9-cb23-43a1-9e6f-2a958ae4cd4d/transicionar/
+2026-09-09 09:15:25,974 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 09:32:59,397 INFO daphne.server Killed 0 pending application instances
+2026-09-09 09:33:02,686 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 09:33:02,690 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 09:33:02,691 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 09:33:02,693 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 09:35:27,530 WARNING django.request Not Found: /v1/vagas/86ad4fdc-bab5-4aa4-84b5-9a2af0c98c01/
+2026-09-09 09:35:29,061 WARNING django.request Not Found: /v1/vagas/8021e3a9-cc71-499d-9dff-194f00c89f62/
+2026-09-09 09:35:31,071 WARNING django.request Bad Request: /v1/vagas/2e1df37c-7540-4180-8499-287bc57e3587/recusar/
+2026-09-09 09:35:31,504 WARNING django.request Forbidden: /v1/vagas/b4f868a7-1334-46bc-890a-bf156cf39326/aprovar/
+2026-09-09 09:35:31,941 WARNING django.request Bad Request: /v1/vagas/2def21e9-f23e-4047-8533-a070a05d3482/transicionar/
+2026-09-09 09:35:34,866 WARNING django.request Bad Request: /v1/vagas/c55b96ca-98bb-4296-a20a-cb50452b8073/cobrar/
+2026-09-09 09:35:35,570 WARNING django.request Not Found: /v1/vagas/c5937023-9ac2-41b3-9e84-57ae08d8fae3/cobrar/
+2026-09-09 09:35:37,516 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 09:35:38,364 WARNING django.request Not Found: /v1/candidatos/e4899d77-622a-43ae-94d9-551a2f9d13e3/curriculo-url/
+2026-09-09 09:35:38,692 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 09:35:40,015 WARNING django.request Forbidden: /v1/candidatos/53b2ac03-d232-40e8-a0b6-a51d85f352cc/mover-etapa/
+2026-09-09 09:35:43,451 WARNING django.request Not Found: /v1/candidatos/d0a6a38a-de49-4e21-ab5c-9f6944f46742/
+2026-09-09 09:35:44,141 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 09:35:44,531 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 09:35:47,463 INFO daphne.server Killed 0 pending application instances
+2026-09-09 09:35:56,261 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 09:35:56,265 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 09:35:56,268 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 09:35:56,273 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 09:37:35,451 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 09:37:36,371 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 09:37:36,558 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 09:37:37,065 WARNING django.request Bad Request: /v1/usuarios/0ffaf82f-e3e1-4d87-b62b-f3e01a18ad6c/
+2026-09-09 09:37:39,019 WARNING django.request Forbidden: /v1/usuarios/3b3e1f26-8c49-4e4d-81ce-96ccc41521a9/
+2026-09-09 09:37:39,689 WARNING django.request Not Found: /v1/candidatos/df311de1-9fb2-44e3-a109-9d37d5306d36/curriculo-url/
+2026-09-09 09:37:39,995 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 09:37:40,915 WARNING django.request Forbidden: /v1/candidatos/3c506e38-d8c6-4792-bfc6-4572a0c8eed1/mover-etapa/
+2026-09-09 09:37:44,117 WARNING django.request Not Found: /v1/candidatos/07718e30-c84e-4a38-95c1-8355fe747712/
+2026-09-09 09:37:44,773 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 09:37:45,175 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 09:37:47,109 WARNING django.request Not Found: /v1/candidatos/e57858b1-5096-412d-8fe7-b9afe391fcc9/mensagens/
+2026-09-09 09:37:50,572 WARNING django.request Not Found: /v1/vagas/40912f2c-d03c-4ea8-b0f3-a0f58c14eecb/
+2026-09-09 09:37:52,073 WARNING django.request Not Found: /v1/vagas/1328a46b-bbd4-405e-9bb2-daf2280bf39d/
+2026-09-09 09:37:53,836 WARNING django.request Bad Request: /v1/vagas/81f98120-c3a1-4567-8a81-c6ce81108bdd/recusar/
+2026-09-09 09:37:54,180 WARNING django.request Forbidden: /v1/vagas/b43c2775-df53-4510-a9e0-31493e84491e/aprovar/
+2026-09-09 09:37:54,499 WARNING django.request Bad Request: /v1/vagas/c339d732-1056-4e37-b0d0-fefa9ab96310/transicionar/
+2026-09-09 09:37:56,250 WARNING django.request Bad Request: /v1/vagas/28ae57df-f467-4b33-b32c-36bcfd451c0e/cobrar/
+2026-09-09 09:37:56,578 WARNING django.request Not Found: /v1/vagas/495f10a4-b1e3-485d-975a-7bd7a8fdc515/cobrar/
+2026-09-09 09:37:57,943 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 10:02:20,081 WARNING django.request Not Found: /v1/vagas/e1edb2b6-92bf-4b98-ba8f-53ab3179a351/
+2026-09-09 10:02:21,539 WARNING django.request Not Found: /v1/vagas/88d33d5a-e9a5-4eaa-a060-7b7464cca8d7/
+2026-09-09 10:02:23,121 WARNING django.request Bad Request: /v1/vagas/5ac5ef09-9494-477e-8cc9-a201a9b965af/recusar/
+2026-09-09 10:02:23,438 WARNING django.request Forbidden: /v1/vagas/d4256c44-23cf-41e8-a20b-3e7c7af30262/aprovar/
+2026-09-09 10:02:23,761 WARNING django.request Bad Request: /v1/vagas/6fc4f545-d433-4cbe-bbf1-6e19af51f401/transicionar/
+2026-09-09 10:02:25,483 WARNING django.request Bad Request: /v1/vagas/12202633-8642-433f-81d6-3129dc19d861/cobrar/
+2026-09-09 10:02:25,808 WARNING django.request Not Found: /v1/vagas/71a353a9-08e0-4c2d-bbef-47f50724aab0/cobrar/
+2026-09-09 10:02:27,149 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 10:02:27,990 WARNING django.request Not Found: /v1/candidatos/749d83f1-b1d0-482b-9c6a-1a7f5c5cb590/curriculo-url/
+2026-09-09 10:02:28,310 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 10:02:29,256 WARNING django.request Forbidden: /v1/candidatos/b8f54223-556d-4820-8cc9-07401930ca36/mover-etapa/
+2026-09-09 10:02:32,390 WARNING django.request Not Found: /v1/candidatos/d5675d7b-f0ac-43cc-8f79-3257fa3aebe6/
+2026-09-09 10:02:33,028 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 10:02:33,449 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 10:02:51,794 INFO daphne.server Killed 0 pending application instances
+2026-09-09 10:02:58,231 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 10:02:58,233 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 10:02:58,234 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 10:02:58,237 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 10:29:24,274 WARNING django.request Not Found: /v1/vagas/f0d177f5-d549-47a1-bb2f-f5dee8e6df02/
+2026-09-09 10:29:25,927 WARNING django.request Not Found: /v1/vagas/4fea9d51-8c39-482d-8a6b-dcafa1207c2d/
+2026-09-09 10:29:27,627 WARNING django.request Bad Request: /v1/vagas/bf35bf56-e244-47f0-bc11-c1d9e7c6a0ec/recusar/
+2026-09-09 10:29:28,033 WARNING django.request Forbidden: /v1/vagas/e024d94f-fe8f-44ad-821b-065063b65d17/aprovar/
+2026-09-09 10:29:28,418 WARNING django.request Bad Request: /v1/vagas/5d49da62-a8db-48fd-8cca-5e42326d9f0d/transicionar/
+2026-09-09 10:29:30,490 WARNING django.request Bad Request: /v1/vagas/35cd5d67-5230-46df-8428-b95065fbe35b/cobrar/
+2026-09-09 10:29:30,813 WARNING django.request Not Found: /v1/vagas/928fa0c4-002b-40e6-82ba-683384f579ca/cobrar/
+2026-09-09 10:29:32,239 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 10:29:32,992 WARNING django.request Not Found: /v1/candidatos/0e2660cd-a8e8-4e90-8a1e-55667e7997f9/curriculo-url/
+2026-09-09 10:29:33,326 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 10:29:34,310 WARNING django.request Forbidden: /v1/candidatos/380b43b8-be93-4287-b242-caf499cc37ca/mover-etapa/
+2026-09-09 10:29:38,050 WARNING django.request Not Found: /v1/candidatos/3f583b75-84e2-43c5-850b-0483ceedb056/
+2026-09-09 10:29:38,714 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 10:29:39,096 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 10:30:21,051 WARNING django.request Not Found: /v1/vagas/f7af28c3-2fe9-4196-9d05-777e10aafc89/
+2026-09-09 10:30:22,562 WARNING django.request Not Found: /v1/vagas/a389e470-c633-4723-bae2-857237ee0d5b/
+2026-09-09 10:30:24,161 WARNING django.request Bad Request: /v1/vagas/851eef59-be7d-4580-8ae1-96089ad4db69/recusar/
+2026-09-09 10:30:24,490 WARNING django.request Forbidden: /v1/vagas/3bb6d2f5-2cb7-4b60-8999-551b4f8a670f/aprovar/
+2026-09-09 10:30:24,809 WARNING django.request Bad Request: /v1/vagas/bbef8879-9a60-4139-8bfa-0ccae9b2010a/transicionar/
+2026-09-09 10:30:26,374 WARNING django.request Bad Request: /v1/vagas/376dcc8a-b6d6-40e9-9276-514263602071/cobrar/
+2026-09-09 10:30:26,686 WARNING django.request Not Found: /v1/vagas/78214573-c69d-4a41-a041-ba11f2719c60/cobrar/
+2026-09-09 10:30:28,329 ERROR django.request Internal Server Error: /v1/vagas/36ead014-187d-450c-8a97-0e87d7da7f52/mover-etapa/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.StringDataRightTruncation: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/vagas/views.py", line 218, in mover_etapa
+    vaga = services.mover_vaga_etapa(vaga, etapa, request.user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/vagas/services.py", line 125, in mover_vaga_etapa
+    registrar_historico(vaga, "", f"triagem:{etapa.nome}", user, "moveu card da vaga")
+  File "/app/apps/vagas/services.py", line 130, in registrar_historico
+    VagaHistoricoStatus.objects.create(
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/query.py", line 665, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/base.py", line 902, in save
+    self.save_base(
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/base.py", line 1008, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/base.py", line 1210, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.DataError: value too long for type character varying(20)
+
+2026-09-09 10:30:29,968 WARNING django.request Bad Request: /v1/vagas/68060ef2-f5d3-4fef-834f-24bf8016501b/mover-etapa/
+2026-09-09 10:30:30,300 WARNING django.request Bad Request: /v1/vagas/0c58c9de-183b-4791-b5ac-67dd6fb02739/mover-etapa/
+2026-09-09 10:30:30,966 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 10:30:53,911 WARNING django.request Not Found: /v1/vagas/14921155-3967-43f9-a055-4f49037f4d58/
+2026-09-09 10:30:55,417 WARNING django.request Not Found: /v1/vagas/fce61816-88a5-41fa-a398-4778a6b573c7/
+2026-09-09 10:30:56,866 WARNING django.request Bad Request: /v1/vagas/b0e1f3bb-da2d-4ea2-a142-a5932dc6e679/recusar/
+2026-09-09 10:30:57,199 WARNING django.request Forbidden: /v1/vagas/6ba319cc-33c0-45f0-b823-fde63d6df43f/aprovar/
+2026-09-09 10:30:57,513 WARNING django.request Bad Request: /v1/vagas/30094283-bfbb-4614-9228-d44347509705/transicionar/
+2026-09-09 10:30:59,139 WARNING django.request Bad Request: /v1/vagas/f7090436-5fab-49c4-ae94-e4df176520a9/cobrar/
+2026-09-09 10:30:59,446 WARNING django.request Not Found: /v1/vagas/7cea2102-0bff-4068-889a-8fd320836d70/cobrar/
+2026-09-09 10:31:01,327 WARNING django.request Bad Request: /v1/vagas/31427cf8-fe89-402a-9642-b44bb00e121d/mover-etapa/
+2026-09-09 10:31:01,639 WARNING django.request Bad Request: /v1/vagas/2a40f8ed-d890-4730-b90f-159b118be3c1/mover-etapa/
+2026-09-09 10:31:02,279 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 10:31:02,981 WARNING django.request Not Found: /v1/candidatos/b60080ed-3586-4d0a-9cfb-803efb85be7a/curriculo-url/
+2026-09-09 10:31:03,301 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 10:31:04,375 WARNING django.request Forbidden: /v1/candidatos/8bc646bd-f5af-4585-8194-ef2ce0b5ad9b/mover-etapa/
+2026-09-09 10:31:07,635 WARNING django.request Not Found: /v1/candidatos/bef9e95c-b813-4b0e-bcff-8821b8078eab/
+2026-09-09 10:31:08,255 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 10:31:08,590 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 10:31:10,922 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 10:31:11,685 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 10:31:11,842 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 10:31:12,318 WARNING django.request Bad Request: /v1/usuarios/20f920a0-ad5c-488b-8a0a-663cf1a6bb9c/
+2026-09-09 10:31:14,322 WARNING django.request Forbidden: /v1/usuarios/9bd1cdef-4df8-4bd0-8731-647b94cc81a7/
+2026-09-09 10:31:35,544 INFO daphne.server Killed 0 pending application instances
+2026-09-09 10:31:40,708 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 10:31:40,710 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 10:31:40,711 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 10:31:40,715 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 10:36:34,056 INFO daphne.server Killed 0 pending application instances
+2026-09-09 10:36:41,432 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 10:36:41,435 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 10:36:41,437 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 10:36:41,442 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 10:40:23,710 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('172.19.0.3', 5672)
+2026-09-09 10:40:23,714 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 32906), raddr=('172.19.0.3', 5672)>
+2026-09-09 10:40:23,716 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x76f0a2bf2540>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x76f0a2bf2540> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>).
+2026-09-09 10:40:23,761 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x76f0a2bf2540> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-09 10:40:23,762 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x76f0a2bf2540> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-09 10:40:23,763 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x76f0a2bf2540> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-09 10:40:23,764 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-09 10:40:23,788 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-09 10:40:23,789 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x76f0a2bf2540> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>>
+2026-09-09 10:40:23,794 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x76f0a2bf2540> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>>
+2026-09-09 10:40:23,796 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-09 10:40:23,798 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 32906), raddr=('172.19.0.3', 5672)>
+2026-09-09 10:40:23,799 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 32906), raddr=('172.19.0.3', 5672)>
+2026-09-09 10:40:23,800 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 32906), raddr=('172.19.0.3', 5672)>
+2026-09-09 10:40:23,801 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-09 10:40:23,802 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-09 10:40:23,803 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 32906), raddr=('172.19.0.3', 5672)>
+2026-09-09 10:40:23,804 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2026-09-09 10:40:49,351 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 10:40:50,233 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 10:40:50,510 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 10:40:51,091 WARNING django.request Bad Request: /v1/usuarios/6cf50350-87f1-43c4-8de1-f491f92e183e/
+2026-09-09 10:40:53,594 WARNING django.request Forbidden: /v1/usuarios/47f2d55c-5ae1-4246-8541-a66fc4836dfa/
+2026-09-09 10:40:54,319 WARNING django.request Not Found: /v1/candidatos/eb9d9fd2-8a5d-4dac-9512-a2fa720c41b0/curriculo-url/
+2026-09-09 10:40:54,640 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 10:40:55,596 WARNING django.request Forbidden: /v1/candidatos/f5059aaa-6d1c-409e-b5c4-77fbcec059bf/mover-etapa/
+2026-09-09 10:40:59,348 WARNING django.request Not Found: /v1/candidatos/32a510b6-f933-4d4e-8740-b7d7807c873d/
+2026-09-09 10:40:59,993 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 10:41:00,579 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 10:41:02,853 WARNING django.request Not Found: /v1/candidatos/f354503f-8648-4ee5-99e4-f780cde09786/mensagens/
+2026-09-09 10:41:06,515 WARNING django.request Not Found: /v1/vagas/767c5981-5303-4bb5-ac72-f98f1ec575d9/
+2026-09-09 10:41:08,043 WARNING django.request Not Found: /v1/vagas/f7a7c57a-71ae-4d03-8b26-2064e2387bde/
+2026-09-09 10:41:09,744 WARNING django.request Bad Request: /v1/vagas/1b3dec87-b74f-47db-a9cd-672c466d6127/recusar/
+2026-09-09 10:41:10,147 WARNING django.request Forbidden: /v1/vagas/c8ecb26d-ee94-4c38-ad9a-e0b809cbb2de/aprovar/
+2026-09-09 10:41:10,628 WARNING django.request Bad Request: /v1/vagas/91a2a170-54ba-48fb-926f-4ac2b3717800/transicionar/
+2026-09-09 10:41:12,210 WARNING django.request Bad Request: /v1/vagas/f864ff54-a368-4b0f-a25e-f7fff46ddcf2/cobrar/
+2026-09-09 10:41:12,615 WARNING django.request Not Found: /v1/vagas/bb180437-2133-4838-9ce7-0b4e080a3d36/cobrar/
+2026-09-09 10:41:14,686 WARNING django.request Bad Request: /v1/vagas/ec009bde-8e7a-476b-aec5-2cb1a8cfe8d8/mover-etapa/
+2026-09-09 10:41:15,097 WARNING django.request Bad Request: /v1/vagas/ca695177-1974-489c-bdd2-26fc6f5270b2/mover-etapa/
+2026-09-09 10:41:15,949 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 10:45:23,244 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 10:45:24,123 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 10:45:24,294 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 10:45:25,145 WARNING django.request Bad Request: /v1/usuarios/0515a867-11a6-48eb-ac0c-b5f3d9281e52/
+2026-09-09 10:45:28,161 WARNING django.request Forbidden: /v1/usuarios/ccb2c106-8f27-47b8-946c-3d480fde36ea/
+2026-09-09 10:45:28,930 WARNING django.request Not Found: /v1/candidatos/995d5fdd-07fb-4423-9c80-13c197378051/curriculo-url/
+2026-09-09 10:45:29,302 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 10:45:30,884 WARNING django.request Forbidden: /v1/candidatos/782131d0-7748-476d-bddb-e212c36c5a1c/mover-etapa/
+2026-09-09 10:45:37,387 WARNING django.request Not Found: /v1/candidatos/6e8262c2-21e8-4d40-9c82-42562d5914b4/
+2026-09-09 10:45:38,140 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 10:45:38,538 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 10:45:41,239 WARNING django.request Not Found: /v1/candidatos/07aa8bb8-f341-4aea-b3ff-ddc4ed56ed0f/mensagens/
+2026-09-09 10:45:45,141 WARNING django.request Not Found: /v1/vagas/67ecc441-d064-404b-b2cd-172b48136428/
+2026-09-09 10:45:47,302 WARNING django.request Not Found: /v1/vagas/eab3157a-33ec-43e2-af53-9a01beff1fae/
+2026-09-09 10:45:49,977 WARNING django.request Bad Request: /v1/vagas/dac2ac99-4151-438b-8fd2-361ac295ba81/recusar/
+2026-09-09 10:45:50,684 WARNING django.request Forbidden: /v1/vagas/39b3d83b-d048-4ea2-8fcd-a6dec0eea4b1/aprovar/
+2026-09-09 10:45:51,150 WARNING django.request Bad Request: /v1/vagas/4cc83505-acf3-4532-b563-fa2b0d5b9164/transicionar/
+2026-09-09 10:45:53,847 WARNING django.request Bad Request: /v1/vagas/0cd01339-f038-4f53-af44-151f033d7977/cobrar/
+2026-09-09 10:45:54,270 WARNING django.request Not Found: /v1/vagas/caa6319b-5179-4d6d-b217-04ec3cb4d8f9/cobrar/
+2026-09-09 10:45:56,374 WARNING django.request Bad Request: /v1/vagas/9da81aa7-be85-4048-b64c-4a516f9439f8/mover-etapa/
+2026-09-09 10:45:56,737 WARNING django.request Bad Request: /v1/vagas/095ad9c4-7f86-439d-976f-cde55c057c01/mover-etapa/
+2026-09-09 10:45:57,423 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 10:57:03,454 WARNING django.request Bad Request: /v1/vagas/d2919709-c4a0-4b14-bb51-41456f1319aa/cobrar/
+2026-09-09 11:06:19,373 INFO daphne.server Killed 0 pending application instances
+2026-09-09 11:06:24,344 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:06:24,345 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 11:06:24,346 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:06:24,348 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 11:09:20,036 INFO daphne.server Killed 0 pending application instances
+2026-09-09 11:09:24,504 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:09:24,506 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 11:09:24,507 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:09:24,510 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 11:09:33,694 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 11:09:34,479 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 11:09:34,676 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 11:09:35,258 WARNING django.request Bad Request: /v1/usuarios/170cff0a-2b53-406a-b79a-74a16d380d15/
+2026-09-09 11:09:37,287 WARNING django.request Forbidden: /v1/usuarios/06856e8c-2436-44b7-a41d-2ab7bf3cbcb9/
+2026-09-09 11:09:37,981 WARNING django.request Not Found: /v1/candidatos/7478fb9f-025a-4f89-88e8-aefe0efb2358/curriculo-url/
+2026-09-09 11:09:38,288 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:09:39,237 WARNING django.request Forbidden: /v1/candidatos/0abfd23e-172e-46ee-81f9-e5ff171545f0/mover-etapa/
+2026-09-09 11:09:42,643 WARNING django.request Not Found: /v1/candidatos/0d61af24-a77d-4624-aa1e-f2b3cbd17227/
+2026-09-09 11:09:43,255 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:09:43,597 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:09:45,513 WARNING django.request Not Found: /v1/candidatos/d07b489f-60b2-4cb4-b64a-c4cc96e4e585/mensagens/
+2026-09-09 11:09:48,857 WARNING django.request Not Found: /v1/vagas/ced3f7ab-7c8b-4f61-9b89-89affc26799f/mensagens/
+2026-09-09 11:09:51,411 WARNING django.request Not Found: /v1/vagas/5dbebf38-f657-40fc-aa66-e69ae8745eca/
+2026-09-09 11:09:53,220 WARNING django.request Not Found: /v1/vagas/4e557e64-4075-4580-b2e4-811f6a1300d6/
+2026-09-09 11:09:54,720 WARNING django.request Bad Request: /v1/vagas/e26aadda-b066-490b-8b3b-cae329d1c984/recusar/
+2026-09-09 11:09:55,080 WARNING django.request Forbidden: /v1/vagas/7960c707-99da-4438-a06e-01664b8e1978/aprovar/
+2026-09-09 11:09:55,445 WARNING django.request Bad Request: /v1/vagas/a7d93208-a4a6-40c3-86cc-e0b1e8c37293/transicionar/
+2026-09-09 11:09:56,996 WARNING django.request Bad Request: /v1/vagas/fa35fe4f-097b-4fa8-b94f-71f54768dffd/cobrar/
+2026-09-09 11:09:57,323 WARNING django.request Not Found: /v1/vagas/cd17dfdd-8ef4-4fbe-92c3-adbb9bee7e4b/cobrar/
+2026-09-09 11:09:59,718 WARNING django.request Bad Request: /v1/vagas/df796965-c3d4-4d12-92fa-d48c690199fe/mover-etapa/
+2026-09-09 11:10:00,042 WARNING django.request Bad Request: /v1/vagas/7fc665a3-a1b1-4931-a21d-3e265ada5401/mover-etapa/
+2026-09-09 11:10:00,868 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 11:10:44,700 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 11:10:45,464 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 11:10:45,616 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 11:10:46,074 WARNING django.request Bad Request: /v1/usuarios/7c54bf1c-4771-48f9-b397-dcff9b16d3ac/
+2026-09-09 11:10:48,050 WARNING django.request Forbidden: /v1/usuarios/6e237b41-21ad-420d-bd8d-03041d359ec6/
+2026-09-09 11:10:48,820 WARNING django.request Not Found: /v1/candidatos/d4052f8a-5c62-49b6-8fbb-ea12a8013f2b/curriculo-url/
+2026-09-09 11:10:49,182 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:10:50,178 WARNING django.request Forbidden: /v1/candidatos/0b5d614b-ef44-4786-b223-907c1557c7de/mover-etapa/
+2026-09-09 11:10:53,307 WARNING django.request Not Found: /v1/candidatos/135db77d-6f7b-4e3e-93f9-138ecccf176b/
+2026-09-09 11:10:53,916 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:10:54,277 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:10:56,230 WARNING django.request Not Found: /v1/candidatos/c248c274-6b86-4e3a-87ca-6d513df06c8a/mensagens/
+2026-09-09 11:10:58,220 WARNING django.request Not Found: /v1/vagas/6ba8a3ca-7338-4475-bbcf-385800545cb0/mensagens/
+2026-09-09 11:11:00,673 WARNING django.request Not Found: /v1/vagas/c972238d-8b36-467c-b9a9-0c4a9e585f7f/
+2026-09-09 11:11:02,749 WARNING django.request Not Found: /v1/vagas/28a0c780-5684-4457-8421-e5045b9d7563/
+2026-09-09 11:11:04,559 WARNING django.request Bad Request: /v1/vagas/12c16f95-8142-4e26-8fc8-0c9d39842693/recusar/
+2026-09-09 11:11:04,906 WARNING django.request Forbidden: /v1/vagas/e8ca6e56-a6e0-4b2d-94b0-988ca3f64202/aprovar/
+2026-09-09 11:11:05,273 WARNING django.request Bad Request: /v1/vagas/61e6b29f-ca00-4f7e-9750-3ee054202d5f/transicionar/
+2026-09-09 11:11:07,691 WARNING django.request Bad Request: /v1/vagas/d1e5843a-8157-4674-afc5-31591f6318d1/cobrar/
+2026-09-09 11:11:08,152 WARNING django.request Not Found: /v1/vagas/0ffa6f47-732b-4347-bd8a-73de58640ff9/cobrar/
+2026-09-09 11:11:10,175 WARNING django.request Bad Request: /v1/vagas/d7e492f1-c1b0-46be-afb8-db58e37fa313/mover-etapa/
+2026-09-09 11:11:10,665 WARNING django.request Bad Request: /v1/vagas/f86f4c99-aa77-4029-8fdd-962df9210650/mover-etapa/
+2026-09-09 11:11:11,446 WARNING django.request Forbidden: /v1/company/config/
+2026-09-09 11:16:51,078 INFO daphne.server Killed 0 pending application instances
+2026-09-09 11:17:00,131 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:17:00,137 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 11:17:00,140 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:17:00,144 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 11:17:28,161 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 11:17:29,191 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 11:17:29,429 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 11:17:30,323 WARNING django.request Bad Request: /v1/usuarios/c752bc6c-a0b5-49fb-80a0-340fecd9d17b/
+2026-09-09 11:17:33,144 WARNING django.request Forbidden: /v1/usuarios/c5d3e9cb-6210-4ee9-b777-44f155d3ba55/
+2026-09-09 11:17:33,922 WARNING django.request Not Found: /v1/candidatos/952b5a49-23b1-4d48-ae43-40ff6fd9430b/curriculo-url/
+2026-09-09 11:17:34,243 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:17:35,406 WARNING django.request Forbidden: /v1/candidatos/f9fe77e2-2979-4c67-864f-baef92e33672/mover-etapa/
+2026-09-09 11:17:39,271 WARNING django.request Not Found: /v1/candidatos/702db57d-fba4-4b28-a077-0fc39719ac7c/
+2026-09-09 11:17:39,991 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:17:40,540 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:17:43,128 WARNING django.request Not Found: /v1/candidatos/5087dfa1-817a-4833-b661-3f34312f447a/mensagens/
+2026-09-09 11:17:45,533 WARNING django.request Not Found: /v1/vagas/1fc9b1fb-0503-4994-b08b-0b5df0d38852/mensagens/
+2026-09-09 11:17:48,439 WARNING django.request Not Found: /v1/vagas/9c87f3a2-7857-47b3-b564-564dc8b431fa/
+2026-09-09 11:17:50,019 WARNING django.request Not Found: /v1/vagas/dfced976-f881-43d9-bbaf-03ee8ece6e90/
+2026-09-09 11:17:51,684 WARNING django.request Bad Request: /v1/vagas/39a7f739-7064-4be5-9422-86f5f048ab0e/recusar/
+2026-09-09 11:17:52,135 WARNING django.request Forbidden: /v1/vagas/4a219f17-5f1b-45d5-bca4-c55dc85f300d/aprovar/
+2026-09-09 11:17:52,579 WARNING django.request Bad Request: /v1/vagas/e5a2fd36-847b-4986-8cf9-a8e53b94ce39/transicionar/
+2026-09-09 11:17:54,603 WARNING django.request Bad Request: /v1/vagas/5c584075-871e-4c7b-9081-00460600c485/cobrar/
+2026-09-09 11:17:54,985 WARNING django.request Not Found: /v1/vagas/9ebf8765-8cb6-47f4-88fb-a5ddfdfeafa1/cobrar/
+2026-09-09 11:17:57,189 WARNING django.request Bad Request: /v1/vagas/6bc70b3c-0ed8-42b5-a807-d567b9aff7e7/mover-etapa/
+2026-09-09 11:17:57,577 WARNING django.request Bad Request: /v1/vagas/ede61eff-59d3-47c5-8220-9f4e50c140ca/mover-etapa/
+2026-09-09 11:22:18,574 INFO daphne.server Killed 0 pending application instances
+2026-09-09 11:22:31,025 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:22:31,028 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 11:22:31,029 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:22:31,031 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 11:22:41,492 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 11:22:42,903 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 11:22:43,138 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 11:22:43,837 WARNING django.request Bad Request: /v1/usuarios/b622c212-325f-4725-a8f6-d4e0603244f5/
+2026-09-09 11:22:46,005 WARNING django.request Forbidden: /v1/usuarios/a88f0e0b-9bdf-42c4-992a-d57965636476/
+2026-09-09 11:22:47,016 WARNING django.request Not Found: /v1/candidatos/5c2a9fde-140b-43a4-a380-32db39591d7a/curriculo-url/
+2026-09-09 11:22:47,595 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:22:49,674 WARNING django.request Forbidden: /v1/candidatos/c29b9d53-125d-45bf-a459-09a2b8bd0f94/mover-etapa/
+2026-09-09 11:22:53,420 WARNING django.request Not Found: /v1/candidatos/ed8fc73a-61f3-44f0-a543-24a36b1f14ba/
+2026-09-09 11:22:54,094 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:22:54,547 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:22:56,878 WARNING django.request Not Found: /v1/candidatos/ccd56b3a-e61f-4396-bbca-dde192ba6383/mensagens/
+2026-09-09 11:22:59,214 WARNING django.request Not Found: /v1/vagas/f52d7024-a2ec-4077-99fb-e8ffbdc667ed/mensagens/
+2026-09-09 11:23:02,801 WARNING django.request Not Found: /v1/vagas/9858e49d-e7ab-444b-8609-1a05ad66b5dc/
+2026-09-09 11:23:04,440 WARNING django.request Not Found: /v1/vagas/22d37154-25f7-47f8-b419-de62ab830cdf/
+2026-09-09 11:23:05,824 WARNING django.request Bad Request: /v1/vagas/0494772a-4635-4e10-b5fb-00d35c0b7df5/recusar/
+2026-09-09 11:23:06,156 WARNING django.request Forbidden: /v1/vagas/7655b060-0793-4513-9d4a-cff995d9fddd/aprovar/
+2026-09-09 11:23:06,494 WARNING django.request Bad Request: /v1/vagas/aa5701fe-dfc0-4d36-b6c3-b21de458706e/transicionar/
+2026-09-09 11:23:08,500 WARNING django.request Bad Request: /v1/vagas/b36a8405-e6a9-4984-91d3-77d22957984b/cobrar/
+2026-09-09 11:23:08,830 WARNING django.request Not Found: /v1/vagas/d403c464-f430-492a-b7a1-c7ea9892a449/cobrar/
+2026-09-09 11:23:11,260 WARNING django.request Bad Request: /v1/vagas/dfee5682-5e82-42e1-9074-6da424fc2458/mover-etapa/
+2026-09-09 11:23:11,603 WARNING django.request Bad Request: /v1/vagas/fd2daca3-214a-4997-b736-1ce46578ee8f/mover-etapa/
+2026-09-09 11:24:31,809 WARNING django.request Not Found: /v1/candidatos/b26b1209-9b77-4169-94f7-b597ed3fd3d1/curriculo-url/
+2026-09-09 11:24:32,213 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:24:35,373 WARNING django.request Forbidden: /v1/candidatos/996b5390-d584-4913-ba6a-57e74ea52d49/mover-etapa/
+2026-09-09 11:24:38,632 WARNING django.request Not Found: /v1/candidatos/cf20e42c-9839-4159-9b9b-f56f283135eb/
+2026-09-09 11:24:39,549 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:24:39,921 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:25:14,207 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 11:25:14,985 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 11:25:15,146 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 11:25:15,606 WARNING django.request Bad Request: /v1/usuarios/5d516ce7-6ada-414b-b379-ae8e55f4179c/
+2026-09-09 11:25:17,563 WARNING django.request Forbidden: /v1/usuarios/303e0074-5a63-405d-b201-7c6c30824c8c/
+2026-09-09 11:25:18,240 WARNING django.request Not Found: /v1/candidatos/9d1de642-5ab1-4d9c-b358-2cb2a860cc93/curriculo-url/
+2026-09-09 11:25:18,579 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:25:20,479 WARNING django.request Forbidden: /v1/candidatos/ae158d5b-9c99-4d74-a918-6323287ba953/mover-etapa/
+2026-09-09 11:25:23,947 WARNING django.request Not Found: /v1/candidatos/34effad9-a63e-48b8-bbb7-5cb4140ab913/
+2026-09-09 11:25:24,675 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:25:25,209 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:25:27,278 WARNING django.request Not Found: /v1/candidatos/2a4ec0d5-799d-4018-b3df-9cf5ecb935e5/mensagens/
+2026-09-09 11:25:29,616 WARNING django.request Not Found: /v1/vagas/7ddf0710-c9e1-4741-a91d-39e396e85fdd/mensagens/
+2026-09-09 11:25:32,827 WARNING django.request Not Found: /v1/vagas/422f0a3e-e748-48da-a6da-39122277cc3f/
+2026-09-09 11:25:34,283 WARNING django.request Not Found: /v1/vagas/8f6f0f7d-e7d4-442e-bd30-d7d87c71f4ac/
+2026-09-09 11:25:35,542 WARNING django.request Bad Request: /v1/vagas/13284b3e-fb8f-4d08-a9b2-c39b3e1978fe/recusar/
+2026-09-09 11:25:35,857 WARNING django.request Forbidden: /v1/vagas/432c18dc-022c-40c9-9810-212cb5e97734/aprovar/
+2026-09-09 11:25:36,193 WARNING django.request Bad Request: /v1/vagas/c0f3d6dd-f3e5-4573-8152-df08fc6f14fe/transicionar/
+2026-09-09 11:25:38,517 WARNING django.request Bad Request: /v1/vagas/6a249457-e729-4806-8dd5-9ed4b9181894/cobrar/
+2026-09-09 11:25:38,911 WARNING django.request Not Found: /v1/vagas/025b794b-d616-45a7-a50d-f41b985daec7/cobrar/
+2026-09-09 11:25:41,535 WARNING django.request Bad Request: /v1/vagas/ca93825f-c301-4ee5-aca1-0d219a6aff02/mover-etapa/
+2026-09-09 11:25:41,860 WARNING django.request Bad Request: /v1/vagas/9436f910-3aa7-4d49-a7bd-f8ef2ea2f59f/mover-etapa/
+2026-09-09 11:36:55,812 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 11:36:56,614 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 11:36:56,772 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 11:36:57,249 WARNING django.request Bad Request: /v1/usuarios/d23ca746-ed69-4c5f-bdb4-f11d5ccde734/
+2026-09-09 11:36:59,341 WARNING django.request Forbidden: /v1/usuarios/d8c4fb16-c5e1-47d4-896e-35135b60c195/
+2026-09-09 11:37:00,136 WARNING django.request Not Found: /v1/candidatos/90aa8ce0-1a81-4fa2-bbda-d154b7ff479a/curriculo-url/
+2026-09-09 11:37:00,543 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:37:01,953 WARNING django.request Forbidden: /v1/candidatos/da3a05ff-ce30-4ac7-95c0-844e53baf9fc/mover-etapa/
+2026-09-09 11:37:05,440 WARNING django.request Not Found: /v1/candidatos/b326d9da-27f9-4e3d-bd83-3221457771d7/
+2026-09-09 11:37:06,257 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:37:06,620 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:37:08,570 WARNING django.request Not Found: /v1/candidatos/6d8ec33f-3c4f-48cd-8b35-ce405d251519/mensagens/
+2026-09-09 11:37:10,712 WARNING django.request Not Found: /v1/vagas/cd6ed912-9f69-40a4-895b-5504e4f2d39a/mensagens/
+2026-09-09 11:37:13,238 WARNING django.request Not Found: /v1/vagas/c9b1aaaa-0745-453b-b3a8-e3965dd23d55/
+2026-09-09 11:37:14,656 WARNING django.request Not Found: /v1/vagas/440f453d-b5b6-4aff-8997-795f44a28c61/
+2026-09-09 11:37:15,977 WARNING django.request Bad Request: /v1/vagas/cd0678b5-e984-43ff-8efe-22216075dcf0/recusar/
+2026-09-09 11:37:16,319 WARNING django.request Forbidden: /v1/vagas/ba3cb056-e166-448e-ab85-1f0a06a1f944/aprovar/
+2026-09-09 11:37:16,691 WARNING django.request Bad Request: /v1/vagas/c754c8e0-74c0-4d79-847a-22000e78a02b/transicionar/
+2026-09-09 11:37:18,533 WARNING django.request Bad Request: /v1/vagas/55539502-6d6b-4c81-9770-a1f203603878/cobrar/
+2026-09-09 11:37:18,878 WARNING django.request Not Found: /v1/vagas/25fa4f89-57a3-4614-a94c-6c38d63c0628/cobrar/
+2026-09-09 11:37:21,539 WARNING django.request Bad Request: /v1/vagas/c6ecf18d-6823-4894-9eb0-e1e091ab8c8a/mover-etapa/
+2026-09-09 11:37:21,943 WARNING django.request Bad Request: /v1/vagas/86116675-674d-4fc2-a09d-b0e2e2b010f7/mover-etapa/
+2026-09-09 11:49:21,385 INFO daphne.server Killed 0 pending application instances
+2026-09-09 11:49:25,773 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:49:25,775 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 11:49:25,776 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:49:25,778 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 11:50:14,034 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 11:50:14,857 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 11:50:15,029 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 11:50:15,585 WARNING django.request Bad Request: /v1/usuarios/34fb1c6c-1d59-4b0c-a292-14281eb51c91/
+2026-09-09 11:50:17,820 WARNING django.request Forbidden: /v1/usuarios/4700587b-3071-49af-a29e-a83a73460f65/
+2026-09-09 11:50:18,973 WARNING django.request Not Found: /v1/candidatos/34a6812d-1665-43f7-be60-d32646a800a7/curriculo-url/
+2026-09-09 11:50:19,340 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:50:21,011 WARNING django.request Forbidden: /v1/candidatos/efdf60a5-4bab-4cf9-9892-359228521bdb/mover-etapa/
+2026-09-09 11:50:24,995 WARNING django.request Not Found: /v1/candidatos/bc582577-38a2-4be6-a38f-c2b9a282a97f/
+2026-09-09 11:50:25,642 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:50:26,005 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:50:28,083 WARNING django.request Not Found: /v1/candidatos/e9d6852c-e3a0-43c6-8c01-61897c6fec96/mensagens/
+2026-09-09 11:50:30,948 WARNING django.request Not Found: /v1/vagas/4e9c4dee-c4d5-4c87-93eb-d1318ed53035/mensagens/
+2026-09-09 11:50:33,556 WARNING django.request Not Found: /v1/vagas/6b159dbd-2626-475f-97e5-ace46a3ca218/
+2026-09-09 11:50:35,784 WARNING django.request Not Found: /v1/vagas/f7cb8c38-dd2b-42c3-8d2d-63be7603487d/
+2026-09-09 11:50:38,797 WARNING django.request Bad Request: /v1/vagas/2cbc0fd6-9ba5-42db-bf0f-be3c264d6446/recusar/
+2026-09-09 11:50:39,329 WARNING django.request Forbidden: /v1/vagas/f64d514f-f39a-4a1a-ae8b-b96fd2662309/aprovar/
+2026-09-09 11:50:39,759 WARNING django.request Bad Request: /v1/vagas/9ec140ae-f181-48e3-91ac-8267bcf0d822/transicionar/
+2026-09-09 11:50:42,185 WARNING django.request Bad Request: /v1/vagas/412f49d4-e015-4a68-a817-7fbdecd5e4f7/cobrar/
+2026-09-09 11:50:42,626 WARNING django.request Not Found: /v1/vagas/e0b2c2e5-6a84-4c7c-935c-630c786c8f75/cobrar/
+2026-09-09 11:50:45,276 WARNING django.request Bad Request: /v1/vagas/5ed98968-fab4-4d5d-9ca9-1e4672f4a3cb/mover-etapa/
+2026-09-09 11:50:45,625 WARNING django.request Bad Request: /v1/vagas/961f6b47-96f8-4df5-89f8-626ca6712903/mover-etapa/
+2026-09-09 11:50:46,305 WARNING django.request Bad Request: /v1/vagas/939705c1-9e2a-41f6-9e97-c7a5e7897c9e/candidaturas/
+2026-09-09 11:52:21,396 INFO daphne.server Killed 0 pending application instances
+2026-09-09 11:52:27,433 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:52:27,435 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 11:52:27,436 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:52:27,438 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 11:52:37,422 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 11:52:38,237 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 11:52:38,404 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 11:52:39,086 WARNING django.request Bad Request: /v1/usuarios/f5dca8c6-6f04-40cc-8ce6-f72588b91b8e/
+2026-09-09 11:52:42,280 WARNING django.request Forbidden: /v1/usuarios/e90f25ab-1001-46f6-829e-3eb1ae690e6d/
+2026-09-09 11:52:43,562 WARNING django.request Not Found: /v1/candidatos/3afa87fd-f857-48f2-8d40-93f4f6c393ef/curriculo-url/
+2026-09-09 11:52:43,908 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 11:52:45,362 WARNING django.request Forbidden: /v1/candidatos/4c9a7006-93ec-4a34-b8b6-b0373119e4ed/mover-etapa/
+2026-09-09 11:52:49,160 WARNING django.request Not Found: /v1/candidatos/f81519bd-e0c1-4438-8919-348b7f2454e3/
+2026-09-09 11:52:49,865 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 11:52:50,332 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 11:52:53,141 WARNING django.request Not Found: /v1/candidatos/f75bf420-a0f1-403b-b652-1ed2a416bf16/mensagens/
+2026-09-09 11:52:55,651 WARNING django.request Not Found: /v1/vagas/464d4e46-f27d-4143-803b-9537c3c434e0/mensagens/
+2026-09-09 11:52:58,300 WARNING django.request Not Found: /v1/vagas/4e22c60c-0461-4633-bf57-a92979f23a3d/
+2026-09-09 11:52:59,999 WARNING django.request Not Found: /v1/vagas/b56b6499-30b5-40a1-94c6-a26498d4cea3/
+2026-09-09 11:53:01,817 WARNING django.request Bad Request: /v1/vagas/bd70db8c-53c9-4434-bd88-abb7390e0d05/recusar/
+2026-09-09 11:53:02,189 WARNING django.request Forbidden: /v1/vagas/7aa14b91-9e4f-427f-8fee-cc65b258fa3c/aprovar/
+2026-09-09 11:53:02,566 WARNING django.request Bad Request: /v1/vagas/02dc93d6-3752-4086-aa20-69ed4b68efb7/transicionar/
+2026-09-09 11:53:04,334 WARNING django.request Bad Request: /v1/vagas/39b82c48-385b-4847-8b6a-a2b59b1ff84f/cobrar/
+2026-09-09 11:53:04,678 WARNING django.request Not Found: /v1/vagas/7edd982e-776c-42a5-a8a5-a5e364179728/cobrar/
+2026-09-09 11:53:07,021 WARNING django.request Bad Request: /v1/vagas/ac8f9f5e-4c37-4f2c-a732-6174cc725768/mover-etapa/
+2026-09-09 11:53:07,352 WARNING django.request Bad Request: /v1/vagas/ed858a68-3804-43a7-9d6b-8d6814279b56/mover-etapa/
+2026-09-09 11:53:08,086 WARNING django.request Bad Request: /v1/vagas/43322ff7-9795-499c-a354-96710a738a17/candidaturas/
+2026-09-09 11:59:46,929 INFO daphne.server Killed 0 pending application instances
+2026-09-09 11:59:51,516 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:59:51,518 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 11:59:51,519 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 11:59:51,520 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 12:00:11,773 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 12:00:12,628 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 12:00:12,839 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 12:00:13,325 WARNING django.request Bad Request: /v1/usuarios/2d319ae5-5321-4cc6-aa6a-31a735c15f11/
+2026-09-09 12:00:15,397 WARNING django.request Forbidden: /v1/usuarios/0bd34421-2954-4f10-b615-6d17b27e47f1/
+2026-09-09 12:00:16,248 WARNING django.request Not Found: /v1/candidatos/0ded3e80-9282-4cd1-ac3e-910842b47cd4/curriculo-url/
+2026-09-09 12:00:16,572 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 12:00:18,040 WARNING django.request Forbidden: /v1/candidatos/ef6c1e9f-5e4d-4276-88c9-df2cfcc7c8eb/mover-etapa/
+2026-09-09 12:00:21,666 WARNING django.request Not Found: /v1/candidatos/dc6afcdc-aa1c-406d-8bc4-9570f119b39f/
+2026-09-09 12:00:22,315 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 12:00:22,686 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 12:00:24,651 WARNING django.request Not Found: /v1/candidatos/bd65b02b-d06d-400a-ad8b-eacfc3817cae/mensagens/
+2026-09-09 12:00:26,736 WARNING django.request Not Found: /v1/vagas/e833b268-998d-4eb0-af08-67616dcff9f9/mensagens/
+2026-09-09 12:00:29,158 WARNING django.request Not Found: /v1/vagas/1407abec-cad9-4639-ab3e-d53f79e65a8c/
+2026-09-09 12:00:30,648 WARNING django.request Not Found: /v1/vagas/cb7ee7ca-ad21-4ba5-ac94-9fd1eb53f68a/
+2026-09-09 12:00:31,941 WARNING django.request Bad Request: /v1/vagas/f656dd6a-818d-4118-aad6-0ec0caa3c20c/recusar/
+2026-09-09 12:00:32,267 WARNING django.request Forbidden: /v1/vagas/325b5693-e3bf-4c95-b965-fcc0ac5d6e22/aprovar/
+2026-09-09 12:00:32,628 WARNING django.request Bad Request: /v1/vagas/4a94381b-3894-4371-bdca-3ba05f79dc73/transicionar/
+2026-09-09 12:00:34,341 WARNING django.request Bad Request: /v1/vagas/14b916e9-85de-4a54-a523-b696a52ecb55/cobrar/
+2026-09-09 12:00:34,689 WARNING django.request Not Found: /v1/vagas/376027bd-dbd6-4e53-80c7-606187db2cca/cobrar/
+2026-09-09 12:00:36,905 WARNING django.request Bad Request: /v1/vagas/9392253c-2aac-4d62-b70c-cc706614c3ac/mover-etapa/
+2026-09-09 12:00:37,315 WARNING django.request Bad Request: /v1/vagas/58c31cd5-e965-43b5-ac63-b43b2afd22e7/mover-etapa/
+2026-09-09 12:00:38,098 WARNING django.request Bad Request: /v1/vagas/a7dab211-1baf-4e66-85b5-879a2612435f/candidaturas/
+2026-09-09 12:03:59,057 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 12:03:59,834 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 12:03:59,997 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 12:04:00,542 WARNING django.request Bad Request: /v1/usuarios/82f53b12-bbf4-4c6f-bd2a-f84d20333ade/
+2026-09-09 12:04:02,587 WARNING django.request Forbidden: /v1/usuarios/efd9829c-d9e6-42b6-9dde-564804fc4721/
+2026-09-09 12:04:03,299 WARNING django.request Not Found: /v1/candidatos/db968dc4-cf2a-415d-ab0d-4f368143f578/curriculo-url/
+2026-09-09 12:04:03,672 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 12:04:05,149 WARNING django.request Forbidden: /v1/candidatos/80e0ddac-8063-4de8-911a-4a9473105713/mover-etapa/
+2026-09-09 12:04:08,341 WARNING django.request Not Found: /v1/candidatos/a3a6bb7d-83dd-4788-be02-b90b6a1e7479/
+2026-09-09 12:04:09,004 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 12:04:09,468 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 12:04:11,698 WARNING django.request Not Found: /v1/candidatos/4c8b7e6c-4754-493f-9a74-8855dcca02dd/mensagens/
+2026-09-09 12:04:13,811 WARNING django.request Not Found: /v1/vagas/9324c225-5518-4463-93f8-46cc73715106/mensagens/
+2026-09-09 12:04:16,317 WARNING django.request Not Found: /v1/vagas/f1901881-de28-4fa3-b6aa-e81b471836c5/
+2026-09-09 12:04:17,796 WARNING django.request Not Found: /v1/vagas/098e3961-a634-494f-b240-33e9f3c8f7a8/
+2026-09-09 12:04:19,149 WARNING django.request Bad Request: /v1/vagas/72eeeb4e-9a12-42c6-b4f0-168421230bba/recusar/
+2026-09-09 12:04:19,475 WARNING django.request Forbidden: /v1/vagas/a1cbab6d-e4b5-429e-88b4-f2452f76efb7/aprovar/
+2026-09-09 12:04:19,797 WARNING django.request Bad Request: /v1/vagas/1c729499-010f-4e26-a4a9-1c99341404ed/transicionar/
+2026-09-09 12:04:21,553 WARNING django.request Bad Request: /v1/vagas/14a1085b-a7df-4694-8ef6-b2bd9857d3a5/cobrar/
+2026-09-09 12:04:21,879 WARNING django.request Not Found: /v1/vagas/a23ed2a6-cdee-4197-a955-b424a85005b9/cobrar/
+2026-09-09 12:04:23,974 WARNING django.request Bad Request: /v1/vagas/5587b298-baf5-40aa-89f0-a2665c2f7068/mover-etapa/
+2026-09-09 12:04:24,359 WARNING django.request Bad Request: /v1/vagas/624d02fa-2554-47dc-8e52-5aded6833a27/mover-etapa/
+2026-09-09 12:04:25,067 WARNING django.request Bad Request: /v1/vagas/3e8d61a9-c077-456b-be5f-b514f47d5a9a/candidaturas/
+2026-09-09 13:29:57,656 WARNING django.request Unauthorized: /v1/candidatos-notificacoes/
+2026-09-09 13:29:57,654 WARNING django.request Unauthorized: /v1/chat/nao-lidas/
+2026-09-09 13:29:57,660 WARNING django.request Unauthorized: /v1/vagas-notificacoes/
+2026-09-09 16:35:25,670 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 16:35:26,463 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 16:35:26,700 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 16:35:27,227 WARNING django.request Bad Request: /v1/usuarios/c082d6dd-b827-4705-b495-2a9fc5e91eee/
+2026-09-09 16:35:29,332 WARNING django.request Forbidden: /v1/usuarios/915f3cef-39cb-437f-a162-1affac7d63da/
+2026-09-09 16:35:30,055 WARNING django.request Not Found: /v1/candidatos/a10fc47e-bfc4-4b04-8a25-dc715a9445e3/curriculo-url/
+2026-09-09 16:35:30,367 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 16:35:31,787 WARNING django.request Forbidden: /v1/candidatos/8c5a86dd-20cc-44f7-bd87-dc1b92f7ce18/mover-etapa/
+2026-09-09 16:35:35,006 WARNING django.request Not Found: /v1/candidatos/faf1ea6f-ec6f-4c7e-ae24-ece20f1e7ec9/
+2026-09-09 16:35:35,620 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 16:35:35,970 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 16:35:38,306 WARNING django.request Not Found: /v1/candidatos/80dc8c30-8f65-4f04-ab4b-d9e8fc101196/mensagens/
+2026-09-09 16:35:40,513 WARNING django.request Not Found: /v1/vagas/7c3b1025-64ea-4c72-917a-30ae83ffb06e/mensagens/
+2026-09-09 16:35:42,940 WARNING django.request Not Found: /v1/vagas/85e4b173-d70f-4b13-a78d-80963cb87904/
+2026-09-09 16:35:44,387 WARNING django.request Not Found: /v1/vagas/f38ad778-b814-4ed7-8dcc-545e55cbc2d4/
+2026-09-09 16:35:45,731 WARNING django.request Bad Request: /v1/vagas/6e014065-3ee3-4dba-b1b6-2280286a2681/recusar/
+2026-09-09 16:35:46,097 WARNING django.request Forbidden: /v1/vagas/5f5f424b-e3dd-48da-91ca-ae8b89087712/aprovar/
+2026-09-09 16:35:46,418 WARNING django.request Bad Request: /v1/vagas/92c2f1d5-dbbd-4674-a767-8f9cb94f5313/transicionar/
+2026-09-09 16:35:48,061 WARNING django.request Bad Request: /v1/vagas/5611d441-0cee-431e-b03e-a3e5343176e6/cobrar/
+2026-09-09 16:35:48,380 WARNING django.request Not Found: /v1/vagas/87b57fe4-f844-4eee-9021-45cb6ffc38f2/cobrar/
+2026-09-09 16:35:50,335 WARNING django.request Bad Request: /v1/vagas/baff5c49-fdfa-4923-8ccf-39dc0e7688d2/mover-etapa/
+2026-09-09 16:35:50,647 WARNING django.request Bad Request: /v1/vagas/ec7fa4a3-4e02-47f5-a02e-b522fdd944a0/mover-etapa/
+2026-09-09 16:35:51,375 WARNING django.request Bad Request: /v1/vagas/a82a18b2-210f-4e92-b783-25b8a3cca652/candidaturas/
+2026-09-09 17:19:15,550 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 17:19:16,472 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 17:19:16,648 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 17:19:17,154 WARNING django.request Bad Request: /v1/usuarios/274822d2-08ad-4a50-bcfb-fedd31bc7ee8/
+2026-09-09 17:19:19,785 WARNING django.request Forbidden: /v1/usuarios/dab02c58-ea93-4065-bcc0-aca300de6377/
+2026-09-09 17:19:22,775 WARNING django.request Not Found: /v1/candidatos/a62bfbc2-732d-4bdd-a849-425c5866e935/curriculo-url/
+2026-09-09 17:19:23,226 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 17:19:25,523 WARNING django.request Forbidden: /v1/candidatos/dafd44ed-9e4a-4f1f-89dd-3a27b1979c04/mover-etapa/
+2026-09-09 17:19:29,275 WARNING django.request Not Found: /v1/candidatos/1673facc-9238-42f6-adeb-8b3c1eec787f/
+2026-09-09 17:19:29,949 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 17:19:30,309 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 17:19:32,940 WARNING django.request Not Found: /v1/candidatos/14a91fb3-2318-4515-ac41-7c518bebc59d/mensagens/
+2026-09-09 17:19:35,461 WARNING django.request Not Found: /v1/vagas/8cdec848-d9e9-40be-8e4b-9349bed24e4f/mensagens/
+2026-09-09 17:19:38,394 WARNING django.request Not Found: /v1/vagas/7972c7c1-5b61-45db-9874-f86137236d3a/
+2026-09-09 17:19:39,876 WARNING django.request Not Found: /v1/vagas/69621f7f-80e7-4007-b0ea-ed098ec683ee/
+2026-09-09 17:19:41,196 WARNING django.request Bad Request: /v1/vagas/5dec9b9f-eb76-49c3-a61d-a0f4c29445b2/recusar/
+2026-09-09 17:19:41,522 WARNING django.request Forbidden: /v1/vagas/60ff1d77-b3b8-47ee-a75b-9d47a40e3fe5/aprovar/
+2026-09-09 17:19:41,845 WARNING django.request Bad Request: /v1/vagas/08f1175f-963a-438b-8ebc-032921b60126/transicionar/
+2026-09-09 17:19:44,148 WARNING django.request Bad Request: /v1/vagas/147110cc-4f30-492b-8cc8-0e358843d8e9/cobrar/
+2026-09-09 17:19:44,492 WARNING django.request Not Found: /v1/vagas/1b4d87b3-a3bc-4d52-93ce-66dc3ca1e832/cobrar/
+2026-09-09 17:19:46,540 WARNING django.request Bad Request: /v1/vagas/de219499-7ae3-417b-9374-5ac9477a55cb/mover-etapa/
+2026-09-09 17:19:46,852 WARNING django.request Bad Request: /v1/vagas/26eeb614-cc00-4112-9c95-fedcb4d01860/mover-etapa/
+2026-09-09 17:19:47,525 WARNING django.request Bad Request: /v1/vagas/103a4c65-9353-4467-b705-cbb164ccebc1/candidaturas/
+2026-09-09 17:29:21,495 INFO daphne.server Killed 0 pending application instances
+2026-09-09 17:29:48,030 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 17:29:48,042 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 17:29:48,047 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 17:29:48,066 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 17:38:49,360 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 17:38:50,399 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 17:38:50,734 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 17:38:51,501 WARNING django.request Bad Request: /v1/usuarios/5bed53e9-6869-41b0-a2b9-04d97e4423cb/
+2026-09-09 17:38:53,711 WARNING django.request Forbidden: /v1/usuarios/1b50ced8-4d3b-4eaa-a3fa-9241013131c2/
+2026-09-09 17:38:56,312 WARNING django.request Not Found: /v1/candidatos/d66e6cad-1135-437c-8506-ce6b10c7514e/curriculo-url/
+2026-09-09 17:38:56,814 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 17:38:58,967 WARNING django.request Forbidden: /v1/candidatos/9e7b419d-fcbf-432a-bace-191c20f6a079/mover-etapa/
+2026-09-09 17:39:02,657 WARNING django.request Not Found: /v1/candidatos/523a6ab4-8b4c-40aa-86ef-05966d6e1aba/
+2026-09-09 17:39:03,621 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 85, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 17:39:04,013 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 17:39:06,135 WARNING django.request Not Found: /v1/candidatos/d8111dd0-e8cf-4ca6-ad10-c13b237862e5/mensagens/
+2026-09-09 17:39:09,121 WARNING django.request Not Found: /v1/vagas/1a28f0a5-1a67-4e79-ac81-113cffcc77bf/mensagens/
+2026-09-09 17:39:12,119 WARNING django.request Not Found: /v1/vagas/c7f310f1-d520-461b-833b-d8a8ef65ccb4/
+2026-09-09 17:39:13,640 WARNING django.request Not Found: /v1/vagas/70bffa0b-c1f5-46fa-b486-557a7211fb2d/
+2026-09-09 17:39:15,733 WARNING django.request Bad Request: /v1/vagas/41abde14-2346-4cdf-94aa-8c33f635ac45/recusar/
+2026-09-09 17:39:16,198 WARNING django.request Forbidden: /v1/vagas/fff3eadd-a263-4a1d-8605-07447c327233/aprovar/
+2026-09-09 17:39:16,564 WARNING django.request Bad Request: /v1/vagas/503b0c4d-b157-4947-8705-aa17b60a89f1/transicionar/
+2026-09-09 17:39:18,784 WARNING django.request Bad Request: /v1/vagas/cc84fc53-3f83-4680-a315-86e75d5df746/cobrar/
+2026-09-09 17:39:19,139 WARNING django.request Not Found: /v1/vagas/5705e9f2-dced-4701-9558-815fbf7ecbe6/cobrar/
+2026-09-09 17:39:21,766 WARNING django.request Bad Request: /v1/vagas/39a872b5-9d7b-425e-8848-8ee65b82bb3b/mover-etapa/
+2026-09-09 17:39:22,134 WARNING django.request Bad Request: /v1/vagas/28dabe42-aebd-4337-b47c-b154619bd003/mover-etapa/
+2026-09-09 17:39:22,849 WARNING django.request Bad Request: /v1/vagas/4ba227e2-6200-4a53-8d07-c207e2a92ac5/candidaturas/
+2026-09-09 17:40:48,681 WARNING django.request Bad Request: /v1/atividade/
+2026-09-09 17:40:49,207 WARNING django.request Forbidden: /v1/atividade/
+2026-09-09 17:41:41,897 WARNING django.request Bad Request: /v1/atividade/
+2026-09-09 17:41:42,350 WARNING django.request Forbidden: /v1/atividade/
+2026-09-09 17:42:14,061 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 17:42:15,186 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 17:42:15,445 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 17:42:16,217 WARNING django.request Bad Request: /v1/usuarios/16b1731d-19d4-44fd-8cc6-2ec444126083/
+2026-09-09 17:42:19,858 WARNING django.request Forbidden: /v1/usuarios/2752e460-6f95-4b1a-af4d-5737c4a813f7/
+2026-09-09 17:42:21,509 WARNING django.request Bad Request: /v1/atividade/
+2026-09-09 17:42:21,978 WARNING django.request Forbidden: /v1/atividade/
+2026-09-09 17:42:24,345 WARNING django.request Not Found: /v1/candidatos/d6e16aac-1f42-4ae0-b762-a472e1d473e6/curriculo-url/
+2026-09-09 17:42:24,684 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 17:42:26,256 WARNING django.request Forbidden: /v1/candidatos/02ee2a9c-64e3-4768-9260-5f1278702031/mover-etapa/
+2026-09-09 17:42:30,709 WARNING django.request Not Found: /v1/candidatos/4d18cb55-bf7f-4da4-8be0-a572e52cc904/
+2026-09-09 17:42:31,402 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 85, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 17:42:31,771 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 17:42:34,301 WARNING django.request Not Found: /v1/candidatos/1846043e-a315-4a94-92b5-cfd5b326f963/mensagens/
+2026-09-09 17:42:36,430 WARNING django.request Not Found: /v1/vagas/d284734d-0717-4637-a0ae-3ee86d9dcb7e/mensagens/
+2026-09-09 17:42:40,983 WARNING django.request Not Found: /v1/vagas/f9c64518-924b-4a9a-90bb-e3a6b7d5e987/
+2026-09-09 17:42:42,586 WARNING django.request Not Found: /v1/vagas/a4e3d7d7-dae6-449f-b123-e802cb5f6c68/
+2026-09-09 17:42:43,898 WARNING django.request Bad Request: /v1/vagas/ca65a85a-6372-49c4-ad09-240fbba903e4/recusar/
+2026-09-09 17:42:44,243 WARNING django.request Forbidden: /v1/vagas/26133cc2-44d1-4e1c-aa61-32e7f0962bc5/aprovar/
+2026-09-09 17:42:44,568 WARNING django.request Bad Request: /v1/vagas/37d34d7c-5747-43b9-a686-fa849e513e9a/transicionar/
+2026-09-09 17:42:46,480 WARNING django.request Bad Request: /v1/vagas/540d6d1f-99aa-4eea-8b05-0d5823220865/cobrar/
+2026-09-09 17:42:46,805 WARNING django.request Not Found: /v1/vagas/ce09d62c-62fa-4eae-b417-0292a0aa1756/cobrar/
+2026-09-09 17:42:49,052 WARNING django.request Bad Request: /v1/vagas/a11c9d36-b8ac-48c5-b374-79fa57aaf1fc/mover-etapa/
+2026-09-09 17:42:49,446 WARNING django.request Bad Request: /v1/vagas/9ae3e130-9407-4732-b1b8-7058d8becfc2/mover-etapa/
+2026-09-09 17:42:50,225 WARNING django.request Bad Request: /v1/vagas/e606db96-21ac-421d-8990-903a7d506f70/candidaturas/
+2026-09-09 17:43:22,197 INFO daphne.server Killed 0 pending application instances
+2026-09-09 17:43:29,465 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-09 17:43:29,467 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-09 17:43:29,468 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-09 17:43:29,469 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-09 18:00:12,072 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-09 18:00:12,967 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-09 18:00:13,155 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-09 18:00:13,926 WARNING django.request Bad Request: /v1/usuarios/5dc798c0-cf24-4180-b0ae-c0b9b6f3befb/
+2026-09-09 18:00:17,498 WARNING django.request Forbidden: /v1/usuarios/b94164a2-2c2c-4be9-a2a4-ef563ef2dd0d/
+2026-09-09 18:00:20,121 WARNING django.request Bad Request: /v1/atividade/
+2026-09-09 18:00:20,879 WARNING django.request Forbidden: /v1/atividade/
+2026-09-09 18:00:23,853 WARNING django.request Not Found: /v1/candidatos/6a55f5bc-5fa0-474f-9423-f01d6a242f08/curriculo-url/
+2026-09-09 18:00:24,210 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-09 18:00:26,008 WARNING django.request Forbidden: /v1/candidatos/43ec33b5-6b43-4f3f-a8ab-c520e19b813c/mover-etapa/
+2026-09-09 18:00:30,223 WARNING django.request Not Found: /v1/candidatos/1494d8a5-5209-4e0d-b23e-da0b2e5ac1a3/
+2026-09-09 18:00:31,071 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 85, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-09 18:00:31,898 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-09 18:00:34,709 WARNING django.request Not Found: /v1/candidatos/729b4494-4f63-4134-a98a-9cdd57f04df0/mensagens/
+2026-09-09 18:00:37,043 WARNING django.request Not Found: /v1/vagas/365f7934-2d99-4099-8609-44f3ca426b19/mensagens/
+2026-09-09 18:00:42,070 WARNING django.request Not Found: /v1/vagas/6a6cac09-a2a7-451a-8bb8-8d9c00bea129/
+2026-09-09 18:00:43,729 WARNING django.request Not Found: /v1/vagas/7b93f287-b7b0-4797-8c2b-11f0bf9e7f7b/
+2026-09-09 18:00:45,396 WARNING django.request Bad Request: /v1/vagas/9161e404-85a1-4771-af30-b36f4047dee4/recusar/
+2026-09-09 18:00:45,864 WARNING django.request Forbidden: /v1/vagas/797042cf-4dc0-484e-9fe7-df87fc7f446e/aprovar/
+2026-09-09 18:00:46,277 WARNING django.request Bad Request: /v1/vagas/3d1c41e6-43a9-4b64-a99f-d104e892e11f/transicionar/
+2026-09-09 18:00:48,513 WARNING django.request Bad Request: /v1/vagas/6fa3dd91-8645-46d9-9e18-e5d50c9a6ca7/cobrar/
+2026-09-09 18:00:48,843 WARNING django.request Not Found: /v1/vagas/366cba34-02a5-4a9b-998c-56f43909758e/cobrar/
+2026-09-09 18:00:51,419 WARNING django.request Bad Request: /v1/vagas/312ce7e5-ab48-4de4-9178-d91329c46a75/mover-etapa/
+2026-09-09 18:00:51,937 WARNING django.request Bad Request: /v1/vagas/9eb18e69-b242-443f-af4e-fd48012a38b0/mover-etapa/
+2026-09-09 18:00:52,692 WARNING django.request Bad Request: /v1/vagas/e94bd9eb-49da-40d1-b3ad-3d5163436016/candidaturas/

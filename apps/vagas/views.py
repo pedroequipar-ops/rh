@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.core.pagination import StandardPagination
 from apps.core.permissions import HasFunctionPermission
 from utils.utils import capture_company_id
 
@@ -140,9 +141,24 @@ class VagaViewSet(viewsets.ModelViewSet):
         if inicial == Vaga.Status.SOLICITADA or user.role == "SETOR":
             services.notificar_vaga_criada(vaga, company_id)
 
+    # Dados originais da solicitação: só RH edita depois que a vaga existe.
+    # Setor mantém edição de urgente/prioridade/tags/responsável/contagens.
+    CAMPOS_SOLICITACAO = (
+        "setor",
+        "titulo",
+        "descricao",
+        "requisitos",
+        "quantidade_vagas",
+        "salario",
+        "data_inicio_prevista",
+        "data_alvo_preenchimento",
+        "motivo_solicitacao",
+    )
+
     def perform_update(self, serializer):
         if self.request.user.role == "SETOR":
-            serializer.validated_data.pop("setor", None)
+            for campo in self.CAMPOS_SOLICITACAO:
+                serializer.validated_data.pop(campo, None)
         responsavel_mudou = "responsavel" in serializer.validated_data
         responsavel_antes = serializer.instance.responsavel if responsavel_mudou else None
         vaga = serializer.save()
@@ -276,19 +292,42 @@ class VagaViewSet(viewsets.ModelViewSet):
 
 
 class VagaNotificacaoListView(generics.ListAPIView):
+    """``?lida=false`` (default, sem paginação real) ou ``?lida=true``
+    (histórico, paginado de verdade)."""
+
     serializer_class = VagaNotificacaoSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = None
+
+    @property
+    def pagination_class(self):
+        return StandardPagination if self.request.query_params.get("lida") == "true" else None
 
     def get_queryset(self):
-        return VagaNotificacao.objects.filter(
-            destinatario=self.request.user, lida=False
-        ).select_related("vaga")[:20]
+        lida = self.request.query_params.get("lida") == "true"
+        qs = VagaNotificacao.objects.filter(destinatario=self.request.user, lida=lida).select_related(
+            "vaga"
+        )
+        return qs if lida else qs[:20]
 
 
 class VagaNotificacaoMarcarLidasView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        VagaNotificacao.objects.filter(destinatario=request.user, lida=False).update(lida=True)
+        VagaNotificacao.objects.filter(destinatario=request.user, lida=False).update(
+            lida=True, lida_em=timezone.now()
+        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class VagaNotificacaoMarcarUmaView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk=None):
+        lida = request.data.get("lida", True)
+        atualizados = VagaNotificacao.objects.filter(id=pk, destinatario=request.user).update(
+            lida=lida, lida_em=timezone.now() if lida else None
+        )
+        if not atualizados:
+            raise NotFound("Notificação não encontrada.")
         return Response(status=status.HTTP_204_NO_CONTENT)

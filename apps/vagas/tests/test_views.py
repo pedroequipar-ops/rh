@@ -80,6 +80,41 @@ def test_setor_cria_vaga_notifica_rh(company_factory, setor_factory, user_factor
 
 
 @pytest.mark.django_db
+def test_marcar_uma_notificacao_de_vaga_e_historico(company_factory, setor_factory, user_factory):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
+    rh = user_factory(company=company, role=User.Role.RH)
+    setor_client = _client_for(setor_user, company)
+    rh_client = _client_for(rh, company)
+
+    for titulo in ("Vendedor", "Analista"):
+        r = setor_client.post(
+            "/v1/vagas/",
+            {"titulo": titulo, "descricao": "desc", "requisitos": "req", "quantidade_vagas": 1},
+        )
+        assert r.status_code == 201
+
+    notificacoes = list(VagaNotificacao.objects.filter(destinatario=rh).order_by("created_at"))
+    assert len(notificacoes) == 2
+
+    marcar_uma = rh_client.post(f"/v1/vagas-notificacoes/{notificacoes[0].id}/marcar/")
+    assert marcar_uma.status_code == 204
+
+    nao_lidas = rh_client.get("/v1/vagas-notificacoes/")
+    assert len(nao_lidas.data) == 1
+
+    historico = rh_client.get("/v1/vagas-notificacoes/?lida=true")
+    assert historico.data["count"] == 1
+    assert historico.data["results"][0]["lida"] is True
+
+    outro_rh = user_factory(company=company, role=User.Role.RH)
+    outro_client = _client_for(outro_rh, company)
+    resposta_de_outro = outro_client.post(f"/v1/vagas-notificacoes/{notificacoes[1].id}/marcar/")
+    assert resposta_de_outro.status_code == 404
+
+
+@pytest.mark.django_db
 def test_rh_cria_vaga_nao_gera_notificacao(company_factory, setor_factory, user_factory):
     company = company_factory()
     setor = setor_factory(company=company)
@@ -106,15 +141,59 @@ def test_rh_cria_vaga_nao_gera_notificacao(company_factory, setor_factory, user_
 def test_setor_edita_a_propria_vaga(company_factory, setor_factory, user_factory, vaga_factory):
     company = company_factory()
     setor = setor_factory(company=company)
-    vaga = vaga_factory(company=company, setor=setor)
+    vaga = vaga_factory(company=company, setor=setor, urgente=False)
     setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
 
     client = _client_for(setor_user, company)
-    response = client.patch(f"/v1/vagas/{vaga.id}/", {"titulo": "Novo título"})
+    response = client.patch(f"/v1/vagas/{vaga.id}/", {"urgente": True})
 
     assert response.status_code == 200
     vaga.refresh_from_db()
-    assert vaga.titulo == "Novo título"
+    assert vaga.urgente is True
+
+
+@pytest.mark.django_db
+def test_setor_nao_pode_editar_dados_da_solicitacao(
+    company_factory, setor_factory, user_factory, vaga_factory
+):
+    """Título, descrição, requisitos, quantidade, salário, datas e motivo são
+    os dados da solicitação original: depois de criada, só RH edita — o
+    setor segue podendo mexer em urgente/prioridade/tags/responsável."""
+    company = company_factory()
+    setor = setor_factory(company=company)
+    vaga = vaga_factory(
+        company=company,
+        setor=setor,
+        titulo="Título original",
+        descricao="desc original",
+        requisitos="req original",
+        quantidade_vagas=1,
+        salario="1000.00",
+        motivo_solicitacao=Vaga.MotivoSolicitacao.AUMENTO_QUADRO,
+    )
+    setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
+
+    client = _client_for(setor_user, company)
+    response = client.patch(
+        f"/v1/vagas/{vaga.id}/",
+        {
+            "titulo": "Hack",
+            "descricao": "Hack",
+            "requisitos": "Hack",
+            "quantidade_vagas": 99,
+            "salario": "9999.00",
+            "motivo_solicitacao": Vaga.MotivoSolicitacao.SUBSTITUICAO,
+        },
+    )
+
+    assert response.status_code == 200
+    vaga.refresh_from_db()
+    assert vaga.titulo == "Título original"
+    assert vaga.descricao == "desc original"
+    assert vaga.requisitos == "req original"
+    assert vaga.quantidade_vagas == 1
+    assert str(vaga.salario) == "1000.00"
+    assert vaga.motivo_solicitacao == Vaga.MotivoSolicitacao.AUMENTO_QUADRO
 
 
 @pytest.mark.django_db
@@ -352,6 +431,21 @@ def test_transicao_invalida_retorna_400(company_factory, user_factory, vaga_fact
 
 
 @pytest.mark.django_db
+def test_transicao_para_lixeira_sem_observacao_falha(company_factory, user_factory, vaga_factory):
+    company = company_factory()
+    vaga = vaga_factory(company=company, status=Vaga.Status.PUBLICADA)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    r = client.post(
+        f"/v1/vagas/{vaga.id}/transicionar/", {"para": "CANCELADA"}, format="json"
+    )
+    assert r.status_code == 400
+    vaga.refresh_from_db()
+    assert vaga.status == Vaga.Status.PUBLICADA
+
+
+@pytest.mark.django_db
 def test_fluxo_completo_ate_em_triagem(company_factory, user_factory, vaga_factory):
     company = company_factory()
     vaga = vaga_factory(company=company, status=Vaga.Status.SOLICITADA)
@@ -362,9 +456,10 @@ def test_fluxo_completo_ate_em_triagem(company_factory, user_factory, vaga_facto
         client.post(f"/v1/vagas/{vaga.id}/aprovar/", {}, format="json").status_code == 200
     )
     for destino in ("PUBLICADA", "ENCERRADA", "EM_TRIAGEM"):
-        r = client.post(
-            f"/v1/vagas/{vaga.id}/transicionar/", {"para": destino}, format="json"
-        )
+        payload = {"para": destino}
+        if destino == "ENCERRADA":
+            payload["observacao"] = "Prazo estourado sem candidatos"
+        r = client.post(f"/v1/vagas/{vaga.id}/transicionar/", payload, format="json")
         assert r.status_code == 200, (destino, r.data)
         assert r.data["status"] == destino
 
@@ -592,7 +687,11 @@ def test_registrar_candidaturas_recebidas_vai_pro_historico(
     assert any(h["observacao"].startswith("Candidaturas recebidas: 12") for h in hist.data)
 
     # fora de PUBLICADA não deixa
-    client.post(f"/v1/vagas/{vaga.id}/transicionar/", {"para": "CANCELADA"}, format="json")
+    client.post(
+        f"/v1/vagas/{vaga.id}/transicionar/",
+        {"para": "CANCELADA", "observacao": "Vaga cancelada pelo solicitante"},
+        format="json",
+    )
     bloqueado = client.post(
         f"/v1/vagas/{vaga.id}/candidaturas/", {"quantidade": 3}, format="json"
     )

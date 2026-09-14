@@ -57,8 +57,10 @@ export function useCreateCandidato() {
 
 export function useMoverEtapaCandidato() {
   const qc = useQueryClient()
+  const { showToast } = useToast()
   return useMutation({
-    mutationFn: ({ id, etapaId }: { id: string; etapaId: string }) => moverEtapa(id, etapaId),
+    mutationFn: ({ id, etapaId, motivo }: { id: string; etapaId: string; motivo?: string }) =>
+      moverEtapa(id, etapaId, motivo),
     onMutate: async ({ id, etapaId }) => {
       await qc.cancelQueries({ queryKey: queryKeys.candidatos })
       const listaAnterior = qc.getQueryData<Candidato[]>(queryKeys.candidatosList)
@@ -87,6 +89,7 @@ export function useMoverEtapaCandidato() {
         old?.map((c) => (c.id === atualizado.id ? atualizado : c)),
       )
       qc.setQueryData(queryKeys.candidato(atualizado.id), atualizado)
+      if (atualizado.etapa_atual.is_saida_negativa) showToast('Candidato descartado')
     },
     onSettled: (_data, _err, { id }) => {
       qc.invalidateQueries({ queryKey: queryKeys.candidatosList })

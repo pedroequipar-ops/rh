@@ -15,20 +15,25 @@ import clsx from 'clsx'
 import type { Vaga, VagaStatus } from '../../types'
 import { CHIP_ABAIXO_DA_COLUNA, FLUXO_STATUSES, STATUS_ORBS } from '../../constants/vagaStatus'
 import { Avatar } from '../ui/Avatar'
+import { LixeiraDock } from '../board/LixeiraDock'
+import { MotivoLixeiraModal } from '../board/MotivoLixeiraModal'
 import { useHorizontalWheel } from './useHorizontalWheel'
 import { VagaAvancarDock } from './VagaAvancarDock'
 import { VagaKanbanCardContent } from './VagaKanbanCard'
 import { VagaKanbanColumn } from './VagaKanbanColumn'
 import { VagaStatusChip } from './VagaStatusChip'
 
-/** Alvos de drop compactos (chips/dock) que não são coluna — o preview
- * arrastado encolhe pra um chip pequeno em cima deles. */
-const ALVOS_COMPACTOS: VagaStatus[] = [...STATUS_ORBS, 'PREENCHIDA']
+/** Alvos de drop compactos (chips) que não são coluna — o preview arrastado
+ * encolhe pra um chip pequeno em cima deles. PREENCHIDA é coluna cheia
+ * (FLUXO_STATUSES), não entra aqui: o card mantém o tamanho normal também
+ * quando cai no dock Avançar (mesmo status, drop mais raro que justifique
+ * o encolhimento). */
+const ALVOS_COMPACTOS: VagaStatus[] = [...STATUS_ORBS]
 
-/** Extrai o status de um id de droppable `status:<STATUS>` (coluna/chip) ou
+/** Extrai o status de um id de droppable `status:<STATUS>` (coluna/chip),
  * `status:<STATUS>:lista` (a lista aberta do chip também aceita drop, com o
  * mesmo status — ver VagaStatusChip), ou `avancar:<STATUS>` (dock — ver
- * VagaAvancarDock, prefixo à parte pra não colidir com o id da coluna). */
+ * VagaAvancarDock; EM_TRIAGEM não tem coluna cheia aqui, só chega por ele). */
 function statusDoDroppable(id: string | null): VagaStatus | null {
   if (id?.startsWith('status:')) return id.slice(7).split(':')[0] as VagaStatus
   if (id?.startsWith('avancar:')) return id.slice(8) as VagaStatus
@@ -41,7 +46,7 @@ interface VagasBoardProps {
   vagaModalBase: string
   /** rota da tela de criar vaga; duplo clique na coluna "Solicitada" abre ela */
   novaVagaHref?: string
-  onMoveVaga?: (vagaId: string, status: VagaStatus) => void
+  onMoveVaga?: (vagaId: string, status: VagaStatus, observacao?: string) => void
   selectedVagaId?: string | null
 }
 
@@ -49,7 +54,9 @@ interface VagasBoardProps {
  * aqui — quem circula ali é o board Pessoas. Recusada/Congelada viram um
  * chip embaixo da coluna de onde normalmente partem (Solicitada/Publicada)
  * em vez de coluna cheia própria; passar o mouse por cima abre a lista (pra
- * dar pra arrastar uma vaga de volta pra fora de lá). */
+ * dar pra arrastar uma vaga de volta pra fora de lá). Ir pra lixeira
+ * (Cancelada/Encerrada) é só arrastar pro dock — mesmo padrão do board
+ * Triagem/Pessoas — com o motivo obrigatório no MotivoLixeiraModal. */
 export function VagasBoard({
   vagas,
   draggable,
@@ -62,12 +69,26 @@ export function VagasBoard({
   const [activeId, setActiveId] = useState<string | null>(null)
   const [overStatus, setOverStatus] = useState<VagaStatus | null>(null)
   const [openStatus, setOpenStatus] = useState<VagaStatus | null>(null)
+  /** Vaga esperando confirmação com motivo antes de ir pra lixeira, arrastada
+   * pro LixeiraDock (Cancelada/Encerrada — as únicas ações destrutivas). */
+  const [pendingLixeira, setPendingLixeira] = useState<{
+    vagaId: string
+    status: VagaStatus
+    titulo: string
+  } | null>(null)
   const handleWheel = useHorizontalWheel()
   const navigate = useNavigate()
 
   const activeVagaId = activeId?.startsWith('vaga:') ? activeId.slice(5) : null
   const activeVaga = activeVagaId ? vagas.find((v) => v.id === activeVagaId) ?? null : null
   const sobreAlvoCompacto = !!overStatus && ALVOS_COMPACTOS.includes(overStatus)
+  const statusLixeiraDe = (vaga: Vaga): VagaStatus | null =>
+    vaga.transicoes_disponiveis.includes('ENCERRADA')
+      ? 'ENCERRADA'
+      : vaga.transicoes_disponiveis.includes('CANCELADA')
+        ? 'CANCELADA'
+        : null
+  const podeLixeira = !!activeVaga && !!statusLixeiraDe(activeVaga)
 
   function handleDragStart(event: DragStartEvent) {
     setActiveId(String(event.active.id))
@@ -85,6 +106,11 @@ export function VagasBoard({
     const vagaId = String(active.id).slice(5)
     const vaga = vagas.find((v) => v.id === vagaId)
     if (!vaga) return
+    if (String(over.id) === 'acao:lixeira') {
+      const status = statusLixeiraDe(vaga)
+      if (status) setPendingLixeira({ vagaId, status, titulo: vaga.titulo })
+      return
+    }
     const destino = statusDoDroppable(String(over.id))
     if (!destino) return
     if (vaga.status === destino) return
@@ -101,39 +127,37 @@ export function VagasBoard({
       {FLUXO_STATUSES.map((status) => {
         const chipStatus = CHIP_ABAIXO_DA_COLUNA[status]
         return (
-          <div key={status} className="flex w-[244px] shrink-0 flex-col gap-2">
-            <VagaKanbanColumn
-              status={status}
-              vagas={vagas.filter((v) => v.status === status)}
-              draggable={draggable}
-              vagaModalBase={vagaModalBase}
-              onDoubleClick={
-                status === 'SOLICITADA' && novaVagaHref
-                  ? () => navigate(novaVagaHref)
-                  : undefined
-              }
-              aceitaDrop={!!activeVaga && activeVaga.transicoes_disponiveis.includes(status)}
-              dropInvalido={
-                !!activeVaga &&
-                !activeVaga.transicoes_disponiveis.includes(status) &&
-                activeVaga.status !== status
-              }
-              selectedVagaId={selectedVagaId}
-              onAcaoRapida={onMoveVaga}
-            />
-            {chipStatus && (
-              <VagaStatusChip
-                status={chipStatus}
-                vagas={vagas}
-                draggable={draggable}
-                vagaModalBase={vagaModalBase}
-                activeVaga={activeVaga}
-                selectedVagaId={selectedVagaId}
-                openStatus={openStatus}
-                onToggle={(s) => setOpenStatus((prev) => (prev === s ? null : s))}
-              />
-            )}
-          </div>
+          <VagaKanbanColumn
+            key={status}
+            status={status}
+            vagas={vagas.filter((v) => v.status === status)}
+            draggable={draggable}
+            vagaModalBase={vagaModalBase}
+            onDoubleClick={
+              status === 'SOLICITADA' && novaVagaHref ? () => navigate(novaVagaHref) : undefined
+            }
+            aceitaDrop={!!activeVaga && activeVaga.transicoes_disponiveis.includes(status)}
+            dropInvalido={
+              !!activeVaga &&
+              !activeVaga.transicoes_disponiveis.includes(status) &&
+              activeVaga.status !== status
+            }
+            selectedVagaId={selectedVagaId}
+            footer={
+              chipStatus && (
+                <VagaStatusChip
+                  status={chipStatus}
+                  vagas={vagas}
+                  draggable={draggable}
+                  vagaModalBase={vagaModalBase}
+                  activeVaga={activeVaga}
+                  selectedVagaId={selectedVagaId}
+                  openStatus={openStatus}
+                  onToggle={(s) => setOpenStatus((prev) => (prev === s ? null : s))}
+                />
+              )
+            }
+          />
         )
       })}
     </div>
@@ -178,11 +202,28 @@ export function VagasBoard({
             </div>
           )}
         </DragOverlay>
-        <VagaAvancarDock
-          visivel={!!activeVaga && activeVaga.transicoes_disponiveis.includes('PREENCHIDA')}
-          status="PREENCHIDA"
-        />
+        <div className="pointer-events-none absolute bottom-5 right-5 z-30 flex items-center gap-3">
+          <LixeiraDock bare visivel={podeLixeira} />
+          <VagaAvancarDock
+            bare
+            visivel={
+              activeVaga?.status === 'PREENCHIDA' &&
+              activeVaga.transicoes_disponiveis.includes('EM_TRIAGEM')
+            }
+            status="EM_TRIAGEM"
+          />
+        </div>
       </DndContext>
+      {pendingLixeira && (
+        <MotivoLixeiraModal
+          titulo={`Mandar "${pendingLixeira.titulo}" pra lixeira?`}
+          onCancel={() => setPendingLixeira(null)}
+          onConfirm={(motivo) => {
+            onMoveVaga?.(pendingLixeira.vagaId, pendingLixeira.status, motivo)
+            setPendingLixeira(null)
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -85,7 +85,8 @@ export function useTransicionarVaga() {
   const qc = useQueryClient()
   const { showToast } = useToast()
   return useMutation({
-    mutationFn: ({ id, para }: { id: string; para: VagaStatus }) => transicionarVaga(id, para),
+    mutationFn: ({ id, para, observacao }: { id: string; para: VagaStatus; observacao?: string }) =>
+      transicionarVaga(id, para, observacao),
     onMutate: async ({ id, para }) => {
       await qc.cancelQueries({ queryKey: queryKeys.vagas })
       const listaAnterior = qc.getQueryData<Vaga[]>(queryKeys.vagasList)
@@ -105,7 +106,12 @@ export function useTransicionarVaga() {
     },
     onSuccess: (atualizada, { para }) => {
       aplicarVagaNoCache(qc, atualizada)
-      showToast(`Vaga movida para "${statusLabel(para)}"`)
+      if (para === 'CANCELADA' || para === 'ENCERRADA') {
+        showToast('Vaga descartada')
+        return
+      }
+      const labelToast = para === 'EM_TRIAGEM' ? 'Triagem' : statusLabel(para)
+      showToast(`Vaga movida para "${labelToast}"`)
     },
     onSettled: (_data, _err, { id, para }) => {
       if (para === 'EM_TRIAGEM') {

@@ -53,9 +53,15 @@ interface CandidatoCardProps {
   candidato: Candidato
   draggable: boolean
   candidatoModalBase: string
+  selected?: boolean
 }
 
-export function CandidatoCard({ candidato, draggable, candidatoModalBase }: CandidatoCardProps) {
+export function CandidatoCard({
+  candidato,
+  draggable,
+  candidatoModalBase,
+  selected,
+}: CandidatoCardProps) {
   const navigate = useNavigate()
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
@@ -66,12 +72,14 @@ export function CandidatoCard({ candidato, draggable, candidatoModalBase }: Cand
   return (
     <div
       ref={setNodeRef}
+      data-candidato-card
       onClick={() => navigate(`${candidatoModalBase}/${candidato.id}`)}
       {...(draggable ? { ...listeners, ...attributes } : {})}
       className={clsx(
         'shrink-0 cursor-pointer rounded-lg border border-slate-200 bg-white p-2 shadow-sm transition hover:border-slate-300 hover:shadow',
         draggable && 'cursor-grab active:cursor-grabbing',
         isDragging && 'opacity-60',
+        selected && 'border-blue-400 ring-2 ring-blue-200 shadow-md',
       )}
     >
       <CandidatoCardContent candidato={candidato} />

@@ -13,6 +13,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 
 from apps.accounts.models import User
 from apps.atividade import services as atividade_services
+from apps.core.notificacoes_ws import publicar_notificacao
 
 from .models import EtapaKanban, Vaga, VagaCobranca, VagaHistoricoStatus, VagaNotificacao
 
@@ -30,7 +31,7 @@ ALLOWED_TRANSITIONS = {
     S.EM_TRIAGEM: {S.PREENCHIDA, S.CANCELADA},
     S.CONGELADA: {S.CANCELADA},
     S.CANCELADA: set(),
-    S.PREENCHIDA: set(),
+    S.PREENCHIDA: {S.EM_TRIAGEM},
 }
 
 # Transições que um usuário SETOR pode disparar (de, para). Todo o resto é RH.
@@ -54,6 +55,10 @@ STAMP_FIELDS = {
     S.EM_TRIAGEM: "triagem_iniciada_em",
 }
 FECHAMENTO = {S.PREENCHIDA, S.CANCELADA}
+
+# Status "Lixeira" (ver VAGA_STATUS_META no frontend) — exigem motivo (`observacao`)
+# porque são destrutivos e só se chega neles arrastando/pelo menu ⋮, nunca sem querer.
+STATUS_LIXEIRA = {S.CANCELADA, S.ENCERRADA}
 
 # Status em que a bola está com o RH / com o setor solicitante.
 RESPONSAVEL_RH = {S.SOLICITADA, S.APROVADA, S.PUBLICADA, S.ENCERRADA}
@@ -89,6 +94,7 @@ def transicoes_disponiveis(vaga, user) -> list:
 
 
 def _notificar(company_id, destinatarios, vaga, mensagem):
+    destinatarios = list(destinatarios)
     VagaNotificacao.objects.bulk_create(
         [
             VagaNotificacao(
@@ -97,6 +103,8 @@ def _notificar(company_id, destinatarios, vaga, mensagem):
             for u in destinatarios
         ]
     )
+    for u in destinatarios:
+        publicar_notificacao(u.id, "vaga", {"mensagem": mensagem, "vaga_id": str(vaga.id)})
 
 
 def notificar_vaga_criada(vaga, company_id):
@@ -293,6 +301,8 @@ def aplicar_transicao(vaga, para, user, observacao="", *, extra_fields=None, che
         )
     if checar_papel and not _is_rh(user) and (de, para) not in SETOR_ALLOWED:
         raise PermissionDenied("Seu perfil não pode fazer essa transição.")
+    if para in STATUS_LIXEIRA and not observacao.strip():
+        raise ValidationError({"observacao": "Informe o motivo."})
 
     now = timezone.now()
     campos = {"status": para, "updated_at": now}

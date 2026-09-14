@@ -1,0 +1,1421 @@
+2026-09-04 15:06:36,571 WARNING django.request Forbidden: /v1/vagas/5dd04fbd-135b-4e5f-8787-5b89bd28a384/
+2026-09-04 15:06:36,574 WARNING django.request Forbidden: /v1/vagas/5dd04fbd-135b-4e5f-8787-5b89bd28a384/mover-etapa/
+2026-09-04 15:07:14,309 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 15:07:17,096 WARNING django.request Not Found: /v1/candidatos/5c5e84ad-5b3c-4a48-bb61-a7a40748353c/
+2026-09-04 15:07:18,881 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 15:08:02,289 WARNING django.request Not Found: /v1/candidatos/f45d29c6-8772-4183-afb3-ea6b01b120ce/mensagens/
+2026-09-04 15:08:34,313 WARNING django.request Not Found: /v1/candidatos/887fe76c-448a-4013-a78d-72d1d0329ffb/mensagens/
+2026-09-04 15:13:17,629 WARNING django.request Not Found: /v1/candidatos/b60dcd85-df94-46e6-b694-f2ddaeafb274/mensagens/
+2026-09-04 15:13:39,013 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 15:13:42,158 WARNING django.request Not Found: /v1/candidatos/91352241-5808-429b-b598-a35a813282ea/
+2026-09-04 15:13:44,431 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 15:13:47,435 WARNING django.request Not Found: /v1/candidatos/fb5a109c-b144-406a-b532-abf5a58cbb8c/mensagens/
+2026-09-04 15:13:49,709 WARNING django.request Forbidden: /v1/vagas/cddc5a12-c1fb-4d63-bd68-f5a036013c5e/
+2026-09-04 15:13:49,710 WARNING django.request Forbidden: /v1/vagas/cddc5a12-c1fb-4d63-bd68-f5a036013c5e/mover-etapa/
+2026-09-04 15:15:47,932 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:15:47,933 INFO daphne.server Configuring endpoint tcp:port=8001:interface=0.0.0.0
+2026-09-04 15:15:47,934 INFO daphne.server Listening on TCP address 0.0.0.0:8001
+2026-09-04 15:16:19,686 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 15:16:24,021 WARNING django.request Not Found: /v1/candidatos/22bcec8b-dcf4-4100-aeee-f52a5526312b/
+2026-09-04 15:16:26,467 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 15:16:30,894 WARNING django.request Not Found: /v1/candidatos/b219c5d7-20fa-4e1d-ac38-bc652c13f396/mensagens/
+2026-09-04 15:16:32,860 WARNING django.request Forbidden: /v1/vagas/a567bb66-de2b-418a-b338-7665c3808866/
+2026-09-04 15:16:32,861 WARNING django.request Forbidden: /v1/vagas/a567bb66-de2b-418a-b338-7665c3808866/mover-etapa/
+2026-09-04 15:18:48,633 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 15:18:51,644 WARNING django.request Not Found: /v1/candidatos/4d49a722-dc6a-47a2-86c3-0f11447c941a/
+2026-09-04 15:18:53,322 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 15:18:56,243 WARNING django.request Not Found: /v1/candidatos/c41ccfc5-29fc-42c1-aa5d-519cc27aaf8a/mensagens/
+2026-09-04 15:18:57,956 WARNING django.request Forbidden: /v1/vagas/5b5f5be8-7b1d-4018-a6d5-4e5d4a54f5c9/
+2026-09-04 15:18:57,957 WARNING django.request Forbidden: /v1/vagas/5b5f5be8-7b1d-4018-a6d5-4e5d4a54f5c9/mover-etapa/
+2026-09-04 15:21:32,663 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:21:33,470 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:21:33,470 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 15:21:33,471 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 15:21:40,274 INFO django.channels.server HTTP GET /docs/ 200 [0.03, 127.0.0.1:53803]
+2026-09-04 15:21:57,633 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.74, 127.0.0.1:51053]
+2026-09-04 15:21:57,728 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.07, 127.0.0.1:61225]
+2026-09-04 15:21:57,968 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.12, 127.0.0.1:52204]
+2026-09-04 15:21:58,039 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.20, 127.0.0.1:52203]
+2026-09-04 15:21:58,102 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.10, 127.0.0.1:56598]
+2026-09-04 15:21:58,156 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.10, 127.0.0.1:53670]
+2026-09-04 15:22:16,694 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.22, 127.0.0.1:62588]
+2026-09-04 15:22:16,808 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.09, 127.0.0.1:53942]
+2026-09-04 15:22:28,867 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:61167]
+2026-09-04 15:22:28,892 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.09, 127.0.0.1:61166]
+2026-09-04 15:22:28,940 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:54426]
+2026-09-04 15:22:28,966 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:53548]
+2026-09-04 15:22:36,745 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:64812]
+2026-09-04 15:22:36,786 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:59398]
+2026-09-04 15:22:42,189 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:58315]
+2026-09-04 15:22:42,193 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:58314]
+2026-09-04 15:22:42,251 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:53368]
+2026-09-04 15:22:42,255 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:53370]
+2026-09-04 15:22:43,695 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:53149]
+2026-09-04 15:22:43,747 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:61006]
+2026-09-04 15:22:48,299 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:63037]
+2026-09-04 15:22:48,302 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:63036]
+2026-09-04 15:22:48,353 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:57038]
+2026-09-04 15:22:48,363 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:54135]
+2026-09-04 15:23:10,329 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.06, 127.0.0.1:59739]
+2026-09-04 15:23:10,451 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.11, 127.0.0.1:59742]
+2026-09-04 15:23:10,497 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.11, 127.0.0.1:59745]
+2026-09-04 15:23:10,568 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.05, 127.0.0.1:59748]
+2026-09-04 15:23:25,366 ERROR django.request Internal Server Error: /v1/vagas/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "etapa_atual_id" of relation "vagas_vaga" violates not-null constraint
+DETAIL:  Failing row contains (bb6ef5af-3f44-4283-8300-e41de4739a51, 2026-09-04 18:23:25.100311+00, 2026-09-04 18:23:25.100311+00, t, Analista Financeiro Pleno, Vaga para analista financeiro pleno., Excel avançado e ERP financeiro., 1, null, 0, b8ed7eb3-8c5d-40a8-b0d4-08f1a08811d3, 617ae7ed-7bb1-4cc8-afa9-ac423d8832f6, null, null).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\views.py", line 106, in perform_create
+    serializer.save(**extra)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\serializers.py", line 208, in save
+    self.instance = self.create(validated_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\serializers.py", line 989, in create
+    instance = ModelClass._default_manager.create(**validated_data)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 665, in create
+    obj.save(force_insert=True, using=self.db)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 902, in save
+    self.save_base(
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1008, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1169, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1210, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "etapa_atual_id" of relation "vagas_vaga" violates not-null constraint
+DETAIL:  Failing row contains (bb6ef5af-3f44-4283-8300-e41de4739a51, 2026-09-04 18:23:25.100311+00, 2026-09-04 18:23:25.100311+00, t, Analista Financeiro Pleno, Vaga para analista financeiro pleno., Excel avançado e ERP financeiro., 1, null, 0, b8ed7eb3-8c5d-40a8-b0d4-08f1a08811d3, 617ae7ed-7bb1-4cc8-afa9-ac423d8832f6, null, null).
+
+2026-09-04 15:23:25,379 ERROR django.channels.server HTTP POST /v1/vagas/ 500 [0.31, 127.0.0.1:57416]
+2026-09-04 15:25:02,148 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\views.py changed, reloading.
+2026-09-04 15:25:04,042 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:25:04,655 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:25:04,655 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 15:25:04,655 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 15:25:23,287 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.06, 127.0.0.1:51053]
+2026-09-04 15:25:23,376 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.08, 127.0.0.1:51056]
+2026-09-04 15:25:23,406 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.06, 127.0.0.1:51059]
+2026-09-04 15:25:23,455 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:51062]
+2026-09-04 15:25:33,834 INFO django.channels.server HTTP POST /v1/vagas/ 201 [0.05, 127.0.0.1:59163]
+2026-09-04 15:25:33,887 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.03, 127.0.0.1:52447]
+2026-09-04 15:25:33,899 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:52446]
+2026-09-04 15:25:33,940 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:58963]
+2026-09-04 15:25:33,953 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:52684]
+2026-09-04 15:27:14,814 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.05, 127.0.0.1:54677]
+2026-09-04 15:27:14,855 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.03, 127.0.0.1:54283]
+2026-09-04 15:27:14,861 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:54284]
+2026-09-04 15:27:16,732 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:52094]
+2026-09-04 15:27:16,775 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.03, 127.0.0.1:51056]
+2026-09-04 15:27:16,780 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:51058]
+2026-09-04 15:27:33,006 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.10, 127.0.0.1:63409]
+2026-09-04 15:27:33,021 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.12, 127.0.0.1:63410]
+2026-09-04 15:27:33,297 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.05, 127.0.0.1:50317]
+2026-09-04 15:27:36,409 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.04, 127.0.0.1:63681]
+2026-09-04 15:28:30,682 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.05, 127.0.0.1:64503]
+2026-09-04 15:28:30,768 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.08, 127.0.0.1:64506]
+2026-09-04 15:28:30,832 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.11, 127.0.0.1:64510]
+2026-09-04 15:28:30,835 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.11, 127.0.0.1:64511]
+2026-09-04 15:28:30,905 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:64515]
+2026-09-04 15:28:30,912 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.07, 127.0.0.1:64517]
+2026-09-04 15:29:20,682 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:56076]
+2026-09-04 15:29:20,714 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.03, 127.0.0.1:62653]
+2026-09-04 15:29:20,764 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.04, 127.0.0.1:55469]
+2026-09-04 15:29:26,479 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.05, 127.0.0.1:63989]
+2026-09-04 15:29:26,563 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.07, 127.0.0.1:63992]
+2026-09-04 15:29:26,593 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.08, 127.0.0.1:63996]
+2026-09-04 15:29:26,598 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.09, 127.0.0.1:63997]
+2026-09-04 15:29:26,643 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:64001]
+2026-09-04 15:29:26,655 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:64003]
+2026-09-04 15:29:51,724 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.04, 127.0.0.1:64531]
+2026-09-04 15:29:51,806 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.07, 127.0.0.1:64534]
+2026-09-04 15:29:51,834 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.07, 127.0.0.1:64537]
+2026-09-04 15:29:51,880 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:64540]
+2026-09-04 15:30:21,876 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.58, 127.0.0.1:51053]
+2026-09-04 15:30:21,995 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 31, in extrair_dados_candidato
+    conteudo = MinioStorage().get_object(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\utils\storage.py", line 49, in get_object
+    response = self.client.get_object(Bucket=bucket, Key=key)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\botocore\client.py", line 606, in _api_call
+    return self._make_api_call(operation_name, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\botocore\context.py", line 123, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\botocore\client.py", line 1094, in _make_api_call
+    raise error_class(parsed_response, operation_name)
+botocore.exceptions.ClientError: An error occurred (InvalidBucketName) when calling the GetObject operation: The specified bucket is not valid.
+2026-09-04 15:30:22,002 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [0.06, 127.0.0.1:50404]
+2026-09-04 15:32:14,332 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\config\settings\base.py changed, reloading.
+2026-09-04 15:32:16,452 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:32:17,038 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:32:17,038 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 15:32:17,039 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 15:32:41,984 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:32:42,577 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:32:42,578 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 15:32:42,580 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 15:32:48,370 WARNING django.request Method Not Allowed: /v1/auth/token/verify/
+2026-09-04 15:32:48,371 WARNING django.channels.server HTTP GET /v1/auth/token/verify/ 405 [0.03, 127.0.0.1:59692]
+2026-09-04 15:32:53,672 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.09, 127.0.0.1:56000]
+2026-09-04 15:32:53,724 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.04, 127.0.0.1:56003]
+2026-09-04 15:32:53,788 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.07, 127.0.0.1:56006]
+2026-09-04 15:32:53,834 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:56009]
+2026-09-04 15:33:15,320 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.33, 127.0.0.1:51570]
+2026-09-04 15:33:15,447 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 34, in extrair_dados_candidato
+    texto = _extrair_texto_pdf(conteudo)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 25, in _extrair_texto_pdf
+    reader = PdfReader(io.BytesIO(conteudo))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\pypdf\_reader.py", line 137, in __init__
+    self.read(stream)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\pypdf\_reader.py", line 576, in read
+    xref_issue_nr = self._get_xref_issues(stream, startxref)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\pypdf\_reader.py", line 978, in _get_xref_issues
+    stream.seek(startxref - 1, 0)  # -1 to check character before
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: negative seek value -1
+2026-09-04 15:33:15,450 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [0.06, 127.0.0.1:52335]
+2026-09-04 15:34:03,323 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.06, 127.0.0.1:64229]
+2026-09-04 15:34:03,425 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.09, 127.0.0.1:64232]
+2026-09-04 15:34:03,478 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.10, 127.0.0.1:64235]
+2026-09-04 15:34:03,567 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.08, 127.0.0.1:64238]
+2026-09-04 15:34:13,449 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.03, 127.0.0.1:57704]
+2026-09-04 15:34:16,143 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 404 Not Found"
+2026-09-04 15:34:16,149 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\extractors\groq_extractor.py", line 52, in extrair
+    response = self.client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\openai\_utils\_utils.py", line 286, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1147, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\openai\_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\openai\_base_client.py", line 1047, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'The model `llama-3.3-70b-versatile` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'code': 'model_not_found'}}
+2026-09-04 15:34:16,160 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [2.64, 127.0.0.1:51137]
+2026-09-04 15:34:58,462 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\config\settings\base.py changed, reloading.
+2026-09-04 15:34:59,905 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:35:00,703 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:35:00,704 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 15:35:00,705 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 15:35:09,027 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:35:09,974 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:35:09,974 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 15:35:09,975 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 15:35:12,125 INFO django.channels.server HTTP GET /docs/ 200 [0.14, 127.0.0.1:51060]
+2026-09-04 15:35:16,235 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.07, 127.0.0.1:52871]
+2026-09-04 15:35:16,351 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.10, 127.0.0.1:52874]
+2026-09-04 15:35:16,422 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.11, 127.0.0.1:52877]
+2026-09-04 15:35:16,472 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:52880]
+2026-09-04 15:35:26,454 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.23, 127.0.0.1:53996]
+2026-09-04 15:35:29,004 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-04 15:35:29,028 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [2.50, 127.0.0.1:57090]
+2026-09-04 15:35:42,905 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-04 15:35:42,905 WARNING django.channels.server HTTP POST /v1/candidatos/ 400 [0.09, 127.0.0.1:64579]
+2026-09-04 15:35:59,459 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.03, 127.0.0.1:63556]
+2026-09-04 15:35:59,520 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-04 15:35:59,521 WARNING django.channels.server HTTP POST /v1/candidatos/ 400 [0.05, 127.0.0.1:60572]
+2026-09-04 15:36:34,171 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.04, 127.0.0.1:58625]
+2026-09-04 15:36:34,264 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.08, 127.0.0.1:58628]
+2026-09-04 15:36:34,299 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.09, 127.0.0.1:58631]
+2026-09-04 15:36:34,347 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:58634]
+2026-09-04 15:36:49,113 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.04, 127.0.0.1:56436]
+2026-09-04 15:36:50,530 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-04 15:36:50,537 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [1.36, 127.0.0.1:54967]
+2026-09-04 15:37:06,802 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-04 15:37:06,802 WARNING django.channels.server HTTP POST /v1/candidatos/ 400 [0.06, 127.0.0.1:58146]
+2026-09-04 15:37:51,654 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\serializers.py changed, reloading.
+2026-09-04 15:37:53,943 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:37:54,575 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:37:54,575 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 15:37:54,576 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 15:38:04,125 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 15:38:09,731 WARNING django.request Not Found: /v1/candidatos/a346f38e-bdbf-4fe0-b60c-1cadfdd2e952/
+2026-09-04 15:38:12,522 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 15:38:33,331 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 15:38:38,370 WARNING django.request Not Found: /v1/candidatos/ae4f09bd-2b76-4e1c-97a3-ca5ddc812ce8/
+2026-09-04 15:38:40,982 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 15:38:44,726 WARNING django.request Not Found: /v1/candidatos/e66445dd-3695-471e-b9c5-a95f89088e90/mensagens/
+2026-09-04 15:38:46,478 WARNING django.request Forbidden: /v1/vagas/b8322e69-c373-4a2c-be28-be458b56758a/
+2026-09-04 15:38:46,479 WARNING django.request Forbidden: /v1/vagas/b8322e69-c373-4a2c-be28-be458b56758a/mover-etapa/
+2026-09-04 15:40:11,968 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.08, 127.0.0.1:63575]
+2026-09-04 15:40:11,971 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.08, 127.0.0.1:63573]
+2026-09-04 15:40:12,043 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:64889]
+2026-09-04 15:40:12,055 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.07, 127.0.0.1:64891]
+2026-09-04 15:40:13,618 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.04, 127.0.0.1:59171]
+2026-09-04 15:40:14,871 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.05, 127.0.0.1:56619]
+2026-09-04 15:40:16,427 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.04, 127.0.0.1:52796]
+2026-09-04 15:40:19,818 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.05, 127.0.0.1:65280]
+2026-09-04 15:40:21,855 INFO django.channels.server HTTP GET /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/candidatos/ 200 [0.03, 127.0.0.1:53225]
+2026-09-04 15:40:24,731 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:56196]
+2026-09-04 15:40:24,789 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:51834]
+2026-09-04 15:40:32,066 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:55920]
+2026-09-04 15:40:32,107 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:56692]
+2026-09-04 15:40:57,903 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.07, 127.0.0.1:64268]
+2026-09-04 15:40:57,906 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.08, 127.0.0.1:64269]
+2026-09-04 15:40:57,962 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:52360]
+2026-09-04 15:40:57,979 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:54793]
+2026-09-04 15:41:00,370 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.05, 127.0.0.1:54866]
+2026-09-04 15:41:40,890 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.11, 127.0.0.1:61593]
+2026-09-04 15:41:40,964 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.06, 127.0.0.1:61596]
+2026-09-04 15:41:41,006 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.08, 127.0.0.1:61600]
+2026-09-04 15:41:41,010 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.08, 127.0.0.1:61601]
+2026-09-04 15:41:41,073 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:61605]
+2026-09-04 15:41:41,079 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:61607]
+2026-09-04 15:43:45,576 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:54716]
+2026-09-04 15:43:45,616 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:55405]
+2026-09-04 15:43:46,543 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:58174]
+2026-09-04 15:43:46,586 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:59730]
+2026-09-04 15:43:46,770 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 15:43:47,196 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:53831]
+2026-09-04 15:43:47,202 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:53833]
+2026-09-04 15:43:47,259 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:65083]
+2026-09-04 15:43:47,271 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:54746]
+2026-09-04 15:43:48,912 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.04, 127.0.0.1:55223]
+2026-09-04 15:43:49,785 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.04, 127.0.0.1:49347]
+2026-09-04 15:43:50,624 WARNING django.request Not Found: /v1/candidatos/18b40c9c-9bf8-4d5d-a133-e346f609274a/
+2026-09-04 15:43:51,744 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.05, 127.0.0.1:51883]
+2026-09-04 15:43:52,883 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 15:43:53,513 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.04, 127.0.0.1:61253]
+2026-09-04 15:43:57,059 WARNING django.request Not Found: /v1/candidatos/1907084c-e747-4939-888c-f747aeb8b802/mensagens/
+2026-09-04 15:43:59,278 WARNING django.request Forbidden: /v1/vagas/7b8522e9-28b1-4f0c-95b7-99f4c0ed4025/
+2026-09-04 15:43:59,279 WARNING django.request Forbidden: /v1/vagas/7b8522e9-28b1-4f0c-95b7-99f4c0ed4025/mover-etapa/
+2026-09-04 15:44:00,544 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.05, 127.0.0.1:51383]
+2026-09-04 15:44:04,833 INFO django.channels.server HTTP PATCH /v1/vagas/26c126bd-212d-4ac8-9959-cba96315eb84/mover-etapa/ 200 [0.05, 127.0.0.1:65063]
+2026-09-04 15:47:40,844 INFO django.channels.server HTTP GET /docs/ 200 [0.07, 127.0.0.1:52347]
+2026-09-04 15:47:55,591 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.55, 127.0.0.1:52350]
+2026-09-04 15:47:55,994 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.03, 127.0.0.1:52353]
+2026-09-04 15:47:56,364 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:52356]
+2026-09-04 15:47:57,133 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.48, 127.0.0.1:52359]
+2026-09-04 15:47:57,886 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('::1', 5672, 0, 0)
+2026-09-04 15:47:57,887 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=1492, family=23, type=1, proto=6, laddr=('::1', 52368, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 15:47:57,888 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020836C49AF0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020836C49AF0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>).
+2026-09-04 15:47:57,979 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020836C49AF0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 15:47:57,980 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020836C49AF0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 15:47:57,980 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020836C49AF0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 15:47:57,980 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-04 15:47:58,040 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-04 15:47:58,040 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020836C49AF0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-04 15:47:58,048 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020836C49AF0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-04 15:47:58,048 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-04 15:47:58,052 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=1492, family=23, type=1, proto=6, laddr=('::1', 52368, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 15:47:58,052 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=1492, family=23, type=1, proto=6, laddr=('::1', 52368, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 15:47:58,052 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=1492, family=23, type=1, proto=6, laddr=('::1', 52368, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 15:47:58,053 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-04 15:47:58,053 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-04 15:47:58,053 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=1492, family=23, type=1, proto=6, laddr=('::1', 52368, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 15:47:58,054 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2026-09-04 15:47:58,064 INFO django.channels.server HTTP POST /v1/candidatos/ 201 [0.29, 127.0.0.1:52363]
+2026-09-04 15:48:08,243 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.42, 127.0.0.1:52370]
+2026-09-04 15:48:08,557 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.03, 127.0.0.1:52373]
+2026-09-04 15:48:08,907 INFO django.channels.server HTTP GET /v1/candidatos/3d8198b3-2cda-4300-8c37-99a42cb02898/curriculo-url/ 200 [0.04, 127.0.0.1:52376]
+2026-09-04 15:48:39,600 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.38, 127.0.0.1:65524]
+2026-09-04 15:48:39,915 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.26, 127.0.0.1:57375]
+2026-09-04 15:49:48,574 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.51, 127.0.0.1:63977]
+2026-09-04 15:49:48,624 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.58, 127.0.0.1:63975]
+2026-09-04 15:49:48,769 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.14, 127.0.0.1:53440]
+2026-09-04 15:49:48,813 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.17, 127.0.0.1:55596]
+2026-09-04 15:55:36,886 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\models.py changed, reloading.
+2026-09-04 15:55:39,735 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:55:40,478 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 15:55:40,479 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 15:55:40,480 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 15:55:46,308 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\models.py changed, reloading.
+2026-09-04 15:55:47,481 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:56:18,264 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\serializers.py changed, reloading.
+2026-09-04 15:56:19,604 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:56:27,752 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\serializers.py changed, reloading.
+2026-09-04 15:56:29,359 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:56:34,051 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\views.py changed, reloading.
+2026-09-04 15:56:35,123 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:56:40,133 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\views.py changed, reloading.
+2026-09-04 15:56:41,505 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:56:47,384 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\views.py changed, reloading.
+2026-09-04 15:56:48,639 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:57:07,341 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\repositories\vaga_repository.py changed, reloading.
+2026-09-04 15:57:08,499 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:57:15,503 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\interfaces\i_vaga_repository.py changed, reloading.
+2026-09-04 15:57:16,491 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:57:22,571 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\admin.py changed, reloading.
+2026-09-04 15:57:23,468 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:57:56,260 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py changed, reloading.
+2026-09-04 15:57:57,258 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:58:11,681 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\serializers.py changed, reloading.
+2026-09-04 15:58:12,629 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:58:24,866 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\views.py changed, reloading.
+2026-09-04 15:58:25,880 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:58:29,713 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\views.py changed, reloading.
+2026-09-04 15:58:30,723 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:58:34,481 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\views.py changed, reloading.
+2026-09-04 15:58:35,430 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:58:42,470 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\views.py changed, reloading.
+2026-09-04 15:58:43,492 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:58:52,804 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\repositories\candidato_repository.py changed, reloading.
+2026-09-04 15:58:53,776 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:59:00,072 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\interfaces\i_candidato_repository.py changed, reloading.
+2026-09-04 15:59:01,912 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 15:59:09,012 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\core\permissions.py changed, reloading.
+2026-09-04 15:59:10,439 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 16:00:45,594 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\chat\migrations\0001_initial.py changed, reloading.
+2026-09-04 16:00:46,604 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 16:00:47,054 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 16:00:47,055 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 16:00:47,056 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 16:01:14,958 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 16:01:21,723 WARNING django.request Forbidden: /v1/candidatos/fc230f8f-87a9-455f-9e5e-49654047f8f0/mover-etapa/
+2026-09-04 16:01:31,066 WARNING django.request Not Found: /v1/candidatos/577ad089-1fa4-4103-9fae-7210f8542fd2/
+2026-09-04 16:01:34,770 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 16:01:41,491 WARNING django.request Not Found: /v1/candidatos/027a56e7-b1b5-474a-ac4e-ba1f525b776d/mensagens/
+2026-09-04 16:01:44,927 WARNING django.request Forbidden: /v1/vagas/a051c557-0aca-4eea-9742-47f30daba3c3/
+2026-09-04 16:04:40,763 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-04 16:04:40,766 WARNING django.channels.server HTTP GET /v1/auth/me/ 401 [0.24, 127.0.0.1:62567]
+2026-09-04 16:04:40,826 INFO django.channels.server HTTP POST /v1/auth/token/refresh/ 200 [0.04, 127.0.0.1:49226]
+2026-09-04 16:04:40,830 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-04 16:04:40,831 WARNING django.channels.server HTTP GET /v1/auth/me/ 401 [0.06, 127.0.0.1:62570]
+2026-09-04 16:04:40,855 INFO django.channels.server HTTP POST /v1/auth/token/refresh/ 200 [0.01, 127.0.0.1:55922]
+2026-09-04 16:04:40,869 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-04 16:04:40,870 WARNING django.channels.server HTTP GET /v1/auth/me/ 401 [0.03, 127.0.0.1:65014]
+2026-09-04 16:04:40,913 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-04 16:04:40,914 WARNING django.channels.server HTTP GET /v1/auth/me/ 401 [0.04, 127.0.0.1:57691]
+2026-09-04 16:06:06,318 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 16:06:10,293 WARNING django.request Forbidden: /v1/candidatos/d6e86d91-afd8-4636-b707-b77462bc71e1/mover-etapa/
+2026-09-04 16:06:15,632 WARNING django.request Not Found: /v1/candidatos/9f474750-21f8-4b9f-98d5-14a85bac3b12/
+2026-09-04 16:06:18,461 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 16:06:23,854 WARNING django.request Not Found: /v1/candidatos/aa0004d7-317a-4233-8935-a7d3e7e4b7d1/mensagens/
+2026-09-04 16:06:25,659 WARNING django.request Forbidden: /v1/vagas/a4799894-124d-457f-8c10-3b05de61aba3/
+2026-09-04 16:07:06,841 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\models.py changed, reloading.
+2026-09-04 16:07:09,133 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 16:07:09,879 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 16:07:09,879 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 16:07:09,880 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 16:08:03,239 INFO django.channels.server HTTP GET /docs/ 200 [0.10, 127.0.0.1:60682]
+2026-09-04 16:08:12,907 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 16:08:13,608 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 16:08:13,609 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 16:08:13,610 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 16:08:18,671 INFO django.channels.server HTTP GET /docs/ 200 [0.04, 127.0.0.1:61962]
+2026-09-04 16:08:35,251 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.63, 127.0.0.1:61967]
+2026-09-04 16:08:35,697 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.05, 127.0.0.1:61970]
+2026-09-04 16:08:36,149 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.09, 127.0.0.1:61973]
+2026-09-04 16:08:36,601 INFO django.channels.server HTTP POST /v1/vagas/ 201 [0.10, 127.0.0.1:61976]
+2026-09-04 16:08:38,016 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.72, 127.0.0.1:61979]
+2026-09-04 16:08:40,005 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('::1', 5672, 0, 0)
+2026-09-04 16:08:40,007 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=1784, family=23, type=1, proto=6, laddr=('::1', 61988, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:08:40,008 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x00000242321569C0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x00000242321569C0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>).
+2026-09-04 16:08:40,173 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x00000242321569C0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 16:08:40,173 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x00000242321569C0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 16:08:40,174 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x00000242321569C0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 16:08:40,174 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-04 16:08:40,230 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-04 16:08:40,231 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x00000242321569C0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-04 16:08:40,306 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x00000242321569C0> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-04 16:08:40,307 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-04 16:08:40,311 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=1784, family=23, type=1, proto=6, laddr=('::1', 61988, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:08:40,312 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=1784, family=23, type=1, proto=6, laddr=('::1', 61988, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:08:40,312 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=1784, family=23, type=1, proto=6, laddr=('::1', 61988, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:08:40,312 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-04 16:08:40,312 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-04 16:08:40,312 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=1784, family=23, type=1, proto=6, laddr=('::1', 61988, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:08:40,312 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2026-09-04 16:08:40,324 INFO django.channels.server HTTP POST /v1/candidatos/ 201 [0.51, 127.0.0.1:61983]
+2026-09-04 16:08:41,444 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.11, 127.0.0.1:57623]
+2026-09-04 16:08:42,330 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.10, 127.0.0.1:57626]
+2026-09-04 16:38:30,989 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 16:38:35,140 WARNING django.request Forbidden: /v1/candidatos/d9c0b0f5-4b4b-477b-9517-101a86b9aa68/mover-etapa/
+2026-09-04 16:38:39,515 WARNING django.request Not Found: /v1/candidatos/52ca018c-5824-456a-86dc-6e70f49312a4/
+2026-09-04 16:38:42,122 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 50, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 16:38:45,364 WARNING django.request Not Found: /v1/candidatos/04e18175-3d38-4a1e-a9a7-5db24f6e748f/mensagens/
+2026-09-04 16:38:47,769 WARNING django.request Forbidden: /v1/vagas/4a480ee6-158e-4bbf-be9e-8e66f256a8af/
+2026-09-04 16:39:17,332 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 16:39:18,298 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 16:39:18,298 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 16:39:18,299 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 16:39:34,929 WARNING django.request Not Found: /api/
+2026-09-04 16:39:34,929 WARNING django.channels.server HTTP GET /api/ 404 [0.09, 127.0.0.1:56047]
+2026-09-04 16:40:10,648 WARNING django.request Unauthorized: /v1/auth/token/
+2026-09-04 16:40:10,649 WARNING django.channels.server HTTP POST /v1/auth/token/ 401 [0.70, 127.0.0.1:52619]
+2026-09-04 16:40:47,994 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.63, 127.0.0.1:60814]
+2026-09-04 16:40:48,040 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.04, 127.0.0.1:52596]
+2026-09-04 16:40:48,178 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.11, 127.0.0.1:64164]
+2026-09-04 16:40:48,179 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.11, 127.0.0.1:64165]
+2026-09-04 16:40:48,240 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:58134]
+2026-09-04 16:40:48,252 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:58136]
+2026-09-04 16:40:56,978 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.06, 127.0.0.1:58066]
+2026-09-04 16:40:58,257 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:52430]
+2026-09-04 16:42:22,340 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.15, 127.0.0.1:53697]
+2026-09-04 16:42:24,264 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.07, 127.0.0.1:60265]
+2026-09-04 16:42:24,315 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:54567]
+2026-09-04 16:42:33,892 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.06, 127.0.0.1:54234]
+2026-09-04 16:42:33,942 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:61847]
+2026-09-04 16:42:40,695 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:57861]
+2026-09-04 16:42:40,714 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.07, 127.0.0.1:57860]
+2026-09-04 16:42:40,767 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:58935]
+2026-09-04 16:42:40,786 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:52143]
+2026-09-04 16:42:42,272 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:52106]
+2026-09-04 16:42:43,269 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:61271]
+2026-09-04 16:42:44,277 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.07, 127.0.0.1:52819]
+2026-09-04 16:42:45,262 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.06, 127.0.0.1:63984]
+2026-09-04 16:42:46,760 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.08, 127.0.0.1:59290]
+2026-09-04 16:42:48,370 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:53055]
+2026-09-04 16:42:50,559 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.04, 127.0.0.1:57728]
+2026-09-04 16:42:55,203 WARNING django.request Not Found: /v1/token/
+2026-09-04 16:42:55,204 WARNING django.channels.server HTTP POST /v1/token/ 404 [0.02, 127.0.0.1:57731]
+2026-09-04 16:43:09,006 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.13, 127.0.0.1:62146]
+2026-09-04 16:43:09,106 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.07, 127.0.0.1:58857]
+2026-09-04 16:43:09,130 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.10, 127.0.0.1:58858]
+2026-09-04 16:43:09,423 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.05, 127.0.0.1:56492]
+2026-09-04 16:43:09,471 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:56468]
+2026-09-04 16:43:09,483 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:56469]
+2026-09-04 16:43:09,787 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:55296]
+2026-09-04 16:43:09,826 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.03, 127.0.0.1:64978]
+2026-09-04 16:43:09,844 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:64979]
+2026-09-04 16:43:10,686 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:54641]
+2026-09-04 16:43:10,730 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:49684]
+2026-09-04 16:43:10,739 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.04, 127.0.0.1:49686]
+2026-09-04 16:43:12,106 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:64062]
+2026-09-04 16:43:12,158 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.04, 127.0.0.1:53001]
+2026-09-04 16:43:12,161 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:53000]
+2026-09-04 16:43:14,618 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:63209]
+2026-09-04 16:43:14,667 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.04, 127.0.0.1:55483]
+2026-09-04 16:43:14,671 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:55481]
+2026-09-04 16:43:17,357 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.05, 127.0.0.1:53026]
+2026-09-04 16:43:17,408 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:61319]
+2026-09-04 16:43:17,416 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:61320]
+2026-09-04 16:43:18,404 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:51053]
+2026-09-04 16:43:18,446 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.03, 127.0.0.1:64682]
+2026-09-04 16:43:18,452 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.04, 127.0.0.1:64683]
+2026-09-04 16:43:33,353 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.67, 127.0.0.1:64687]
+2026-09-04 16:43:35,986 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.62, 127.0.0.1:64690]
+2026-09-04 16:43:37,106 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.06, 127.0.0.1:51053]
+2026-09-04 16:43:38,310 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.04, 127.0.0.1:51427]
+2026-09-04 16:43:38,621 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.63, 127.0.0.1:51056]
+2026-09-04 16:43:40,658 WARNING django.request Bad Request: /v1/setores/
+2026-09-04 16:43:40,659 WARNING django.channels.server HTTP GET /v1/setores/ 400 [0.03, 127.0.0.1:51430]
+2026-09-04 16:44:05,050 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.68, 127.0.0.1:51440]
+2026-09-04 16:44:07,683 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.62, 127.0.0.1:51443]
+2026-09-04 16:44:10,368 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.68, 127.0.0.1:51446]
+2026-09-04 16:44:12,407 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:51449]
+2026-09-04 16:44:53,285 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.06, 127.0.0.1:51980]
+2026-09-04 16:44:54,384 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.57, 127.0.0.1:51982]
+2026-09-04 16:44:55,062 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.04, 127.0.0.1:60160]
+2026-09-04 16:44:56,572 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:62614]
+2026-09-04 16:44:57,082 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.69, 127.0.0.1:60162]
+2026-09-04 16:44:57,805 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:63387]
+2026-09-04 16:44:59,672 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.04, 127.0.0.1:62494]
+2026-09-04 16:44:59,777 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.69, 127.0.0.1:63389]
+2026-09-04 16:45:01,500 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:53501]
+2026-09-04 16:45:01,811 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:53503]
+2026-09-04 16:45:02,130 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.04, 127.0.0.1:52270]
+2026-09-04 16:45:02,179 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.04, 127.0.0.1:55493]
+2026-09-04 16:45:02,210 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58663]
+2026-09-04 16:45:02,215 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:59679]
+2026-09-04 16:45:02,278 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.06, 127.0.0.1:58665]
+2026-09-04 16:45:02,347 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.06, 127.0.0.1:54874]
+2026-09-04 16:45:02,353 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58663]
+2026-09-04 16:45:02,354 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:59679]
+2026-09-04 16:45:02,360 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58663]
+2026-09-04 16:45:04,209 ERROR django.request Internal Server Error: /v1/vagas/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "setor_id" of relation "vagas_vaga" violates not-null constraint
+DETAIL:  Failing row contains (65942202-59d8-4d84-bcf4-60acf6ca9f1c, 2026-09-04 19:45:03.844509+00, 2026-09-04 19:45:03.844509+00, t, Smoke Test Vaga, vaga de teste automatizado, , 1, null, cf2cff0f-d816-4fd0-9ae4-976917519734, e64953dd-5d53-43b2-8db9-9652a6aca91e, null).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\views.py", line 90, in perform_create
+    serializer.save(**extra)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\serializers.py", line 208, in save
+    self.instance = self.create(validated_data)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\serializers.py", line 989, in create
+    instance = ModelClass._default_manager.create(**validated_data)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 665, in create
+    obj.save(force_insert=True, using=self.db)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 902, in save
+    self.save_base(
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1008, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1169, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1210, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "setor_id" of relation "vagas_vaga" violates not-null constraint
+DETAIL:  Failing row contains (65942202-59d8-4d84-bcf4-60acf6ca9f1c, 2026-09-04 19:45:03.844509+00, 2026-09-04 19:45:03.844509+00, t, Smoke Test Vaga, vaga de teste automatizado, , 1, null, cf2cff0f-d816-4fd0-9ae4-976917519734, e64953dd-5d53-43b2-8db9-9652a6aca91e, null).
+
+2026-09-04 16:45:04,219 ERROR django.channels.server HTTP POST /v1/vagas/ 500 [0.40, 127.0.0.1:54880]
+2026-09-04 16:45:09,122 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/curriculo-url/ 200 [0.71, 127.0.0.1:54844]
+2026-09-04 16:45:38,457 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:59679]
+2026-09-04 16:45:40,265 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.04, 127.0.0.1:52024]
+2026-09-04 16:45:41,645 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.06, 127.0.0.1:57832]
+2026-09-04 16:45:43,406 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.07, 127.0.0.1:56746]
+2026-09-04 16:45:58,160 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.06, 127.0.0.1:51797]
+2026-09-04 16:45:58,208 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.04, 127.0.0.1:51833]
+2026-09-04 16:45:58,219 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:55417]
+2026-09-04 16:45:58,230 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58653]
+2026-09-04 16:45:58,263 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.04, 127.0.0.1:55419]
+2026-09-04 16:45:58,301 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:55417]
+2026-09-04 16:45:58,303 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:55417]
+2026-09-04 16:45:58,316 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.05, 127.0.0.1:52787]
+2026-09-04 16:45:58,325 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58653]
+2026-09-04 16:45:59,666 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/curriculo-url/ 200 [0.05, 127.0.0.1:50461]
+2026-09-04 16:46:03,283 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58653]
+2026-09-04 16:46:05,255 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.64, 127.0.0.1:55267]
+2026-09-04 16:46:05,813 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.04, 127.0.0.1:60627]
+2026-09-04 16:46:07,785 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.52, 127.0.0.1:60630]
+2026-09-04 16:46:10,209 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.42, 127.0.0.1:60633]
+2026-09-04 16:46:12,249 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:60637]
+2026-09-04 16:46:14,289 INFO django.channels.server HTTP POST /v1/vagas/ 201 [0.04, 127.0.0.1:60640]
+2026-09-04 16:46:16,328 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-04 16:46:16,328 WARNING django.channels.server HTTP POST /v1/candidatos/ 400 [0.03, 127.0.0.1:60643]
+2026-09-04 16:46:18,156 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:53800]
+2026-09-04 16:46:24,183 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.04, 127.0.0.1:56819]
+2026-09-04 16:46:24,223 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.03, 127.0.0.1:60098]
+2026-09-04 16:46:24,236 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:62140]
+2026-09-04 16:46:24,251 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:54244]
+2026-09-04 16:46:24,287 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.05, 127.0.0.1:62142]
+2026-09-04 16:46:24,315 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:62140]
+2026-09-04 16:46:24,318 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:62140]
+2026-09-04 16:46:24,329 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.03, 127.0.0.1:65422]
+2026-09-04 16:46:24,335 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:54244]
+2026-09-04 16:46:32,237 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.65, 127.0.0.1:65428]
+2026-09-04 16:46:34,929 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.69, 127.0.0.1:65431]
+2026-09-04 16:46:37,370 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.44, 127.0.0.1:65434]
+2026-09-04 16:46:39,414 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:65437]
+2026-09-04 16:46:41,465 INFO django.channels.server HTTP POST /v1/vagas/ 201 [0.04, 127.0.0.1:65440]
+2026-09-04 16:46:43,552 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-04 16:46:43,552 WARNING django.channels.server HTTP POST /v1/candidatos/ 400 [0.08, 127.0.0.1:65443]
+2026-09-04 16:46:57,731 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:54244]
+2026-09-04 16:47:29,709 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [1.23, 127.0.0.1:65449]
+2026-09-04 16:47:32,926 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [1.20, 127.0.0.1:65452]
+2026-09-04 16:47:35,497 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.56, 127.0.0.1:65455]
+2026-09-04 16:47:37,553 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.05, 127.0.0.1:53158]
+2026-09-04 16:47:39,720 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.16, 127.0.0.1:55788]
+2026-09-04 16:47:42,023 INFO django.channels.server HTTP POST /v1/vagas/ 201 [0.07, 127.0.0.1:55792]
+2026-09-04 16:47:44,149 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('::1', 5672, 0, 0)
+2026-09-04 16:47:44,150 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=1300, family=23, type=1, proto=6, laddr=('::1', 65006, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:47:44,154 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020998033C20>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020998033C20> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>).
+2026-09-04 16:47:44,230 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020998033C20> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 16:47:44,231 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020998033C20> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 16:47:44,231 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020998033C20> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 16:47:44,232 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-04 16:47:44,241 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-04 16:47:44,241 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020998033C20> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-04 16:47:44,291 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000020998033C20> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-04 16:47:44,292 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-04 16:47:44,293 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=1300, family=23, type=1, proto=6, laddr=('::1', 65006, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:47:44,293 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=1300, family=23, type=1, proto=6, laddr=('::1', 65006, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:47:44,293 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=1300, family=23, type=1, proto=6, laddr=('::1', 65006, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:47:44,293 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-04 16:47:44,293 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-04 16:47:44,294 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=1300, family=23, type=1, proto=6, laddr=('::1', 65006, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 16:47:44,294 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2026-09-04 16:47:44,297 INFO django.channels.server HTTP POST /v1/candidatos/ 201 [0.27, 127.0.0.1:65001]
+2026-09-04 16:47:46,342 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:65008]
+2026-09-04 16:47:48,394 INFO django.channels.server HTTP PATCH /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mover-etapa/ 200 [0.05, 127.0.0.1:65011]
+2026-09-04 16:47:50,444 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:65014]
+2026-09-04 16:47:52,487 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.04, 127.0.0.1:65017]
+2026-09-04 16:47:54,525 WARNING django.request Not Found: /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/
+2026-09-04 16:47:54,525 WARNING django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 404 [0.03, 127.0.0.1:65021]
+2026-09-04 16:47:56,571 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.04, 127.0.0.1:65024]
+2026-09-04 16:48:37,900 WARNING django.request Not Found: /v1/candidatos/c5b4afe2-f554-4860-aa78-8cd1f92456f2/mensagens/
+2026-09-04 16:48:47,256 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.14, 127.0.0.1:56720]
+2026-09-04 16:48:48,024 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.06, 127.0.0.1:60715]
+2026-09-04 16:48:48,111 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.05, 127.0.0.1:54011]
+2026-09-04 16:48:48,187 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58983]
+2026-09-04 16:48:48,270 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.11, 127.0.0.1:58981]
+2026-09-04 16:48:48,282 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58983]
+2026-09-04 16:48:48,333 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.05, 127.0.0.1:50488]
+2026-09-04 16:48:50,564 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:58983]
+2026-09-04 16:48:55,342 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.05, 127.0.0.1:64792]
+2026-09-04 16:48:55,485 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.13, 127.0.0.1:52464]
+2026-09-04 16:48:55,495 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.14, 127.0.0.1:52465]
+2026-09-04 16:48:58,108 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:54686]
+2026-09-04 16:48:58,159 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:52084]
+2026-09-04 16:48:58,179 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:52085]
+2026-09-04 16:49:04,780 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:49764]
+2026-09-04 16:49:04,814 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:55796]
+2026-09-04 16:49:30,672 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:56625]
+2026-09-04 16:49:30,721 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:51301]
+2026-09-04 16:49:52,580 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:63817]
+2026-09-04 16:49:52,594 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:63819]
+2026-09-04 16:49:52,635 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:59457]
+2026-09-04 16:49:52,657 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:49673]
+2026-09-04 16:49:54,147 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.05, 127.0.0.1:58550]
+2026-09-04 16:49:54,185 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.03, 127.0.0.1:52785]
+2026-09-04 16:49:54,202 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:61301]
+2026-09-04 16:49:54,213 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:50353]
+2026-09-04 16:49:54,246 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.04, 127.0.0.1:61302]
+2026-09-04 16:49:54,284 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:61301]
+2026-09-04 16:49:54,287 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:61301]
+2026-09-04 16:49:54,300 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/ 200 [0.04, 127.0.0.1:58312]
+2026-09-04 16:49:54,314 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:50353]
+2026-09-04 16:50:14,756 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:50353]
+2026-09-04 16:50:26,621 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.06, 127.0.0.1:58548]
+2026-09-04 16:50:26,656 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.03, 127.0.0.1:52077]
+2026-09-04 16:50:26,673 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:59598]
+2026-09-04 16:50:26,686 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:63253]
+2026-09-04 16:50:26,735 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/ 200 [0.06, 127.0.0.1:59600]
+2026-09-04 16:50:26,765 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:59598]
+2026-09-04 16:50:26,766 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:59598]
+2026-09-04 16:50:26,787 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/ 200 [0.04, 127.0.0.1:60053]
+2026-09-04 16:50:26,791 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:63253]
+2026-09-04 16:50:28,065 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:63253]
+2026-09-04 16:57:50,639 INFO django.channels.server HTTP PATCH /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mover-etapa/ 200 [0.69, 127.0.0.1:58291]
+2026-09-04 16:57:50,810 INFO django.channels.server HTTP PATCH /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mover-etapa/ 200 [0.10, 127.0.0.1:55595]
+2026-09-04 17:03:14,050 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.60, 127.0.0.1:59503]
+2026-09-04 17:03:14,138 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.06, 127.0.0.1:59217]
+2026-09-04 17:03:15,115 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.09, 127.0.0.1:58689]
+2026-09-04 17:03:15,193 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:58513]
+2026-09-04 17:05:45,839 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py changed, reloading.
+2026-09-04 17:05:48,132 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:05:49,237 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:05:49,237 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:05:49,238 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:06:03,740 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py changed, reloading.
+2026-09-04 17:06:04,991 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:06:05,479 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:06:05,479 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:06:05,480 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:06:09,977 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\serializers.py changed, reloading.
+2026-09-04 17:06:11,253 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:06:12,029 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:06:12,030 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:06:12,030 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:06:24,162 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\views.py changed, reloading.
+2026-09-04 17:06:25,624 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:06:26,169 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:06:26,169 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:06:26,170 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:08:24,146 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\chat\views.py changed, reloading.
+2026-09-04 17:08:25,623 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:08:26,257 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:08:26,257 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:08:26,257 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:09:31,566 WARNING django.request Not Found: /v1/candidatos/df13b342-8539-4d10-8be6-579e04da9f3e/mensagens/
+2026-09-04 17:09:33,612 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 17:09:36,528 WARNING django.request Forbidden: /v1/candidatos/5a03d8e8-d4fb-49c8-8904-48c3be67172b/mover-etapa/
+2026-09-04 17:09:40,212 WARNING django.request Not Found: /v1/candidatos/07c45075-57c1-466d-90cb-ecc72c09e785/
+2026-09-04 17:09:42,083 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 17:10:23,297 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 17:10:26,482 WARNING django.request Forbidden: /v1/candidatos/fe56f308-5f54-4513-bc59-d5ddb90793b0/mover-etapa/
+2026-09-04 17:10:31,656 WARNING django.request Not Found: /v1/candidatos/4f4aac49-e2cb-4ab1-b95f-d4036d3acf8c/
+2026-09-04 17:10:34,255 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 17:10:40,577 WARNING django.request Not Found: /v1/candidatos/35170fed-26ac-4dff-bef3-ebfe555a5e14/mensagens/
+2026-09-04 17:10:42,839 WARNING django.request Forbidden: /v1/vagas/04108436-9586-40de-833d-244cd3fd0812/
+2026-09-04 17:12:09,834 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.17, 127.0.0.1:51923]
+2026-09-04 17:12:09,840 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.16, 127.0.0.1:51924]
+2026-09-04 17:12:09,898 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:57413]
+2026-09-04 17:12:09,910 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:57415]
+2026-09-04 17:12:26,530 INFO django.channels.server HTTP POST /v1/auth/token/ 200 [0.65, 127.0.0.1:49744]
+2026-09-04 17:12:28,626 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/?ordering=-created_at&page=1&page_size=20 200 [0.09, 127.0.0.1:49747]
+2026-09-04 17:12:30,672 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/?ordering=-created_at&page=2&page_size=20 200 [0.04, 127.0.0.1:49750]
+2026-09-04 17:13:47,827 INFO django.channels.server HTTP PATCH /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mover-etapa/ 200 [0.06, 127.0.0.1:52823]
+2026-09-04 17:13:49,545 INFO django.channels.server HTTP PATCH /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mover-etapa/ 200 [0.04, 127.0.0.1:60380]
+2026-09-04 17:14:59,889 INFO django.channels.server HTTP PATCH /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mover-etapa/ 200 [0.07, 127.0.0.1:51312]
+2026-09-04 17:15:18,877 INFO django.channels.server HTTP PATCH /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mover-etapa/ 200 [0.08, 127.0.0.1:64914]
+2026-09-04 17:18:23,168 INFO django.channels.server HTTP PATCH /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mover-etapa/ 200 [0.07, 127.0.0.1:59955]
+2026-09-04 17:19:27,506 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:56767]
+2026-09-04 17:19:28,366 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:53838]
+2026-09-04 17:20:48,506 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.31, 127.0.0.1:52353]
+2026-09-04 17:20:48,587 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.07, 127.0.0.1:52356]
+2026-09-04 17:20:48,717 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.16, 127.0.0.1:52361]
+2026-09-04 17:20:48,745 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.19, 127.0.0.1:52360]
+2026-09-04 17:20:48,830 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.10, 127.0.0.1:52365]
+2026-09-04 17:20:48,855 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.10, 127.0.0.1:52367]
+2026-09-04 17:20:55,963 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.07, 127.0.0.1:64960]
+2026-09-04 17:20:56,023 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.05, 127.0.0.1:64963]
+2026-09-04 17:20:56,044 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:53765]
+2026-09-04 17:20:56,059 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:53766]
+2026-09-04 17:20:56,109 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:56780]
+2026-09-04 17:20:56,134 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:60972]
+2026-09-04 17:21:16,751 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.06, 127.0.0.1:56216]
+2026-09-04 17:21:16,808 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.05, 127.0.0.1:56219]
+2026-09-04 17:21:16,824 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:55761]
+2026-09-04 17:21:16,843 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.07, 127.0.0.1:55763]
+2026-09-04 17:21:16,884 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:57807]
+2026-09-04 17:21:16,896 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:50062]
+2026-09-04 17:21:54,135 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.06, 127.0.0.1:53660]
+2026-09-04 17:21:54,206 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:62677]
+2026-09-04 17:21:54,215 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.07, 127.0.0.1:62678]
+2026-09-04 17:21:56,511 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:51248]
+2026-09-04 17:21:56,556 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:60101]
+2026-09-04 17:21:56,569 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:60103]
+2026-09-04 17:22:40,124 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.11, 127.0.0.1:54206]
+2026-09-04 17:22:40,203 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.07, 127.0.0.1:62398]
+2026-09-04 17:22:40,275 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:51933]
+2026-09-04 17:22:40,283 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:49674]
+2026-09-04 17:22:40,447 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.17, 127.0.0.1:51935]
+2026-09-04 17:22:40,522 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.06, 127.0.0.1:51674]
+2026-09-04 17:22:40,532 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:51933]
+2026-09-04 17:22:40,533 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:49674]
+2026-09-04 17:22:40,545 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:51933]
+2026-09-04 17:23:02,310 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:49674]
+2026-09-04 17:23:03,926 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.12, 127.0.0.1:51915]
+2026-09-04 17:23:03,997 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.06, 127.0.0.1:60942]
+2026-09-04 17:23:19,840 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:61693]
+2026-09-04 17:23:19,857 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.07, 127.0.0.1:61694]
+2026-09-04 17:23:19,895 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:59552]
+2026-09-04 17:23:19,911 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:55231]
+2026-09-04 17:23:37,677 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.08, 127.0.0.1:60147]
+2026-09-04 17:23:37,748 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.06, 127.0.0.1:60150]
+2026-09-04 17:23:37,778 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.07, 127.0.0.1:61725]
+2026-09-04 17:23:37,800 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.09, 127.0.0.1:61726]
+2026-09-04 17:23:38,180 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.39, 127.0.0.1:52100]
+2026-09-04 17:23:38,209 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.40, 127.0.0.1:55600]
+2026-09-04 17:28:00,238 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.17, 127.0.0.1:51828]
+2026-09-04 17:28:04,525 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:56571]
+2026-09-04 17:28:05,510 INFO django.channels.server HTTP PATCH /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mover-etapa/ 200 [0.05, 127.0.0.1:49893]
+2026-09-04 17:28:06,739 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.05, 127.0.0.1:59295]
+2026-09-04 17:28:06,795 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.05, 127.0.0.1:49776]
+2026-09-04 17:28:06,827 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:54193]
+2026-09-04 17:28:06,832 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:59060]
+2026-09-04 17:28:06,891 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.06, 127.0.0.1:54195]
+2026-09-04 17:28:06,923 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:54193]
+2026-09-04 17:28:06,927 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:54193]
+2026-09-04 17:28:06,937 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.04, 127.0.0.1:52670]
+2026-09-04 17:28:06,948 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:59060]
+2026-09-04 17:28:11,642 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:59060]
+2026-09-04 17:28:12,643 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:56255]
+2026-09-04 17:28:12,680 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:50120]
+2026-09-04 17:30:08,245 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.12, 127.0.0.1:57318]
+2026-09-04 17:30:08,308 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:56212]
+2026-09-04 17:31:56,395 INFO django.channels.server HTTP GET /v1/setores/ 200 [6.87, 127.0.0.1:62242]
+2026-09-04 17:31:56,780 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.27, 127.0.0.1:62111]
+2026-09-04 17:34:10,083 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\serializers.py changed, reloading.
+2026-09-04 17:34:49,521 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:35:08,930 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:35:08,931 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:35:08,940 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:35:56,600 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\accounts\models.py changed, reloading.
+2026-09-04 17:36:21,786 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:36:34,417 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:36:34,418 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:36:34,429 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:38:48,884 WARNING django.request Forbidden: /v1/vagas/94baae6c-fef4-4d30-bd3f-f91a2cf1bc8a/
+2026-09-04 17:40:42,650 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [3.07, 127.0.0.1:51054]
+2026-09-04 17:40:43,729 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.94, 127.0.0.1:51057]
+2026-09-04 17:40:44,785 INFO django.channels.server HTTP GET /v1/setores/ 200 [1.54, 127.0.0.1:52025]
+2026-09-04 17:40:45,151 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.27, 127.0.0.1:57732]
+2026-09-04 17:40:50,999 INFO django.channels.server HTTP GET /v1/vagas/ 200 [1.06, 127.0.0.1:52713]
+2026-09-04 17:40:51,618 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.54, 127.0.0.1:60778]
+2026-09-04 17:40:52,190 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.36, 127.0.0.1:49960]
+2026-09-04 17:40:52,743 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.44, 127.0.0.1:55086]
+2026-09-04 17:41:19,971 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 17:41:29,839 WARNING django.request Forbidden: /v1/candidatos/fa596470-19af-4efb-a46a-6c3823b319a2/mover-etapa/
+2026-09-04 17:41:42,914 WARNING django.request Not Found: /v1/candidatos/a38984e8-f1d7-4bb9-8c89-5f263401a153/
+2026-09-04 17:41:49,470 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 17:42:07,703 WARNING django.request Not Found: /v1/candidatos/11f47048-3bfb-4134-9662-8e7380b3d622/mensagens/
+2026-09-04 17:42:23,698 WARNING django.request Forbidden: /v1/vagas/5bf6cf82-a10a-44ac-9d53-05dd894a4646/
+2026-09-04 17:43:03,762 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.30, 127.0.0.1:63759]
+2026-09-04 17:43:03,837 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.06, 127.0.0.1:63762]
+2026-09-04 17:43:11,698 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.07, 127.0.0.1:57229]
+2026-09-04 17:43:11,786 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.07, 127.0.0.1:57232]
+2026-09-04 17:44:38,482 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.09, 127.0.0.1:62953]
+2026-09-04 17:44:38,531 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:52452]
+2026-09-04 17:45:08,165 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\serializers.py changed, reloading.
+2026-09-04 17:45:09,836 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:45:10,586 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:45:10,586 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:45:10,588 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:45:27,373 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\serializers.py changed, reloading.
+2026-09-04 17:45:28,991 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:45:29,808 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:45:29,809 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:45:29,809 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:45:35,261 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\vagas\views.py changed, reloading.
+2026-09-04 17:45:36,389 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:45:36,867 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:45:36,867 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:45:36,868 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:45:51,517 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\accounts\models.py changed, reloading.
+2026-09-04 17:45:52,840 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:45:53,382 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:45:53,382 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:45:53,383 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:46:11,405 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.14, 127.0.0.1:62161]
+2026-09-04 17:46:11,481 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.07, 127.0.0.1:60237]
+2026-09-04 17:47:51,613 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 17:47:54,012 WARNING django.request Forbidden: /v1/candidatos/825e6f0b-d845-4d15-9041-1c8e1681e63b/mover-etapa/
+2026-09-04 17:47:56,773 WARNING django.request Not Found: /v1/candidatos/427196c0-1ea6-4ecc-bdab-0e6f204dff71/
+2026-09-04 17:47:58,484 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 17:48:01,391 WARNING django.request Not Found: /v1/candidatos/1481278a-c534-41b6-b5a0-e88c63a60259/mensagens/
+2026-09-04 17:48:03,132 WARNING django.request Forbidden: /v1/vagas/53df7744-aaf6-4257-98d7-7a4a515f0080/
+2026-09-04 17:49:21,840 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.11, 127.0.0.1:57782]
+2026-09-04 17:49:21,856 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.11, 127.0.0.1:57783]
+2026-09-04 17:49:21,910 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:55748]
+2026-09-04 17:49:21,945 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.08, 127.0.0.1:65490]
+2026-09-04 17:49:31,674 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.05, 127.0.0.1:62842]
+2026-09-04 17:49:31,715 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ 200 [0.04, 127.0.0.1:55117]
+2026-09-04 17:49:31,743 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:49793]
+2026-09-04 17:49:31,763 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:61987]
+2026-09-04 17:49:31,812 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.07, 127.0.0.1:49795]
+2026-09-04 17:49:31,860 INFO django.channels.server HTTP GET /v1/candidatos/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.04, 127.0.0.1:62332]
+2026-09-04 17:49:31,872 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:49793]
+2026-09-04 17:49:31,874 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:61987]
+2026-09-04 17:49:31,875 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:49793]
+2026-09-04 17:50:09,268 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/bf4b9858-e0a0-41c4-a6e6-cac0e86bcc14/ [127.0.0.1:61987]
+2026-09-04 17:50:10,464 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:61994]
+2026-09-04 17:50:10,524 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:61376]
+2026-09-04 17:50:40,117 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\interfaces\i_curriculo_extractor.py changed, reloading.
+2026-09-04 17:50:41,650 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:50:42,113 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:50:42,113 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:50:42,114 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:51:04,721 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\models.py changed, reloading.
+2026-09-04 17:51:06,051 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:51:06,540 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:51:06,541 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:51:06,541 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:51:27,225 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\serializers.py changed, reloading.
+2026-09-04 17:51:28,574 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:51:29,089 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:51:29,089 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:51:29,090 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:51:35,536 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\serializers.py changed, reloading.
+2026-09-04 17:51:36,536 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:51:37,015 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:51:37,016 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:51:37,016 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:51:50,003 INFO django.utils.autoreload C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\views.py changed, reloading.
+2026-09-04 17:51:51,141 INFO django.utils.autoreload Watching for file changes with StatReloader
+2026-09-04 17:51:51,591 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-04 17:51:51,591 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-04 17:51:51,592 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-04 17:52:04,380 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 17:52:08,245 WARNING django.request Forbidden: /v1/candidatos/465fffd1-0f4c-4ce8-8b98-b7619d3f659d/mover-etapa/
+2026-09-04 17:52:12,573 WARNING django.request Not Found: /v1/candidatos/dbeba03b-b782-433a-a8be-3570737ff3d2/
+2026-09-04 17:52:15,110 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 17:52:40,200 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.08, 127.0.0.1:56042]
+2026-09-04 17:52:40,708 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-04 17:52:40,729 ERROR django.channels.server HTTP GET /v1/candidatos/ 500 [0.61, 127.0.0.1:56043]
+2026-09-04 17:53:58,018 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-04 17:54:01,842 WARNING django.request Forbidden: /v1/candidatos/066b5139-613e-480c-9060-90b0c4aa0937/mover-etapa/
+2026-09-04 17:54:06,164 WARNING django.request Not Found: /v1/candidatos/5ce3b2cb-03a9-4422-926b-21a4f6937656/
+2026-09-04 17:54:08,872 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-04 17:54:12,725 WARNING django.request Not Found: /v1/candidatos/2a3fac85-ad97-4cc0-860a-638ba1339c17/mensagens/
+2026-09-04 17:54:14,345 WARNING django.request Forbidden: /v1/vagas/eca70301-9d58-4e66-ac61-c0380f5a704f/
+2026-09-04 17:55:19,907 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.09, 127.0.0.1:56931]
+2026-09-04 17:55:19,971 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.05, 127.0.0.1:56934]
+2026-09-04 17:55:20,017 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.09, 127.0.0.1:56938]
+2026-09-04 17:55:20,039 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.11, 127.0.0.1:56939]
+2026-09-04 17:55:20,083 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:56943]
+2026-09-04 17:55:20,101 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:56946]
+2026-09-04 17:55:23,587 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.05, 127.0.0.1:60625]
+2026-09-04 17:55:23,633 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.04, 127.0.0.1:59957]
+2026-09-04 17:55:23,650 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:53632]
+2026-09-04 17:55:23,657 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:54910]
+2026-09-04 17:55:23,730 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.08, 127.0.0.1:53634]
+2026-09-04 17:55:23,778 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:53632]
+2026-09-04 17:55:23,780 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:54910]
+2026-09-04 17:55:23,784 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:53632]
+2026-09-04 17:55:23,789 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.05, 127.0.0.1:64548]
+2026-09-04 17:55:25,472 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:54910]
+2026-09-04 17:56:17,038 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:62633]
+2026-09-04 17:56:17,079 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:60973]
+2026-09-04 17:57:08,150 INFO django.channels.server HTTP POST /v1/vagas/ 201 [0.04, 127.0.0.1:53471]
+2026-09-04 17:57:08,239 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.07, 127.0.0.1:64140]
+2026-09-04 17:57:08,267 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.10, 127.0.0.1:64141]
+2026-09-04 17:57:08,318 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.07, 127.0.0.1:60220]
+2026-09-04 17:57:08,333 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:52964]
+2026-09-04 17:57:11,323 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:60629]
+2026-09-04 17:57:11,368 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:52036]
+2026-09-04 17:57:19,844 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.67, 127.0.0.1:57089]
+2026-09-04 17:57:24,032 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-04 17:57:24,051 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [4.12, 127.0.0.1:65215]
+2026-09-04 17:57:31,455 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.05, 127.0.0.1:56461]
+2026-09-04 17:57:31,530 INFO django.channels.server HTTP GET /v1/auth/me/ 200 [0.06, 127.0.0.1:56464]
+2026-09-04 17:57:31,563 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.08, 127.0.0.1:56467]
+2026-09-04 17:57:31,621 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.05, 127.0.0.1:56470]
+2026-09-04 17:58:15,074 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:57888]
+2026-09-04 17:58:15,085 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:57890]
+2026-09-04 17:58:15,127 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:55818]
+2026-09-04 17:58:15,136 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.04, 127.0.0.1:50467]
+2026-09-04 17:58:15,584 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:56041]
+2026-09-04 17:58:15,617 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:54854]
+2026-09-04 17:58:17,939 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:53198]
+2026-09-04 17:58:17,946 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:53199]
+2026-09-04 17:58:17,989 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:49353]
+2026-09-04 17:58:18,001 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.05, 127.0.0.1:59292]
+2026-09-04 17:58:20,109 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:51200]
+2026-09-04 17:58:20,146 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:54472]
+2026-09-04 17:58:23,262 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:53878]
+2026-09-04 17:58:23,310 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:62055]
+2026-09-04 17:58:29,754 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:56675]
+2026-09-04 17:58:29,791 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:62929]
+2026-09-04 17:58:57,419 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:60602]
+2026-09-04 17:58:57,426 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:60603]
+2026-09-04 17:58:57,482 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.05, 127.0.0.1:61519]
+2026-09-04 17:58:57,493 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:49974]
+2026-09-04 17:58:58,211 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.04, 127.0.0.1:64243]
+2026-09-04 17:58:58,248 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/ 200 [0.03, 127.0.0.1:58689]
+2026-09-04 17:58:58,258 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:53112]
+2026-09-04 17:58:58,275 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:61079]
+2026-09-04 17:58:58,301 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.04, 127.0.0.1:53956]
+2026-09-04 17:58:58,327 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:53112]
+2026-09-04 17:58:58,330 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:53112]
+2026-09-04 17:58:58,346 INFO django.channels.server HTTP GET /v1/candidatos/13f52bd5-682c-42be-957d-f6c29e331e67/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.04, 127.0.0.1:54063]
+2026-09-04 17:58:58,353 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:61079]
+2026-09-04 17:59:03,487 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/13f52bd5-682c-42be-957d-f6c29e331e67/ [127.0.0.1:61079]
+2026-09-04 17:59:13,305 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.06, 127.0.0.1:54135]
+2026-09-04 17:59:13,388 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.07, 127.0.0.1:51087]
+2026-09-04 17:59:13,394 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.07, 127.0.0.1:51088]
+2026-09-04 17:59:14,856 INFO django.channels.server HTTP POST /v1/etapas-kanban/reordenar/ 200 [0.04, 127.0.0.1:53039]
+2026-09-04 17:59:14,901 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:49675]
+2026-09-04 17:59:14,904 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.04, 127.0.0.1:49676]
+2026-09-04 18:03:12,414 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:59396]
+2026-09-04 18:03:12,459 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:54043]
+2026-09-04 18:03:15,748 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.13, 127.0.0.1:60837]
+2026-09-04 18:03:17,964 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-04 18:03:17,977 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [2.15, 127.0.0.1:51417]
+2026-09-04 18:03:27,429 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.07, 127.0.0.1:49813]
+2026-09-04 18:03:27,530 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.07, 127.0.0.1:54669]
+2026-09-04 18:03:27,924 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:61913]
+2026-09-04 18:03:27,993 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.06, 127.0.0.1:53012]
+2026-09-04 18:03:31,829 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.04, 127.0.0.1:52214]
+2026-09-04 18:03:34,012 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-04 18:03:34,017 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [2.12, 127.0.0.1:56967]
+2026-09-04 18:03:49,038 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:59867]
+2026-09-04 18:03:49,058 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:59868]
+2026-09-04 18:03:49,093 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.04, 127.0.0.1:55507]
+2026-09-04 18:03:49,130 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.06, 127.0.0.1:51582]
+2026-09-04 18:03:51,201 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.04, 127.0.0.1:58094]
+2026-09-04 18:03:51,238 INFO django.channels.server HTTP GET /v1/setores/ 200 [0.03, 127.0.0.1:60948]
+2026-09-04 18:04:06,407 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:58290]
+2026-09-04 18:04:06,454 INFO django.channels.server HTTP GET /v1/vagas/ 200 [0.04, 127.0.0.1:64344]
+2026-09-04 18:04:09,833 INFO django.channels.server HTTP POST /v1/candidatos/upload-url/ 200 [0.06, 127.0.0.1:52549]
+2026-09-04 18:04:11,843 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-04 18:04:11,853 INFO django.channels.server HTTP POST /v1/candidatos/analisar-curriculo/ 200 [1.95, 127.0.0.1:60915]
+2026-09-04 18:04:41,384 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('::1', 5672, 0, 0)
+2026-09-04 18:04:41,385 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=3160, family=23, type=1, proto=6, laddr=('::1', 55794, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 18:04:41,391 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000028C2813F050>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000028C2813F050> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>).
+2026-09-04 18:04:41,467 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000028C2813F050> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 18:04:41,467 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000028C2813F050> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 18:04:41,468 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000028C2813F050> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-04 18:04:41,469 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-04 18:04:41,481 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-04 18:04:41,481 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000028C2813F050> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-04 18:04:41,529 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x0000028C2813F050> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-04 18:04:41,530 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-04 18:04:41,531 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=3160, family=23, type=1, proto=6, laddr=('::1', 55794, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 18:04:41,531 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=3160, family=23, type=1, proto=6, laddr=('::1', 55794, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 18:04:41,531 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=3160, family=23, type=1, proto=6, laddr=('::1', 55794, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 18:04:41,532 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-04 18:04:41,532 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-04 18:04:41,535 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=3160, family=23, type=1, proto=6, laddr=('::1', 55794, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-04 18:04:41,535 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2026-09-04 18:04:41,542 INFO django.channels.server HTTP POST /v1/candidatos/ 201 [0.29, 127.0.0.1:55789]
+2026-09-04 18:04:41,638 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.07, 127.0.0.1:64576]
+2026-09-04 18:04:41,638 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ 200 [0.08, 127.0.0.1:64574]
+2026-09-04 18:04:41,646 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.08, 127.0.0.1:64575]
+2026-09-04 18:04:41,709 INFO django.channels.server HTTP GET /v1/etapas-kanban/ 200 [0.06, 127.0.0.1:61871]
+2026-09-04 18:04:41,715 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ 200 [0.07, 127.0.0.1:61873]
+2026-09-04 18:04:41,732 INFO django.channels.server HTTP GET /v1/candidatos/ 200 [0.08, 127.0.0.1:51486]
+2026-09-04 18:04:41,742 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:64930]
+2026-09-04 18:04:41,753 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:58510]
+2026-09-04 18:04:41,793 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.05, 127.0.0.1:64932]
+2026-09-04 18:04:41,834 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:64930]
+2026-09-04 18:04:41,836 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:64930]
+2026-09-04 18:04:41,838 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.04, 127.0.0.1:62470]
+2026-09-04 18:04:41,851 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:58510]
+2026-09-04 18:04:48,136 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:58510]
+2026-09-04 18:04:51,422 INFO django.channels.server HTTP PATCH /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mover-etapa/ 200 [0.05, 127.0.0.1:59851]
+2026-09-04 18:04:52,383 INFO django.channels.server HTTP PATCH /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mover-etapa/ 200 [0.04, 127.0.0.1:53168]
+2026-09-04 18:04:53,553 INFO django.channels.server HTTP PATCH /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mover-etapa/ 200 [0.04, 127.0.0.1:63022]
+2026-09-04 18:04:54,539 INFO django.channels.server HTTP PATCH /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mover-etapa/ 200 [0.04, 127.0.0.1:61698]
+2026-09-04 18:04:56,938 INFO django.channels.server HTTP PATCH /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mover-etapa/ 200 [0.04, 127.0.0.1:56136]
+2026-09-04 18:04:57,698 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ 200 [0.06, 127.0.0.1:58505]
+2026-09-04 18:04:57,741 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ 200 [0.03, 127.0.0.1:61384]
+2026-09-04 18:04:57,751 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:61492]
+2026-09-04 18:04:57,763 INFO django.channels.server WebSocket HANDSHAKING /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:61615]
+2026-09-04 18:04:57,811 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.06, 127.0.0.1:61494]
+2026-09-04 18:04:57,834 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:61492]
+2026-09-04 18:04:57,835 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:61492]
+2026-09-04 18:04:57,853 INFO django.channels.server WebSocket CONNECT /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:61615]
+2026-09-04 18:04:57,864 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/mensagens/?ordering=-created_at&page=1&page_size=30 200 [0.05, 127.0.0.1:52277]
+2026-09-04 18:05:01,402 INFO django.channels.server HTTP GET /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/curriculo-url/ 200 [0.06, 127.0.0.1:59451]
+2026-09-04 18:05:13,063 INFO django.channels.server WebSocket DISCONNECT /ws/v1/chat/candidato/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/ [127.0.0.1:61615]

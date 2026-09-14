@@ -10,9 +10,10 @@ import type { ChatMensagem } from '../../types'
 interface ChatPanelProps {
   kind: ChatKind
   id: string
+  title?: string
 }
 
-export function ChatPanel({ kind, id }: ChatPanelProps) {
+export function ChatPanel({ kind, id, title = 'Chat' }: ChatPanelProps) {
   const { me } = useAuth()
   const [messages, setMessages] = useState<ChatMensagem[]>([])
   const [status, setStatus] = useState<ChatSocketStatus>('connecting')
@@ -108,7 +109,7 @@ export function ChatPanel({ kind, id }: ChatPanelProps) {
   return (
     <div className="flex h-full flex-col border-l border-slate-200">
       <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-        <h3 className="text-sm font-semibold text-slate-800">Chat</h3>
+        <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
         <span
           className={clsx(
             'flex items-center gap-1.5 text-xs',

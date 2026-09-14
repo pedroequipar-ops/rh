@@ -106,3 +106,26 @@ class VagaChatConsumer(_ChatConsumerBase):
             return Vaga.objects.select_related("setor").get(id=obj_id, company_id=company_id)
         except Vaga.DoesNotExist:
             return None
+
+
+class NotificacoesConsumer(AsyncJsonWebsocketConsumer):
+    """Canal único por usuário — recebe os eventos publicados por
+    ``apps.core.notificacoes_ws.publicar_notificacao`` (notificação de
+    candidato/vaga criada). Sem lógica de negócio aqui, só entrega."""
+
+    async def connect(self):
+        user = self.scope["user"]
+        if not user or not user.is_authenticated:
+            await self.close(code=4401)
+            return
+        self.group_name = f"notificacoes_{user.id}"
+        await self.channel_layer.group_add(self.group_name, self.channel_name)
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        group_name = getattr(self, "group_name", None)
+        if group_name:
+            await self.channel_layer.group_discard(group_name, self.channel_name)
+
+    async def notificacao_evento(self, event):
+        await self.send_json(event["payload"])

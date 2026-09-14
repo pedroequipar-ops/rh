@@ -112,6 +112,8 @@ export interface VagaNotificacaoNova {
   vaga_titulo: string
   mensagem: string
   created_at: string
+  lida: boolean
+  lida_em: string | null
 }
 
 export async function getVagaNotificacoes(): Promise<VagaNotificacaoNova[]> {
@@ -119,6 +121,20 @@ export async function getVagaNotificacoes(): Promise<VagaNotificacaoNova[]> {
   return data
 }
 
+export async function getVagaNotificacoesHistorico(
+  page: number,
+): Promise<{ results: VagaNotificacaoNova[]; next: string | null }> {
+  const { data } = await apiClient.get<{ results: VagaNotificacaoNova[]; next: string | null }>(
+    '/vagas-notificacoes/',
+    { params: { lida: 'true', page } },
+  )
+  return data
+}
+
 export async function marcarVagaNotificacoesComoLidas(): Promise<void> {
   await apiClient.post('/vagas-notificacoes/marcar-lidas/')
+}
+
+export async function marcarVagaNotificacaoUma(id: string, lida = true): Promise<void> {
+  await apiClient.post(`/vagas-notificacoes/${id}/marcar/`, { lida })
 }

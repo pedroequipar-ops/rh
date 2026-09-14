@@ -33,8 +33,10 @@ def registrar(ator, verbo, alvo, *, resumo, **dados):
 
 def _notificar_mencoes(autor, mencionados, alvo, texto):
     from apps.candidatos.models import Candidato, CandidatoNotificacao
+    from apps.core.notificacoes_ws import publicar_notificacao
     from apps.vagas.models import Vaga, VagaNotificacao
 
+    mencionados = list(mencionados)
     resumo = texto if len(texto) <= 140 else f"{texto[:137]}..."
     mensagem = f'{autor.username} mencionou você: "{resumo}"'
 
@@ -45,6 +47,8 @@ def _notificar_mencoes(autor, mencionados, alvo, texto):
                 for u in mencionados
             ]
         )
+        for u in mencionados:
+            publicar_notificacao(u.id, "vaga", {"mensagem": mensagem, "vaga_id": str(alvo.id)})
     elif isinstance(alvo, Candidato):
         CandidatoNotificacao.objects.bulk_create(
             [
@@ -54,6 +58,8 @@ def _notificar_mencoes(autor, mencionados, alvo, texto):
                 for u in mencionados
             ]
         )
+        for u in mencionados:
+            publicar_notificacao(u.id, "candidato", {"mensagem": mensagem, "candidato_id": str(alvo.id)})
 
 
 def criar_comentario(autor, alvo, texto: str) -> Comentario:

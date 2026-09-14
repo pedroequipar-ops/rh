@@ -112,6 +112,7 @@ class CandidatoSerializer(serializers.ModelSerializer):
 
 class CandidatoMoverEtapaSerializer(serializers.Serializer):
     etapa_id = serializers.UUIDField()
+    motivo = serializers.CharField(required=False, allow_blank=True, default="")
 
 
 class UploadUrlRequestSerializer(serializers.Serializer):
@@ -152,5 +153,5 @@ class CandidatoNotificacaoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CandidatoNotificacao
-        fields = ["id", "candidato_id", "candidato_nome", "mensagem", "created_at"]
+        fields = ["id", "candidato_id", "candidato_nome", "mensagem", "created_at", "lida", "lida_em"]
         read_only_fields = fields

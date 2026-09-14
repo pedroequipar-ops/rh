@@ -15,8 +15,13 @@ interface KanbanColumnProps {
   vagaDraggable?: boolean
   /** destaque quando uma vaga arrastada pode cair aqui */
   aceitaVaga?: boolean
+  /** destaque quando um candidato arrastado pode cair aqui — candidato pode
+   * ir pra qualquer etapa (sem máquina de estados como a vaga), então é
+   * "true" pra toda coluna que não seja a etapa atual dele */
+  aceitaCandidato?: boolean
   cadastroAqui?: boolean
   selectedVagaId?: string | null
+  selectedCandidatoId?: string | null
 }
 
 export function KanbanColumn({
@@ -28,22 +33,26 @@ export function KanbanColumn({
   vagaModalBase,
   vagaDraggable,
   aceitaVaga,
+  aceitaCandidato,
   cadastroAqui,
   selectedVagaId,
+  selectedCandidatoId,
 }: KanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: etapa.id })
   const dot = etapa.is_saida_negativa ? 'bg-red-500' : (etapa.cor ?? 'bg-slate-400')
   const dotIsHex = dot.startsWith('#')
+  const aceitaDrop = aceitaVaga || aceitaCandidato
+  const emeraldCadastro = aceitaVaga && cadastroAqui
 
   return (
     <div
       ref={setNodeRef}
       className={clsx(
         'flex w-[244px] shrink-0 flex-col gap-2 rounded-lg p-1 transition-fast',
-        isOver && !aceitaVaga && 'bg-slate-100',
-        aceitaVaga && !cadastroAqui && 'bg-sky-50/60 ring-1 ring-sky-300',
-        aceitaVaga && cadastroAqui && 'bg-emerald-50/60 ring-1 ring-emerald-300',
-        aceitaVaga && isOver && (cadastroAqui ? 'bg-emerald-50 ring-2 ring-emerald-400' : 'bg-sky-50 ring-2 ring-sky-400'),
+        isOver && !aceitaDrop && 'bg-slate-100',
+        aceitaDrop && !emeraldCadastro && 'bg-sky-50/60 ring-1 ring-sky-300',
+        emeraldCadastro && 'bg-emerald-50/60 ring-1 ring-emerald-300',
+        aceitaDrop && isOver && (emeraldCadastro ? 'bg-emerald-50 ring-2 ring-emerald-400' : 'bg-sky-50 ring-2 ring-sky-400'),
       )}
     >
       <div className="flex items-center gap-1.5 px-1.5 py-1">
@@ -90,6 +99,7 @@ export function KanbanColumn({
             candidato={candidato}
             draggable={draggable}
             candidatoModalBase={candidatoModalBase}
+            selected={candidato.id === selectedCandidatoId}
           />
         ))}
         {candidatos.length === 0 && !vagasNaEtapa?.length && (

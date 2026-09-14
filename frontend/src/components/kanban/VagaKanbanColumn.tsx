@@ -1,8 +1,8 @@
+import type { ReactNode } from 'react'
 import { useDroppable } from '@dnd-kit/core'
 import clsx from 'clsx'
 import type { Vaga, VagaStatus } from '../../types'
 import { VAGA_STATUS_META } from '../../constants/vagaStatus'
-import { acoesRapidasVagas } from './vagaAcoesRapidas'
 import { VagaKanbanCard } from './VagaKanbanCard'
 
 interface VagaKanbanColumnProps {
@@ -16,7 +16,10 @@ interface VagaKanbanColumnProps {
   /** duplo clique numa área vazia da coluna (fora de um card) */
   onDoubleClick?: () => void
   selectedVagaId?: string | null
-  onAcaoRapida?: (vagaId: string, status: VagaStatus) => void
+  /** chip de status de baixo volume (ex.: Recusada sob Solicitada) — fica
+   * fixo no rodapé da própria coluna, fora da lista rolável, pra não sumir
+   * de vista quando a coluna tem muitos cards. */
+  footer?: ReactNode
 }
 
 export function VagaKanbanColumn({
@@ -28,7 +31,7 @@ export function VagaKanbanColumn({
   dropInvalido,
   onDoubleClick,
   selectedVagaId,
-  onAcaoRapida,
+  footer,
 }: VagaKanbanColumnProps) {
   const { setNodeRef, isOver } = useDroppable({ id: `status:${status}` })
   const meta = VAGA_STATUS_META[status]
@@ -45,7 +48,7 @@ export function VagaKanbanColumn({
           : undefined
       }
       className={clsx(
-        'flex w-full min-h-0 flex-1 flex-col gap-2 rounded-lg p-1 transition-fast',
+        'flex w-[244px] min-h-0 shrink-0 flex-col gap-2 rounded-lg p-1 transition-fast',
         aceitaDrop && 'bg-sky-50/60 ring-1 ring-sky-300',
         dropInvalido && isOver && 'ring-2 ring-red-300',
         aceitaDrop && isOver && 'bg-sky-50 ring-2 ring-sky-400',
@@ -69,8 +72,6 @@ export function VagaKanbanColumn({
             draggable={draggable}
             vagaModalBase={vagaModalBase}
             selected={vaga.id === selectedVagaId}
-            acoesRapidas={acoesRapidasVagas(vaga)}
-            onAcaoRapida={onAcaoRapida}
           />
         ))}
         {vagas.length === 0 && (
@@ -79,6 +80,7 @@ export function VagaKanbanColumn({
           </p>
         )}
       </div>
+      {footer && <div className="shrink-0 px-1 pt-1">{footer}</div>}
     </div>
   )
 }

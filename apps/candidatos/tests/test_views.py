@@ -251,7 +251,79 @@ def test_mover_etapa_notifica_usuarios_do_setor(
 
 
 @pytest.mark.django_db
+def test_marcar_uma_notificacao_e_historico(
+    company_factory, setor_factory, user_factory, etapa_factory, candidato_factory
+):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    etapa_a = etapa_factory(company=company, nome="Primeira Entrevista", ordem=1)
+    etapa_b = etapa_factory(company=company, nome="Perfil Comportamental", ordem=2)
+    candidato = candidato_factory(company=company)
+    candidato.vaga.setor = setor
+    candidato.vaga.save()
+
+    rh = user_factory(company=company, role=User.Role.RH)
+    setor_user = user_factory(company=company, role=User.Role.SETOR, setor=setor)
+    rh_client = _client_for(rh, company)
+    setor_client = _client_for(setor_user, company)
+
+    rh_client.patch(f"/v1/candidatos/{candidato.id}/mover-etapa/", {"etapa_id": str(etapa_a.id)})
+    rh_client.patch(f"/v1/candidatos/{candidato.id}/mover-etapa/", {"etapa_id": str(etapa_b.id)})
+
+    notificacoes = list(
+        CandidatoNotificacao.objects.filter(destinatario=setor_user).order_by("created_at")
+    )
+    assert len(notificacoes) == 2
+
+    marcar_uma = setor_client.post(f"/v1/candidatos-notificacoes/{notificacoes[0].id}/marcar/")
+    assert marcar_uma.status_code == 204
+
+    nao_lidas = setor_client.get("/v1/candidatos-notificacoes/")
+    assert len(nao_lidas.data) == 1
+    assert nao_lidas.data[0]["id"] == str(notificacoes[1].id)
+
+    historico = setor_client.get("/v1/candidatos-notificacoes/?lida=true")
+    assert historico.status_code == 200
+    assert historico.data["count"] == 1
+    assert historico.data["results"][0]["id"] == str(notificacoes[0].id)
+    assert historico.data["results"][0]["lida"] is True
+    assert historico.data["results"][0]["lida_em"] is not None
+
+    desmarcar = setor_client.post(
+        f"/v1/candidatos-notificacoes/{notificacoes[0].id}/marcar/", {"lida": False}
+    )
+    assert desmarcar.status_code == 204
+    nao_lidas_apos = setor_client.get("/v1/candidatos-notificacoes/")
+    assert len(nao_lidas_apos.data) == 2
+
+    outro_usuario = user_factory(company=company, role=User.Role.SETOR, setor=setor)
+    outro_client = _client_for(outro_usuario, company)
+    marcar_de_outro = outro_client.post(f"/v1/candidatos-notificacoes/{notificacoes[1].id}/marcar/")
+    assert marcar_de_outro.status_code == 404
+
+
+@pytest.mark.django_db
 def test_mover_para_reprovado_marca_reprovado_em(
+    company_factory, user_factory, etapa_factory, candidato_factory
+):
+    company = company_factory()
+    etapa_reprovado = etapa_factory(company=company, nome="Reprovado", is_saida_negativa=True)
+    candidato = candidato_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+    client = _client_for(rh, company)
+
+    response = client.patch(
+        f"/v1/candidatos/{candidato.id}/mover-etapa/",
+        {"etapa_id": str(etapa_reprovado.id), "motivo": "Perfil não compatível com a vaga"},
+    )
+
+    assert response.status_code == 200
+    candidato.refresh_from_db()
+    assert candidato.reprovado_em is not None
+
+
+@pytest.mark.django_db
+def test_mover_para_saida_negativa_sem_motivo_falha(
     company_factory, user_factory, etapa_factory, candidato_factory
 ):
     company = company_factory()
@@ -264,9 +336,9 @@ def test_mover_para_reprovado_marca_reprovado_em(
         f"/v1/candidatos/{candidato.id}/mover-etapa/", {"etapa_id": str(etapa_reprovado.id)}
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 400
     candidato.refresh_from_db()
-    assert candidato.reprovado_em is not None
+    assert candidato.etapa_atual_id != etapa_reprovado.id
 
 
 @pytest.mark.django_db

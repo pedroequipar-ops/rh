@@ -286,5 +286,5 @@ class VagaNotificacaoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VagaNotificacao
-        fields = ["id", "vaga_id", "vaga_titulo", "mensagem", "created_at"]
+        fields = ["id", "vaga_id", "vaga_titulo", "mensagem", "created_at", "lida", "lida_em"]
         read_only_fields = fields

@@ -46,7 +46,13 @@ export function DetailPanel({ onClose, children, className }: DetailPanelProps) 
 
   useEffect(() => {
     function onPointerDown(e: MouseEvent) {
-      if (asideRef.current && !asideRef.current.contains(e.target as Node)) requestClose()
+      const target = e.target as HTMLElement
+      if (asideRef.current?.contains(target)) return
+      // Clique em outro card: ele navega pro próprio id sozinho — fechar
+      // aqui agendaria um `onClose` que dispara depois dessa navegação e
+      // joga de volta pro board vazio (só troca de vaga/candidato, não fecha).
+      if (target.closest('[data-vaga-card], [data-candidato-card]')) return
+      requestClose()
     }
     document.addEventListener('mousedown', onPointerDown)
     return () => document.removeEventListener('mousedown', onPointerDown)

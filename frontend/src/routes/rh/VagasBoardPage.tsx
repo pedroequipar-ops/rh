@@ -32,15 +32,14 @@ export function VagasBoardPage() {
   const totalTriagem = vagas.filter((v) => v.status === 'EM_TRIAGEM').length
   const loading = vagasQuery.isLoading
 
-  function handleMoveVaga(vagaId: string, status: VagaStatus) {
-    transicionarVaga.mutate({ id: vagaId, para: status })
+  function handleMoveVaga(vagaId: string, status: VagaStatus, observacao?: string) {
+    transicionarVaga.mutate({ id: vagaId, para: status, observacao })
   }
 
   return (
     <div className="flex h-full flex-col bg-board">
       <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-5">
         <div className="flex items-center gap-4">
-          <h1 className="text-lg font-semibold text-slate-800">Vagas</h1>
           <BoardSwitcher
             vagasHref={`${base}/vagas`}
             triagemHref={`${base}/triagem`}

@@ -7,3 +7,11 @@ export function vagaIdFromLocation(pathname: string, search: string): string | n
   if (doPath) return doPath
   return new URLSearchParams(search).get('vaga')
 }
+
+/** Mesma lógica do `vagaIdFromLocation`, pro card de candidato — usado pra
+ *  destacar o card quando se navega até ele (ex.: clicando numa notificação). */
+export function candidatoIdFromLocation(pathname: string, search: string): string | null {
+  const doPath = pathname.match(/\/candidato\/([^/]+)/)?.[1]
+  if (doPath) return doPath
+  return new URLSearchParams(search).get('candidato')
+}

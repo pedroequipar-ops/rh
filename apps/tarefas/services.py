@@ -24,6 +24,8 @@ def _notificar_responsavel(tarefa):
         return
     mensagem = f'Tarefa "{tarefa.titulo}" está vencendo.'
 
+    from apps.core.notificacoes_ws import publicar_notificacao
+
     if tarefa.alvo_tipo == AlvoTipo.VAGA and tarefa.alvo_id:
         from apps.vagas.models import Vaga, VagaNotificacao
 
@@ -34,6 +36,9 @@ def _notificar_responsavel(tarefa):
                 vaga_id=tarefa.alvo_id,
                 mensagem=mensagem,
             )
+            publicar_notificacao(
+                tarefa.responsavel_id, "vaga", {"mensagem": mensagem, "vaga_id": str(tarefa.alvo_id)}
+            )
     elif tarefa.alvo_tipo == AlvoTipo.CANDIDATO and tarefa.alvo_id:
         from apps.candidatos.models import Candidato, CandidatoNotificacao
 
@@ -43,6 +48,11 @@ def _notificar_responsavel(tarefa):
                 destinatario=tarefa.responsavel,
                 candidato_id=tarefa.alvo_id,
                 mensagem=mensagem,
+            )
+            publicar_notificacao(
+                tarefa.responsavel_id,
+                "candidato",
+                {"mensagem": mensagem, "candidato_id": str(tarefa.alvo_id)},
             )
 
 

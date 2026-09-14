@@ -11,6 +11,7 @@ import {
 import type { Candidato, EtapaKanban, Vaga, VagaStatus } from '../../types'
 import { useToast } from '../../context/ToastContext'
 import { LixeiraDock } from '../board/LixeiraDock'
+import { MotivoLixeiraModal } from '../board/MotivoLixeiraModal'
 import { etapaSaidaNegativa, ordenarEtapas } from './etapaNav'
 import { useHorizontalWheel } from './useHorizontalWheel'
 import { CandidatoCardContent } from './CandidatoCard'
@@ -25,16 +26,17 @@ interface PessoasBoardProps {
   draggable: boolean
   candidatoModalBase: string
   vagaModalBase: string
-  onMoveCandidato?: (candidatoId: string, etapaId: string) => void
+  onMoveCandidato?: (candidatoId: string, etapaId: string, motivo?: string) => void
   onMoveVagaEtapa?: (vagaId: string, etapaId: string) => void
   onRegistrarCandidato?: (vaga: Vaga, etapa: EtapaKanban) => void
   /** Presente só na aba Triagem: liga os docks de arrastar "Avançar"
    * (→ abre cadastro completo) e a lixeira (→ Cancelada). */
-  onTransicionarVaga?: (vagaId: string, status: VagaStatus) => void
+  onTransicionarVaga?: (vagaId: string, status: VagaStatus, observacao?: string) => void
   /** Primeira etapa que exige cadastro completo (ex.: Perfil Comportamental)
    * — é pra ela que o dock "Avançar" manda a vaga na aba Triagem. */
   etapaCadastroInicial?: EtapaKanban | null
   selectedVagaId?: string | null
+  selectedCandidatoId?: string | null
 }
 
 /** Board só de pessoas: colunas de etapa. Vagas EM_TRIAGEM aparecem como card
@@ -62,9 +64,17 @@ export function PessoasBoard({
   onTransicionarVaga,
   etapaCadastroInicial,
   selectedVagaId,
+  selectedCandidatoId,
 }: PessoasBoardProps) {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
   const [activeId, setActiveId] = useState<string | null>(null)
+  /** Candidato ou vaga esperando confirmação com motivo antes de ir pra
+   * lixeira — obrigatório pra qualquer card que tenha essa opção. */
+  const [pendingLixeira, setPendingLixeira] = useState<
+    | { tipo: 'candidato'; id: string; etapaId: string; nome: string }
+    | { tipo: 'vaga'; id: string; titulo: string }
+    | null
+  >(null)
   const handleWheel = useHorizontalWheel()
   const { showToast } = useToast()
 
@@ -108,7 +118,7 @@ export function PessoasBoard({
       }
       if (overIdStr === 'acao:lixeira') {
         if (vaga.transicoes_disponiveis.includes('CANCELADA')) {
-          onTransicionarVaga?.(vagaId, 'CANCELADA')
+          setPendingLixeira({ tipo: 'vaga', id: vagaId, titulo: vaga.titulo })
         }
         return
       }
@@ -131,7 +141,7 @@ export function PessoasBoard({
         return
       }
       if (candidato.etapa_atual.id === saida.id) return
-      onMoveCandidato?.(activeIdStr, saida.id)
+      setPendingLixeira({ tipo: 'candidato', id: activeIdStr, etapaId: saida.id, nome: candidato.nome })
       return
     }
 
@@ -157,8 +167,10 @@ export function PessoasBoard({
           vagaModalBase={vagaModalBase}
           vagaDraggable={draggable}
           aceitaVaga={vagaEmTriagem && !etapa.is_saida_negativa}
+          aceitaCandidato={!!activeCandidato && activeCandidato.etapa_atual.id !== etapa.id}
           cadastroAqui={etapa.exige_cadastro_completo}
           selectedVagaId={selectedVagaId}
+          selectedCandidatoId={selectedCandidatoId}
         />
       ))}
     </div>
@@ -196,6 +208,20 @@ export function PessoasBoard({
           )}
         </div>
       </DndContext>
+      {pendingLixeira && (
+        <MotivoLixeiraModal
+          titulo={`Mandar "${pendingLixeira.tipo === 'candidato' ? pendingLixeira.nome : pendingLixeira.titulo}" pra lixeira?`}
+          onCancel={() => setPendingLixeira(null)}
+          onConfirm={(motivo) => {
+            if (pendingLixeira.tipo === 'candidato') {
+              onMoveCandidato?.(pendingLixeira.id, pendingLixeira.etapaId, motivo)
+            } else {
+              onTransicionarVaga?.(pendingLixeira.id, 'CANCELADA', motivo)
+            }
+            setPendingLixeira(null)
+          }}
+        />
+      )}
     </div>
   )
 }

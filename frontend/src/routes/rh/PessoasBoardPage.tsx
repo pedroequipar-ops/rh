@@ -14,7 +14,7 @@ import { useBoardFilters } from '../../components/board/useBoardFilters'
 import { BoardSwitcher } from '../../components/kanban/BoardSwitcher'
 import { PessoasBoard } from '../../components/kanban/PessoasBoard'
 import { EtapaColumnEditor } from '../../components/kanban/EtapaColumnEditor'
-import { vagaIdFromLocation } from '../../lib/selectedVaga'
+import { candidatoIdFromLocation, vagaIdFromLocation } from '../../lib/selectedVaga'
 import type { EtapaKanban, Vaga, VagaStatus } from '../../types'
 
 interface PessoasBoardPageProps {
@@ -31,6 +31,7 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
   const base = isRh ? '/rh' : '/setor'
   const rotaAtual = soTriagem ? 'triagem' : 'pessoas'
   const selectedVagaId = vagaIdFromLocation(location.pathname, location.search)
+  const selectedCandidatoId = candidatoIdFromLocation(location.pathname, location.search)
   const [editorOpen, setEditorOpen] = useState(false)
 
   const etapasQuery = useEtapas()
@@ -55,16 +56,16 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
   const totalTriagem = vagas.filter((v) => v.status === 'EM_TRIAGEM').length
   const loading = etapasQuery.isLoading || vagasQuery.isLoading || candidatosQuery.isLoading
 
-  function handleMoveCandidato(candidatoId: string, etapaId: string) {
-    moverEtapaCandidato.mutate({ id: candidatoId, etapaId })
+  function handleMoveCandidato(candidatoId: string, etapaId: string, motivo?: string) {
+    moverEtapaCandidato.mutate({ id: candidatoId, etapaId, motivo })
   }
 
   function handleMoveVagaEtapa(vagaId: string, etapaId: string) {
     moverVagaEtapa.mutate({ id: vagaId, etapaId })
   }
 
-  function handleTransicionarVaga(vagaId: string, status: VagaStatus) {
-    transicionarVaga.mutate({ id: vagaId, para: status })
+  function handleTransicionarVaga(vagaId: string, status: VagaStatus, observacao?: string) {
+    transicionarVaga.mutate({ id: vagaId, para: status, observacao })
   }
 
   function handleRegistrarCandidato(vaga: Vaga, etapa: EtapaKanban) {
@@ -81,9 +82,6 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
     <div className="flex h-full flex-col bg-board">
       <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-slate-200 bg-white px-5">
         <div className="flex items-center gap-4">
-          <h1 className="text-lg font-semibold text-slate-800">
-            {soTriagem ? 'Triagem' : 'Pessoas'}
-          </h1>
           <BoardSwitcher
             vagasHref={`${base}/vagas`}
             triagemHref={`${base}/triagem`}
@@ -133,6 +131,7 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
               onTransicionarVaga={isRh && soTriagem ? handleTransicionarVaga : undefined}
               etapaCadastroInicial={etapaCadastroInicial}
               selectedVagaId={selectedVagaId}
+              selectedCandidatoId={selectedCandidatoId}
             />
           </div>
         )}

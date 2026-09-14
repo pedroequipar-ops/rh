@@ -44,10 +44,11 @@ def registrar_mudanca_responsavel(candidato, antes, depois, user):
     atividade_services.registrar(user, "mudou_responsavel", candidato, resumo=resumo)
 
 
-def registrar_mudanca_etapa(candidato, etapa, user):
-    atividade_services.registrar(
-        user, "moveu_etapa", candidato, resumo=f'moveu para a etapa "{etapa.nome}"'
-    )
+def registrar_mudanca_etapa(candidato, etapa, user, motivo=""):
+    resumo = f'moveu para a etapa "{etapa.nome}"'
+    if motivo:
+        resumo += f": {motivo}"
+    atividade_services.registrar(user, "moveu_etapa", candidato, resumo=resumo)
 
 
 def excluir_reprovados_vencidos(company_id) -> int:

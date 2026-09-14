@@ -70,9 +70,10 @@ export async function getCurriculoUrl(id: string): Promise<string> {
   return data.curriculo_url
 }
 
-export async function moverEtapa(id: string, etapaId: string): Promise<Candidato> {
+export async function moverEtapa(id: string, etapaId: string, motivo?: string): Promise<Candidato> {
   const { data } = await apiClient.patch<Candidato>(`/candidatos/${id}/mover-etapa/`, {
     etapa_id: etapaId,
+    motivo,
   })
   return data
 }
@@ -92,11 +93,27 @@ export interface CandidatoNotificacaoEtapa {
   candidato_nome: string
   mensagem: string
   created_at: string
+  lida: boolean
+  lida_em: string | null
 }
 
 export async function getNotificacoesEtapa(): Promise<CandidatoNotificacaoEtapa[]> {
   const { data } = await apiClient.get<CandidatoNotificacaoEtapa[]>('/candidatos-notificacoes/')
   return data
+}
+
+export async function getNotificacoesEtapaHistorico(
+  page: number,
+): Promise<{ results: CandidatoNotificacaoEtapa[]; next: string | null }> {
+  const { data } = await apiClient.get<{
+    results: CandidatoNotificacaoEtapa[]
+    next: string | null
+  }>('/candidatos-notificacoes/', { params: { lida: 'true', page } })
+  return data
+}
+
+export async function marcarNotificacaoEtapaUma(id: string, lida = true): Promise<void> {
+  await apiClient.post(`/candidatos-notificacoes/${id}/marcar/`, { lida })
 }
 
 export async function marcarNotificacoesEtapaComoLidas(): Promise<void> {

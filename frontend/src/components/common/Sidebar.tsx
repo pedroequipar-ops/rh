@@ -47,14 +47,6 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         <NotificacoesMenu collapsed={collapsed} />
         <UserMenu collapsed={collapsed} />
       </div>
-
-      <button
-        onClick={() => setCollapsed((v) => !v)}
-        className="hidden shrink-0 items-center justify-center border-t border-slate-100 py-1.5 text-slate-300 outline-none transition-fast hover:bg-slate-50 hover:text-slate-500 focus-visible:bg-slate-50 focus-visible:text-slate-500 md:flex"
-        aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
-      >
-        {collapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
-      </button>
     </>
   )
 
@@ -62,11 +54,18 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
     <>
       <aside
         className={cn(
-          'hidden shrink-0 flex-col border-r border-slate-200 bg-white transition-fast md:flex',
+          'relative hidden shrink-0 flex-col border-r border-slate-200 bg-white transition-fast md:flex',
           collapsed ? 'w-16' : 'w-52',
         )}
       >
         {content}
+        <button
+          onClick={() => setCollapsed((v) => !v)}
+          className="absolute -right-3 top-1/2 z-10 hidden h-6 w-6 shrink-0 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-400 shadow-sm outline-none transition-fast hover:bg-slate-50 hover:text-slate-600 focus-visible:bg-slate-50 focus-visible:text-slate-600 md:flex"
+          aria-label={collapsed ? 'Expandir menu' : 'Recolher menu'}
+        >
+          {collapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
+        </button>
       </aside>
 
       {mobileOpen && (

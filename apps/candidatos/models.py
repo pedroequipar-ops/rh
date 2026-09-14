@@ -52,6 +52,7 @@ class CandidatoNotificacao(TimeStampedModel):
     candidato = models.ForeignKey(Candidato, on_delete=models.CASCADE, related_name="notificacoes")
     mensagem = models.CharField(max_length=255)
     lida = models.BooleanField(default=False)
+    lida_em = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at"]

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { Bell, Flame, Upload, UserPlus, X } from 'lucide-react'
 import clsx from 'clsx'
+import { ActivityFeed } from '../atividade/ActivityFeed'
 import { BulkCurriculoDropzone } from '../candidato/BulkCurriculoDropzone'
 import { ChatPanel } from '../candidato/ChatPanel'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
@@ -85,10 +86,11 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const candidatosQuery = useCandidatosDaVaga(vaga.id)
   const historicoQuery = useVagaHistorico(vaga.id)
 
-  const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'chat'>('detalhes')
-  const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | null>(null)
+  const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'chat' | 'atividade'>('detalhes')
+  const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | 'cobrar' | null>(null)
   const [importOpen, setImportOpen] = useState(false)
   const [motivoRecusa, setMotivoRecusa] = useState('')
+  const [mensagemCobranca, setMensagemCobranca] = useState('')
   const [aprovarPrioridade, setAprovarPrioridade] = useState<VagaPrioridade>(vaga.prioridade)
   const [aprovarUrgente, setAprovarUrgente] = useState(vaga.urgente)
   const [aprovarDataAlvo, setAprovarDataAlvo] = useState(vaga.data_alvo_preenchimento ?? '')
@@ -129,10 +131,11 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
     setMotivoRecusa('')
   }
 
-  async function handleCobrar() {
-    const msg = window.prompt('Mensagem da cobrança (opcional):') ?? undefined
-    if (msg === undefined) return
-    await cobrar.mutateAsync({ id: vaga.id, mensagem: msg || undefined })
+  async function handleCobrar(event: FormEvent) {
+    event.preventDefault()
+    await cobrar.mutateAsync({ id: vaga.id, mensagem: mensagemCobranca.trim() || undefined })
+    setAcaoPendente(null)
+    setMensagemCobranca('')
   }
 
   const statusMeta = VAGA_STATUS_META[vaga.status]
@@ -156,6 +159,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
         <div className="flex items-start justify-between gap-2">
           <InlineEdit
             value={vaga.titulo}
+            disabled={!isRh}
             onSave={(v) => salvar({ titulo: v })}
             className="text-base font-semibold text-slate-800"
           />
@@ -222,6 +226,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
           { value: 'detalhes', label: 'Detalhes' },
           ...(emPessoas ? [{ value: 'candidatos', label: 'Candidatos' }] : []),
           { value: 'chat', label: 'Chat' },
+          { value: 'atividade', label: 'Atividade' },
         ]}
       />
 
@@ -240,6 +245,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
             <InlineEdit
               value={vaga.descricao}
               type="textarea"
+              disabled={!isRh}
               placeholder="Sem descrição."
               onSave={(v) => salvar({ descricao: v })}
             />
@@ -252,6 +258,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
             <InlineEdit
               value={vaga.requisitos}
               type="textarea"
+              disabled={!isRh}
               placeholder="Sem requisitos informados."
               onSave={(v) => salvar({ requisitos: v })}
             />
@@ -265,6 +272,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               <InlineEdit
                 value={String(vaga.quantidade_vagas)}
                 type="number"
+                disabled={!isRh}
                 onSave={(v) => salvar({ quantidade_vagas: Number(v) })}
               />
             </div>
@@ -274,6 +282,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               </h3>
               <InlineEdit
                 value={vaga.salario != null ? String(vaga.salario) : ''}
+                disabled={!isRh}
                 placeholder="Não informado"
                 onSave={(v) => salvar({ salario: v || null })}
               />
@@ -285,6 +294,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               <InlineEdit
                 value={vaga.data_inicio_prevista ?? ''}
                 type="date"
+                disabled={!isRh}
                 onSave={(v) => salvar({ data_inicio_prevista: v || null })}
               />
             </div>
@@ -295,6 +305,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               <InlineEdit
                 value={vaga.data_alvo_preenchimento ?? ''}
                 type="date"
+                disabled={!isRh}
                 onSave={(v) => salvar({ data_alvo_preenchimento: v || null })}
               />
             </div>
@@ -317,6 +328,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
                 value={vaga.motivo_solicitacao}
                 type="select"
                 options={MOTIVO_SOLICITACAO_OPCOES}
+                disabled={!isRh}
                 onSave={(v) => salvar({ motivo_solicitacao: v })}
               />
             </div>
@@ -433,6 +445,31 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
                     </Button>
                   </div>
                 </form>
+              ) : acaoPendente === 'cobrar' ? (
+                <form onSubmit={handleCobrar} className="space-y-2">
+                  <Textarea
+                    rows={3}
+                    autoFocus
+                    value={mensagemCobranca}
+                    onChange={(e) => setMensagemCobranca(e.target.value)}
+                    placeholder="Mensagem da cobrança (opcional)"
+                  />
+                  <div className="flex gap-2">
+                    <Button type="submit" disabled={cobrar.isPending} className="flex-1">
+                      <Bell size={13} /> Cobrar
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => {
+                        setAcaoPendente(null)
+                        setMensagemCobranca('')
+                      }}
+                    >
+                      Cancelar
+                    </Button>
+                  </div>
+                </form>
               ) : (
                 <div className="space-y-1.5">
                   {podeAprovar && (
@@ -464,8 +501,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
                   })}
                   <Button
                     variant="secondary"
-                    onClick={handleCobrar}
-                    disabled={cobrar.isPending}
+                    onClick={() => setAcaoPendente('cobrar')}
                     className="w-full"
                   >
                     <Bell size={13} /> Cobrar responsável
@@ -524,7 +560,13 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
 
       {aba === 'chat' && (
         <div className="min-h-0 flex-1">
-          <ChatPanel kind="vaga" id={vaga.id} />
+          <ChatPanel kind="vaga" id={vaga.id} title={`Chat com ${vaga.setor.nome}`} />
+        </div>
+      )}
+
+      {aba === 'atividade' && (
+        <div className="min-h-0 flex-1">
+          <ActivityFeed alvoTipo="vaga" alvoId={vaga.id} />
         </div>
       )}
 

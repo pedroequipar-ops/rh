@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.conf import settings
+from django.utils import timezone
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, ValidationError
@@ -9,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.accounts.models import User
+from apps.core.notificacoes_ws import publicar_notificacao
+from apps.core.pagination import StandardPagination
 from apps.core.permissions import HasFunctionPermission
 from apps.vagas import services as vagas_services
 from apps.vagas.models import EtapaKanban, Vaga
@@ -246,9 +249,13 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         except Exception:
             raise NotFound("Etapa não encontrada.")
 
+        motivo = serializer.validated_data.get("motivo", "").strip()
+        if etapa.is_saida_negativa and not motivo:
+            raise ValidationError({"motivo": "Informe o motivo."})
+
         candidato = self.repo.mover_etapa(candidato, etapa)
         _notificar_mudanca_etapa(candidato, etapa, company_id)
-        services.registrar_mudanca_etapa(candidato, etapa, request.user)
+        services.registrar_mudanca_etapa(candidato, etapa, request.user, motivo=motivo)
         return Response(CandidatoSerializer(candidato).data)
 
 
@@ -256,8 +263,8 @@ def _notificar_mudanca_etapa(candidato, etapa, company_id):
     setor_id = candidato.vaga.setor_id
     if not setor_id:
         return
-    destinatarios = User.objects.filter(
-        company_id=company_id, role="SETOR", setor_id=setor_id, is_active=True
+    destinatarios = list(
+        User.objects.filter(company_id=company_id, role="SETOR", setor_id=setor_id, is_active=True)
     )
     mensagem = f'"{candidato.nome}" mudou para a etapa "{etapa.nome}"'
     CandidatoNotificacao.objects.bulk_create(
@@ -271,17 +278,31 @@ def _notificar_mudanca_etapa(candidato, etapa, company_id):
             for user in destinatarios
         ]
     )
+    for user in destinatarios:
+        publicar_notificacao(
+            user.id,
+            "candidato",
+            {"mensagem": mensagem, "candidato_id": str(candidato.id)},
+        )
 
 
 class CandidatoNotificacaoListView(generics.ListAPIView):
+    """``?lida=false`` (default, sem paginação real — usado pelo sininho pro
+    total de não lidas) ou ``?lida=true`` (histórico, paginado de verdade)."""
+
     serializer_class = CandidatoNotificacaoSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = None
+
+    @property
+    def pagination_class(self):
+        return StandardPagination if self.request.query_params.get("lida") == "true" else None
 
     def get_queryset(self):
-        return CandidatoNotificacao.objects.filter(
-            destinatario=self.request.user, lida=False
-        ).select_related("candidato")[:20]
+        lida = self.request.query_params.get("lida") == "true"
+        qs = CandidatoNotificacao.objects.filter(
+            destinatario=self.request.user, lida=lida
+        ).select_related("candidato")
+        return qs if lida else qs[:20]
 
 
 class CandidatoNotificacaoMarcarLidasView(APIView):
@@ -289,6 +310,19 @@ class CandidatoNotificacaoMarcarLidasView(APIView):
 
     def post(self, request):
         CandidatoNotificacao.objects.filter(destinatario=request.user, lida=False).update(
-            lida=True
+            lida=True, lida_em=timezone.now()
         )
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CandidatoNotificacaoMarcarUmaView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk=None):
+        lida = request.data.get("lida", True)
+        atualizados = CandidatoNotificacao.objects.filter(
+            id=pk, destinatario=request.user
+        ).update(lida=lida, lida_em=timezone.now() if lida else None)
+        if not atualizados:
+            raise NotFound("Notificação não encontrada.")
         return Response(status=status.HTTP_204_NO_CONTENT)

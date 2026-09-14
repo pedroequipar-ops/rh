@@ -1,0 +1,1924 @@
+2026-09-05 07:41:28,685 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 07:41:28,691 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 07:41:28,691 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 07:41:28,692 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 07:45:32,931 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 07:45:32,932 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 07:45:32,932 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 07:45:32,933 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 07:45:41,801 WARNING django.request Not Found: /
+2026-09-05 07:54:02,544 WARNING django.request Not Found: /
+2026-09-05 07:54:02,652 WARNING django.request Not Found: /favicon.ico
+2026-09-05 07:54:14,500 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 07:54:14,519 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 07:54:48,745 WARNING django.request Not Found: /v1/auth/login/
+2026-09-05 08:14:09,541 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:14:57,122 ERROR django.request Internal Server Error: /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 54, in retrieve
+    instance = self.get_object()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 100, in get_object
+    obj = get_object_or_404(queryset, **filter_kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 19, in get_object_or_404
+    return _get_object_or_404(queryset, *filter_args, **filter_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\shortcuts.py", line 90, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:14:57,167 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:14:57,308 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:14:57,318 ERROR django.request Internal Server Error: /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 54, in retrieve
+    instance = self.get_object()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 100, in get_object
+    obj = get_object_or_404(queryset, **filter_kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 19, in get_object_or_404
+    return _get_object_or_404(queryset, *filter_args, **filter_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\shortcuts.py", line 90, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:15:32,750 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 08:15:35,166 WARNING django.request Forbidden: /v1/candidatos/98a5f978-db69-4931-b40c-2fba3506b1cc/mover-etapa/
+2026-09-05 08:15:38,052 WARNING django.request Not Found: /v1/candidatos/71c9ee54-b6ce-4b5d-a71f-56f283985080/
+2026-09-05 08:15:39,663 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 08:15:42,614 WARNING django.request Not Found: /v1/candidatos/5ceea265-60db-4450-b9f7-e4684efd6ab2/mensagens/
+2026-09-05 08:15:44,354 WARNING django.request Forbidden: /v1/vagas/25ce72eb-a43c-4043-b4f6-d36e33e4f1d8/
+2026-09-05 08:17:16,673 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:17:16,688 ERROR django.request Internal Server Error: /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 54, in retrieve
+    instance = self.get_object()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 100, in get_object
+    obj = get_object_or_404(queryset, **filter_kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 19, in get_object_or_404
+    return _get_object_or_404(queryset, *filter_args, **filter_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\shortcuts.py", line 90, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:17:17,027 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:17:17,049 ERROR django.request Internal Server Error: /v1/candidatos/6c5a15c6-c313-4e98-a5a9-a7afd7e1e511/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 54, in retrieve
+    instance = self.get_object()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 100, in get_object
+    obj = get_object_or_404(queryset, **filter_kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 19, in get_object_or_404
+    return _get_object_or_404(queryset, *filter_args, **filter_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\shortcuts.py", line 90, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:17:24,276 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:17:24,369 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:17:27,380 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:17:27,466 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:18:02,406 WARNING django.request Bad Request: /v1/vagas/
+2026-09-05 08:18:02,443 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-05 08:18:11,513 ERROR django.request Internal Server Error: /v1/candidatos/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\asgiref\sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 368, in __len__
+    self._fetch_all()
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column candidatos_candidato.resumo_perfil does not exist
+LINE 1: ...to"."cpf", "candidatos_candidato"."linkedin_url", "candidato...
+                                                             ^
+
+2026-09-05 08:18:56,195 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 08:18:56,196 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 08:18:56,196 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 08:18:56,198 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 08:19:05,177 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 09:11:50,435 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:11:51,003 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 09:11:51,499 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:12:27,803 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:12:50,990 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 09:12:51,385 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:13:04,071 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 09:13:04,494 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:13:06,158 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 09:13:08,530 WARNING django.request Forbidden: /v1/candidatos/e769749a-e18a-4f03-8c04-1935ce18bbb1/mover-etapa/
+2026-09-05 09:13:11,383 WARNING django.request Not Found: /v1/candidatos/bfc92010-8e8a-4a98-a3b9-b9bb286e318c/
+2026-09-05 09:13:13,039 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 09:13:15,885 WARNING django.request Not Found: /v1/candidatos/d1b8a6a1-8cd1-47c3-af44-4314c7335d80/mensagens/
+2026-09-05 09:13:17,544 WARNING django.request Forbidden: /v1/vagas/9567cece-8ccf-4089-9e48-679507b11c4b/
+2026-09-05 09:15:01,813 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 09:15:01,814 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 09:15:01,814 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 09:15:01,815 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 09:15:11,052 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 09:29:47,629 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 09:31:27,846 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 09:34:02,490 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 09:34:09,346 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('::1', 5672, 0, 0)
+2026-09-05 09:34:09,346 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=3704, family=23, type=1, proto=6, laddr=('::1', 50205, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 09:34:09,347 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000001C793F35550>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000001C793F35550> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>).
+2026-09-05 09:34:09,432 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000001C793F35550> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-05 09:34:09,432 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000001C793F35550> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-05 09:34:09,433 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000001C793F35550> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-05 09:34:09,433 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-05 09:34:09,447 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-05 09:34:09,447 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000001C793F35550> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-05 09:34:09,508 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000001C793F35550> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-05 09:34:09,508 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-05 09:34:09,509 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=3704, family=23, type=1, proto=6, laddr=('::1', 50205, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 09:34:09,509 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=3704, family=23, type=1, proto=6, laddr=('::1', 50205, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 09:34:09,509 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=3704, family=23, type=1, proto=6, laddr=('::1', 50205, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 09:34:09,510 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-05 09:34:09,510 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-05 09:34:09,510 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=3704, family=23, type=1, proto=6, laddr=('::1', 50205, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 09:34:09,510 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2026-09-05 09:39:15,301 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 09:52:23,683 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 09:52:24,257 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:52:26,225 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 09:52:28,966 WARNING django.request Forbidden: /v1/candidatos/6d0812c6-8fd2-4277-955e-02ba521f78f0/mover-etapa/
+2026-09-05 09:52:31,915 WARNING django.request Not Found: /v1/candidatos/8b1654a0-f33e-4bc1-82b1-d3acef3ccf08/
+2026-09-05 09:52:34,088 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 09:52:36,291 ERROR django.request Internal Server Error: /v1/candidatos/531796a0-0a95-4293-8e8d-fb4c17775a47/mensagens/
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 948, in get_or_create
+    return self.get(**kwargs), False
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 635, in get
+    raise self.model.DoesNotExist(
+apps.chat.models.ChatLeitura.DoesNotExist: ChatLeitura matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.NotNullViolation: null value in column "company_id" of relation "chat_chatleitura" violates not-null constraint
+DETAIL:  Failing row contains (88b6fef7-69b6-47c1-bc7e-03ff0ca2c715, 2026-09-05 12:52:36.270492+00, 2026-09-05 12:52:36.270492+00, t, 531796a0-0a95-4293-8e8d-fb4c17775a47, null, 647637b1-3d4f-40fc-841d-c2c7de1a4ebc).
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\views\generic\base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\chat\views.py", line 49, in list
+    _marcar_como_lida(request.user, self.candidato)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\chat\views.py", line 18, in _marcar_como_lida
+    leitura, _ = ChatLeitura.objects.get_or_create(usuario=user, candidato=candidato)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 955, in get_or_create
+    return self.create(**params), True
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 665, in create
+    obj.save(force_insert=True, using=self.db)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 902, in save
+    self.save_base(
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1008, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1169, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\base.py", line 1210, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\query.py", line 1873, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1882, in execute_sql
+    cursor.execute(sql, params)
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: null value in column "company_id" of relation "chat_chatleitura" violates not-null constraint
+DETAIL:  Failing row contains (88b6fef7-69b6-47c1-bc7e-03ff0ca2c715, 2026-09-05 12:52:36.270492+00, 2026-09-05 12:52:36.270492+00, t, 531796a0-0a95-4293-8e8d-fb4c17775a47, null, 647637b1-3d4f-40fc-841d-c2c7de1a4ebc).
+
+2026-09-05 09:52:38,651 WARNING django.request Not Found: /v1/candidatos/23bde893-65a1-4bec-9bac-55ed5686649a/mensagens/
+2026-09-05 09:52:40,857 WARNING django.request Forbidden: /v1/vagas/6c10f85f-9899-48a4-989a-086a33907e78/
+2026-09-05 09:53:13,391 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 09:53:13,813 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:53:15,580 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 09:53:18,075 WARNING django.request Forbidden: /v1/candidatos/47328243-3791-4233-b69e-4feff3fc8dbd/mover-etapa/
+2026-09-05 09:53:21,192 WARNING django.request Not Found: /v1/candidatos/1a57cc06-d74b-4d2f-9cac-f050be178643/
+2026-09-05 09:53:22,948 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 09:53:25,969 WARNING django.request Not Found: /v1/candidatos/58ec26ac-87aa-41d7-8ef8-6419fbf80401/mensagens/
+2026-09-05 09:53:27,682 WARNING django.request Forbidden: /v1/vagas/df20d031-4f5f-4e45-b759-cb3c86b13903/
+2026-09-05 09:54:07,505 WARNING django.request Not Found: /v1/candidatos/798fd7d5-4c5a-4ff2-aff8-1183a3577742/mensagens/
+2026-09-05 09:55:28,114 WARNING django.request Not Found: /v1/chat/nao-lidas/
+2026-09-05 09:55:28,129 WARNING django.request Not Found: /v1/chat/nao-lidas/
+2026-09-05 09:55:28,472 WARNING django.request Not Found: /v1/chat/nao-lidas/
+2026-09-05 09:55:28,499 WARNING django.request Not Found: /v1/chat/nao-lidas/
+2026-09-05 09:55:58,866 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 09:55:58,867 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 09:55:58,868 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 09:55:58,870 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 09:56:24,149 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 09:57:47,928 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 09:57:48,516 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:57:51,029 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 09:57:54,452 WARNING django.request Forbidden: /v1/candidatos/d06365db-cd81-457f-a3ec-79ec8d0dec15/mover-etapa/
+2026-09-05 09:57:58,309 WARNING django.request Not Found: /v1/candidatos/6620d2a1-6d3a-41ff-8dc4-fd8c58e40b23/
+2026-09-05 09:58:00,458 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 09:58:05,762 WARNING django.request Not Found: /v1/candidatos/055471d5-0427-45cd-94c6-cfc202395e03/mensagens/
+2026-09-05 09:58:13,581 WARNING django.request Forbidden: /v1/vagas/a109aa51-2073-4a46-adb3-be4cdc32c666/
+2026-09-05 09:59:06,225 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 09:59:06,726 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:59:08,637 WARNING django.request Bad Request: /v1/usuarios/cd10fe33-a85e-49b3-9ca4-1a8c0dabdf24/
+2026-09-05 09:59:28,636 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 09:59:29,318 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 09:59:30,769 WARNING django.request Bad Request: /v1/usuarios/ebadfa8f-7e53-48cb-9547-c8d1d5ae2705/
+2026-09-05 09:59:33,834 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 09:59:36,753 WARNING django.request Forbidden: /v1/candidatos/d8ba57ec-d881-42b3-8bc3-e4b8c4c410cd/mover-etapa/
+2026-09-05 09:59:40,194 WARNING django.request Not Found: /v1/candidatos/6d90d037-5e81-4853-8389-44b5455564cd/
+2026-09-05 09:59:41,943 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 09:59:45,441 WARNING django.request Not Found: /v1/candidatos/4d45e35f-8224-4065-8fa6-fc70c6f65e22/mensagens/
+2026-09-05 09:59:50,818 WARNING django.request Forbidden: /v1/vagas/9905df40-90fd-446a-b941-831b19f30651/
+2026-09-05 10:01:36,933 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:01:36,934 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 10:01:36,934 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:01:36,935 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 10:03:23,648 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 10:12:44,346 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 10:12:44,948 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 10:12:46,541 WARNING django.request Bad Request: /v1/usuarios/91c411b3-e087-445d-90c7-97eb2d5b68c1/
+2026-09-05 10:12:49,047 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:12:51,872 WARNING django.request Forbidden: /v1/candidatos/fba18f37-e64e-44d4-bfd0-e2e025770781/mover-etapa/
+2026-09-05 10:12:55,380 WARNING django.request Not Found: /v1/candidatos/ec960afb-9f7f-4cc6-aa60-74e57d06efa3/
+2026-09-05 10:12:57,305 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:13:01,025 WARNING django.request Not Found: /v1/candidatos/fff6d769-1d76-4d29-9da6-f987d8f84448/mensagens/
+2026-09-05 10:13:08,340 WARNING django.request Forbidden: /v1/vagas/df4eb2a1-3bb8-4f26-96d5-6d6bd4ad87c7/
+2026-09-05 10:14:14,600 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:14:18,282 WARNING django.request Forbidden: /v1/candidatos/685a70f7-49c3-4960-a117-50668a973fef/mover-etapa/
+2026-09-05 10:14:24,992 WARNING django.request Not Found: /v1/candidatos/43475aaf-77f9-4fc5-8af6-816eaa7548f2/
+2026-09-05 10:14:27,174 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:14:41,876 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 10:14:42,324 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 10:14:44,232 WARNING django.request Bad Request: /v1/usuarios/0cd1c1ca-d847-4ab1-890a-f4a645029f89/
+2026-09-05 10:14:47,204 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:14:50,952 WARNING django.request Forbidden: /v1/candidatos/fbb4d4ad-0efb-4ac6-bbc8-c130bb41cabd/mover-etapa/
+2026-09-05 10:15:00,642 WARNING django.request Not Found: /v1/candidatos/2bd19b49-594e-476f-9317-8549e5696489/
+2026-09-05 10:15:03,532 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 54, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 37, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:15:08,042 WARNING django.request Not Found: /v1/candidatos/c8cf2c44-7649-4ad3-abd6-9ff3aa01d2fc/mensagens/
+2026-09-05 10:15:14,645 WARNING django.request Forbidden: /v1/vagas/6cfe0d5b-d30e-4bfd-b098-cc61d250519b/
+2026-09-05 10:16:26,125 WARNING django.request Not Found: /v1/candidatos-notificacoes/
+2026-09-05 10:16:26,491 WARNING django.request Not Found: /v1/candidatos-notificacoes/
+2026-09-05 10:16:46,027 WARNING django.request Not Found: /v1/candidatos-notificacoes/
+2026-09-05 10:16:47,463 WARNING django.request Not Found: /v1/candidatos-notificacoes/
+2026-09-05 10:17:06,029 WARNING django.request Not Found: /v1/candidatos-notificacoes/
+2026-09-05 10:17:07,459 WARNING django.request Not Found: /v1/candidatos-notificacoes/
+2026-09-05 10:17:32,905 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:17:32,906 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 10:17:32,906 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:17:32,907 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 10:17:42,651 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 10:21:18,381 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:21:21,717 WARNING django.request Forbidden: /v1/candidatos/7f890697-31ca-4fd1-ad1b-be57a24e4a2f/mover-etapa/
+2026-09-05 10:21:31,908 WARNING django.request Not Found: /v1/candidatos/fee60d19-17ed-4283-996c-f76ccc7da3bb/
+2026-09-05 10:21:33,693 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:21:47,357 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 10:21:47,801 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 10:21:49,743 WARNING django.request Bad Request: /v1/usuarios/93710948-ed6c-4cbb-84a0-dcbdc00c8d2f/
+2026-09-05 10:21:52,183 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:21:55,441 WARNING django.request Forbidden: /v1/candidatos/af0c2b04-2496-493a-8203-75fe87e1925d/mover-etapa/
+2026-09-05 10:22:04,488 WARNING django.request Not Found: /v1/candidatos/d504a9bb-0084-4449-bfa7-89d1dad99577/
+2026-09-05 10:22:06,570 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:22:11,123 WARNING django.request Not Found: /v1/candidatos/8acb5390-223a-4dd4-be6c-1f9a7caf9841/mensagens/
+2026-09-05 10:22:19,490 WARNING django.request Forbidden: /v1/vagas/295c2ad6-f651-4f15-bfde-9b99ddcacfba/
+2026-09-05 10:23:22,325 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:23:22,326 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 10:23:22,326 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:23:22,326 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 10:23:33,648 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 10:26:19,674 WARNING django.request Not Found: /v1/candidatos/12de1163-72b8-4659-b548-c50989c00d0d/curriculo-url/
+2026-09-05 10:26:20,447 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:26:22,899 WARNING django.request Forbidden: /v1/candidatos/3517dff8-9053-4958-a615-2b4733b62178/mover-etapa/
+2026-09-05 10:26:31,253 WARNING django.request Not Found: /v1/candidatos/35a45805-7c53-4493-b191-60fe630584a0/
+2026-09-05 10:26:32,940 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:26:45,658 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 10:26:46,052 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 10:26:47,391 WARNING django.request Bad Request: /v1/usuarios/333f1437-eae1-49ce-808d-9a788d027d21/
+2026-09-05 10:26:49,829 WARNING django.request Not Found: /v1/candidatos/81ca3d11-7b91-4f4c-ba52-9bf576a44983/curriculo-url/
+2026-09-05 10:26:50,662 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:26:53,645 WARNING django.request Forbidden: /v1/candidatos/1f69a875-fc99-4ac5-9591-5031fc259f9e/mover-etapa/
+2026-09-05 10:27:02,506 WARNING django.request Not Found: /v1/candidatos/f64c2f4f-ff36-48a9-bc0e-ddd33c83eb7b/
+2026-09-05 10:27:04,336 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:27:07,686 WARNING django.request Not Found: /v1/candidatos/c2bb7b47-b94f-46ac-b795-4fc604cb5a40/mensagens/
+2026-09-05 10:27:14,373 WARNING django.request Forbidden: /v1/vagas/df4612c7-c5a1-4bfe-878f-ef55045f608c/
+2026-09-05 10:27:49,445 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:27:49,445 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 10:27:49,446 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:27:49,446 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 10:33:02,402 WARNING django.request Forbidden: /v1/vagas/d753403c-d7a4-4778-8a3d-6db049c17182/
+2026-09-05 10:33:21,650 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 10:33:22,051 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 10:33:23,340 WARNING django.request Bad Request: /v1/usuarios/fcd314e3-4c01-4ba6-a865-be0028fc6fe0/
+2026-09-05 10:33:25,526 WARNING django.request Not Found: /v1/candidatos/a7d95e15-e2d3-4c9a-a84d-9a25d37e17cf/curriculo-url/
+2026-09-05 10:33:26,320 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:33:28,762 WARNING django.request Forbidden: /v1/candidatos/235ef79d-ec5c-477e-88cf-711f0c312e12/mover-etapa/
+2026-09-05 10:33:37,620 WARNING django.request Not Found: /v1/candidatos/e7ac3d9b-84df-4d4e-9825-2b5f9be5fcc8/
+2026-09-05 10:33:39,307 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:33:42,280 WARNING django.request Not Found: /v1/candidatos/1d5a0145-8993-4ec1-9109-55a79a6b8ef1/mensagens/
+2026-09-05 10:33:49,366 WARNING django.request Forbidden: /v1/vagas/8667442e-388b-4ce3-8ffb-4d09cf19e47b/
+2026-09-05 10:34:48,576 WARNING django.request Not Found: /v1/vagas-notificacoes/
+2026-09-05 10:35:08,534 WARNING django.request Not Found: /v1/vagas-notificacoes/
+2026-09-05 10:35:28,539 WARNING django.request Not Found: /v1/vagas-notificacoes/
+2026-09-05 10:35:48,545 WARNING django.request Not Found: /v1/vagas-notificacoes/
+2026-09-05 10:36:08,536 WARNING django.request Not Found: /v1/vagas-notificacoes/
+2026-09-05 10:36:28,546 WARNING django.request Not Found: /v1/vagas-notificacoes/
+2026-09-05 10:36:44,586 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:36:44,587 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 10:36:44,587 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:36:44,588 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 10:36:55,485 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 10:41:40,171 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 10:41:40,567 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 10:41:41,759 WARNING django.request Bad Request: /v1/usuarios/63eca701-9db2-4d73-993e-9d7a09f54c4c/
+2026-09-05 10:41:47,338 WARNING django.request Forbidden: /v1/usuarios/fbd6a7ab-2d0b-4188-b18b-e6ce0ce544ac/
+2026-09-05 10:42:01,690 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 10:42:02,099 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 10:42:03,388 WARNING django.request Bad Request: /v1/usuarios/d515a2a4-ef39-49f5-a203-ae08fb99592b/
+2026-09-05 10:42:08,715 WARNING django.request Forbidden: /v1/usuarios/623d011c-724e-4cd0-9882-62a369c8851b/
+2026-09-05 10:42:10,355 WARNING django.request Not Found: /v1/candidatos/ec76eb5e-a0b3-4296-b2bf-85f48526794c/curriculo-url/
+2026-09-05 10:42:11,136 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:42:13,812 WARNING django.request Forbidden: /v1/candidatos/448d8ab2-aa48-4507-81f9-fe09ff8a9829/mover-etapa/
+2026-09-05 10:42:21,953 WARNING django.request Not Found: /v1/candidatos/beb41dbd-5361-4722-90de-84936035676a/
+2026-09-05 10:42:23,748 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:42:26,612 WARNING django.request Not Found: /v1/candidatos/eeb10acd-f03e-43df-8337-0f435f92d0a1/mensagens/
+2026-09-05 10:42:32,895 WARNING django.request Forbidden: /v1/vagas/33da550e-398c-4245-b0c9-2e0556ad9ec3/
+2026-09-05 10:46:27,185 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 10:46:27,699 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 10:46:29,173 WARNING django.request Bad Request: /v1/usuarios/1f03e0d0-56e3-4e44-912a-410d2e6b385a/
+2026-09-05 10:46:35,608 WARNING django.request Forbidden: /v1/usuarios/3bf3364c-02a0-4633-a148-517e3e5bcfa2/
+2026-09-05 10:46:37,443 WARNING django.request Not Found: /v1/candidatos/dac95a4b-7856-4c00-9272-621418b4539a/curriculo-url/
+2026-09-05 10:46:38,274 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:46:40,815 WARNING django.request Forbidden: /v1/candidatos/bfc93e9b-230a-4bec-9a35-b3fe09de0c70/mover-etapa/
+2026-09-05 10:46:51,455 WARNING django.request Not Found: /v1/candidatos/8af55c5a-e1d4-4f31-9a32-d00821359b4a/
+2026-09-05 10:46:53,467 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:46:57,283 WARNING django.request Not Found: /v1/candidatos/ab235aa6-c676-48d0-831b-ccfdbbeba533/mensagens/
+2026-09-05 10:47:05,653 WARNING django.request Forbidden: /v1/vagas/093ad9c5-ec0b-4afe-b700-ba92e2164d93/
+2026-09-05 10:47:43,819 WARNING django.request Not Found: /v1/candidatos/de0c8aeb-afa0-4f8a-a812-3bd7e1074252/curriculo-url/
+2026-09-05 10:47:44,904 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:47:48,132 WARNING django.request Forbidden: /v1/candidatos/d3d95874-3b9f-418e-883f-4014c76e77ad/mover-etapa/
+2026-09-05 10:47:59,539 WARNING django.request Not Found: /v1/candidatos/44049190-8b81-444a-a478-f45cc5afb475/
+2026-09-05 10:48:01,579 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:48:28,061 WARNING django.request Not Found: /v1/candidatos/01029d9d-c1c0-41c7-9241-b63195f21f5b/curriculo-url/
+2026-09-05 10:48:29,158 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 10:48:32,181 WARNING django.request Forbidden: /v1/candidatos/ea893070-1cac-4fdc-89f7-657f039209ef/mover-etapa/
+2026-09-05 10:48:41,959 WARNING django.request Not Found: /v1/candidatos/2b47bb0f-8791-4b83-a24c-47d3613d1d55/
+2026-09-05 10:48:44,203 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 10:51:19,902 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:51:19,903 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 10:51:19,903 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 10:51:19,905 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 10:51:29,937 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 10:59:39,072 WARNING django.request Not Found: /v1/vagas/1ade447f-5627-4685-942a-4c1175abe887/
+2026-09-05 11:00:03,619 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 11:00:04,166 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 11:00:06,071 WARNING django.request Bad Request: /v1/usuarios/2b26dc08-d476-4a31-a1fb-72adfc694e2c/
+2026-09-05 11:00:13,458 WARNING django.request Forbidden: /v1/usuarios/5ef205e6-242c-4a70-a7ed-db4438233398/
+2026-09-05 11:00:15,663 WARNING django.request Not Found: /v1/candidatos/ffab6a1d-1e68-40c1-b9bb-46dd2bc5ab0b/curriculo-url/
+2026-09-05 11:00:16,712 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 11:00:20,019 WARNING django.request Forbidden: /v1/candidatos/c40a16e7-d3f1-4d68-9a85-b13aba772250/mover-etapa/
+2026-09-05 11:00:30,741 WARNING django.request Not Found: /v1/candidatos/25e18f44-ba4c-4843-9042-f9981cd6be0d/
+2026-09-05 11:00:32,423 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 11:00:37,533 WARNING django.request Not Found: /v1/candidatos/be1957f7-8885-4914-a110-bf4e4b612a83/mensagens/
+2026-09-05 11:00:47,292 WARNING django.request Not Found: /v1/vagas/2c1e4664-6238-4305-a6de-6e1b83ee3244/
+2026-09-05 11:05:38,568 WARNING django.request Not Found: /v1/vagas/63b46e06-a3ac-4eea-a1cc-1ab6b444b43b/
+2026-09-05 11:05:43,828 WARNING django.request Not Found: /v1/vagas/052b753f-4e74-4f49-b520-f8342dbd4265/
+2026-09-05 11:09:44,374 WARNING django.request Forbidden: /v1/vagas/144d90ea-a7f9-413a-bec0-5e07f006b455/
+2026-09-05 11:09:48,859 WARNING django.request Forbidden: /v1/vagas/144d90ea-a7f9-413a-bec0-5e07f006b455/
+2026-09-05 11:09:53,584 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 11:09:54,093 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 11:09:55,753 WARNING django.request Bad Request: /v1/usuarios/4aa99db0-f7b6-48b7-bf3d-b8103e6012c4/
+2026-09-05 11:10:02,648 WARNING django.request Forbidden: /v1/usuarios/c8054675-8202-4559-8936-4cd13fd93124/
+2026-09-05 11:10:04,855 WARNING django.request Not Found: /v1/candidatos/9703c860-d692-4d47-9f9e-df966fe5b705/curriculo-url/
+2026-09-05 11:10:05,910 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-05 11:10:09,133 WARNING django.request Forbidden: /v1/candidatos/41b980fd-cf1f-4f11-bb55-e65f8500c43e/mover-etapa/
+2026-09-05 11:10:20,008 WARNING django.request Not Found: /v1/candidatos/92909824-cafb-4d3b-ba75-254215dfff4f/
+2026-09-05 11:10:22,172 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\services.py", line 70, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\EQUIPAR - EVENTOS\Documents\GitHub\rh\apps\candidatos\tests\test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-05 11:10:27,319 WARNING django.request Not Found: /v1/candidatos/fab5892f-99e3-4246-8b60-9741f0cc2ff8/mensagens/
+2026-09-05 11:10:36,161 WARNING django.request Not Found: /v1/vagas/a28c0187-6b72-47ab-8d7f-0b17a1e6ae29/
+2026-09-05 11:10:39,904 WARNING django.request Not Found: /v1/vagas/9678fae4-7eb9-4a20-acc7-e18a1448a17d/
+2026-09-05 11:11:02,148 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 11:11:02,148 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 11:11:02,149 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 11:11:02,149 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 11:11:10,600 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 11:26:19,842 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 11:26:20,352 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 11:26:22,145 WARNING django.request Bad Request: /v1/usuarios/d8d80ae8-f0de-450d-9d9e-71962a3cbe2f/
+2026-09-05 11:26:29,914 WARNING django.request Forbidden: /v1/usuarios/ea820ab6-2a42-4ed4-81d1-f78174597dcc/
+2026-09-05 11:26:56,561 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-05 11:26:58,721 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-05 11:26:59,141 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-05 11:27:00,404 WARNING django.request Bad Request: /v1/usuarios/bfd798c0-3b9b-4d1e-a589-dc37cbbfd838/
+2026-09-05 11:27:07,717 WARNING django.request Forbidden: /v1/usuarios/f2c5e7e2-d764-4252-a2e7-4173a411aad2/
+2026-09-05 11:27:26,421 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-05 11:27:26,421 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-05 11:27:26,421 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-05 11:27:26,422 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-05 11:27:33,415 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-05 11:41:11,225 INFO httpx HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-09-05 11:41:44,312 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('::1', 5672, 0, 0)
+2026-09-05 11:41:44,313 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=1416, family=23, type=1, proto=6, laddr=('::1', 58508, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 11:41:44,315 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000002A3BB245580>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000002A3BB245580> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>).
+2026-09-05 11:41:44,381 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000002A3BB245580> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-05 11:41:44,382 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000002A3BB245580> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-05 11:41:44,383 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000002A3BB245580> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>
+2026-09-05 11:41:44,383 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-05 11:41:44,391 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-05 11:41:44,392 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000002A3BB245580> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-05 11:41:44,443 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x000002A3BB245580> params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>>
+2026-09-05 11:41:44,443 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-05 11:41:44,445 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=1416, family=23, type=1, proto=6, laddr=('::1', 58508, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 11:41:44,445 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=1416, family=23, type=1, proto=6, laddr=('::1', 58508, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 11:41:44,446 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=1416, family=23, type=1, proto=6, laddr=('::1', 58508, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 11:41:44,446 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-05 11:41:44,446 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-05 11:41:44,447 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=1416, family=23, type=1, proto=6, laddr=('::1', 58508, 0, 0), raddr=('::1', 5672, 0, 0)>
+2026-09-05 11:41:44,447 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=localhost port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')

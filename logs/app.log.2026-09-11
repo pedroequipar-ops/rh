@@ -1,0 +1,202 @@
+2026-09-11 08:23:06,361 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-11 08:23:06,383 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-11 08:23:06,385 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-11 08:23:06,389 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-11 08:23:50,312 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-11 08:23:50,333 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-11 10:06:02,486 WARNING django.request Not Found: /v1/vagas/0a322b2d-ffa5-4f95-a6d7-ca09c8205bb6/
+2026-09-11 10:06:04,210 WARNING django.request Not Found: /v1/vagas/d736f76a-7ced-4344-947d-45f98564b329/
+2026-09-11 10:06:05,556 WARNING django.request Bad Request: /v1/vagas/85e48c3a-9cfb-41a0-8b3b-af4baab1a52d/recusar/
+2026-09-11 10:06:05,893 WARNING django.request Forbidden: /v1/vagas/23db19a8-09c7-405e-a984-13a9856eea26/aprovar/
+2026-09-11 10:06:06,255 WARNING django.request Bad Request: /v1/vagas/b18c8842-a40a-433e-b02d-65c9e61f4296/transicionar/
+2026-09-11 10:06:07,800 WARNING django.request Bad Request: /v1/vagas/ba006944-4ec5-46e6-88f4-458bf8d2fd2e/cobrar/
+2026-09-11 10:06:08,115 WARNING django.request Not Found: /v1/vagas/1feee02a-dca2-4b32-87d9-861883c1f6b8/cobrar/
+2026-09-11 10:06:10,076 WARNING django.request Bad Request: /v1/vagas/396eb461-5e3a-4657-9009-0a0438ddc051/mover-etapa/
+2026-09-11 10:06:10,390 WARNING django.request Bad Request: /v1/vagas/acea0a0c-b2fa-4037-b95f-2a123acec0b7/mover-etapa/
+2026-09-11 10:06:11,044 WARNING django.request Bad Request: /v1/vagas/b31ae5e9-8049-471b-8dec-a2a80e156d25/candidaturas/
+2026-09-11 10:06:30,931 INFO daphne.server Killed 0 pending application instances
+2026-09-11 10:06:35,262 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-11 10:06:35,264 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-11 10:06:35,266 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-11 10:06:35,268 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-11 13:24:41,989 WARNING django.request Unauthorized: /v1/chat/nao-lidas/
+2026-09-11 13:24:41,990 WARNING django.request Unauthorized: /v1/candidatos-notificacoes/
+2026-09-11 13:24:41,991 WARNING django.request Unauthorized: /v1/vagas-notificacoes/
+2026-09-11 15:28:43,482 WARNING django.request Not Found: /v1/vagas/f680300d-9070-4f0a-9a22-49596ee7cf5c/
+2026-09-11 15:28:47,545 WARNING django.request Not Found: /v1/vagas/cf548e92-8d90-4921-918f-6fd7bf63cf11/
+2026-09-11 15:28:49,823 WARNING django.request Bad Request: /v1/vagas/b4795777-aacf-4da2-81e5-b2b56109a167/recusar/
+2026-09-11 15:28:50,304 WARNING django.request Forbidden: /v1/vagas/b5d8c1aa-1535-444a-b7fa-51ab9e94860f/aprovar/
+2026-09-11 15:28:50,718 WARNING django.request Bad Request: /v1/vagas/05c9df70-93ab-4c9e-8494-f33c233615cd/transicionar/
+2026-09-11 15:28:53,219 WARNING django.request Bad Request: /v1/vagas/8485a08b-681b-4aa6-b0c4-3e8ed783487a/cobrar/
+2026-09-11 15:28:53,658 WARNING django.request Not Found: /v1/vagas/5a834d41-fd50-422d-923c-b9a90ef9bc8d/cobrar/
+2026-09-11 15:28:56,072 WARNING django.request Bad Request: /v1/vagas/f64792bc-1ad7-4ff0-a927-f5b8b5fee64b/mover-etapa/
+2026-09-11 15:28:56,708 WARNING django.request Bad Request: /v1/vagas/38f20c8a-64ae-401d-abea-a79c6c13c414/mover-etapa/
+2026-09-11 15:28:58,237 WARNING django.request Bad Request: /v1/vagas/07db3870-633b-4f02-894b-58279801032d/candidaturas/
+2026-09-11 15:29:07,674 INFO daphne.server Killed 0 pending application instances
+2026-09-11 15:29:15,579 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-11 15:29:15,581 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-11 15:29:15,581 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-11 15:29:15,583 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-11 15:42:18,040 WARNING django.request Unauthorized: /v1/candidatos-notificacoes/
+2026-09-11 15:42:18,038 WARNING django.request Unauthorized: /v1/vagas-notificacoes/
+2026-09-11 15:42:18,048 WARNING django.request Unauthorized: /v1/chat/nao-lidas/
+2026-09-11 15:42:18,195 WARNING django.request Unauthorized: /v1/vagas-notificacoes/
+2026-09-11 15:42:18,196 WARNING django.request Unauthorized: /v1/candidatos-notificacoes/
+2026-09-11 15:42:18,197 WARNING django.request Unauthorized: /v1/chat/nao-lidas/
+2026-09-11 15:42:25,051 WARNING django.request Unauthorized: /v1/vagas/
+2026-09-11 15:42:25,055 WARNING django.request Unauthorized: /v1/candidatos/
+2026-09-11 15:42:25,063 WARNING django.request Unauthorized: /v1/usuarios/
+2026-09-11 15:42:25,072 WARNING django.request Unauthorized: /v1/tags/
+2026-09-11 15:42:25,076 WARNING django.request Unauthorized: /v1/setores/
+2026-09-11 15:42:25,179 WARNING django.request Unauthorized: /v1/usuarios/
+2026-09-11 15:42:25,182 WARNING django.request Unauthorized: /v1/vagas/
+2026-09-11 15:42:25,184 WARNING django.request Unauthorized: /v1/setores/
+2026-09-11 15:42:25,189 WARNING django.request Unauthorized: /v1/candidatos/
+2026-09-11 15:42:25,196 WARNING django.request Unauthorized: /v1/tags/
+2026-09-11 15:42:26,396 WARNING django.request Unauthorized: /v1/usuarios/
+2026-09-11 15:42:26,407 WARNING django.request Unauthorized: /v1/setores/
+2026-09-11 15:42:26,410 WARNING django.request Unauthorized: /v1/tarefas/
+2026-09-11 15:42:26,414 WARNING django.request Unauthorized: /v1/dashboard/
+2026-09-11 15:42:26,503 WARNING django.request Unauthorized: /v1/usuarios/
+2026-09-11 15:42:26,515 WARNING django.request Unauthorized: /v1/tarefas/
+2026-09-11 15:42:26,518 WARNING django.request Unauthorized: /v1/setores/
+2026-09-11 15:42:26,520 WARNING django.request Unauthorized: /v1/dashboard/
+2026-09-11 15:42:27,561 WARNING django.request Unauthorized: /v1/usuarios/
+2026-09-11 15:42:27,579 WARNING django.request Unauthorized: /v1/tarefas/
+2026-09-11 15:42:27,586 WARNING django.request Unauthorized: /v1/dashboard/
+2026-09-11 15:42:27,640 WARNING django.request Unauthorized: /v1/tarefas/
+2026-09-11 15:42:27,649 WARNING django.request Unauthorized: /v1/usuarios/
+2026-09-11 15:42:27,650 WARNING django.request Unauthorized: /v1/dashboard/
+2026-09-11 15:42:37,754 WARNING django.request Unauthorized: /v1/chat/nao-lidas/
+2026-09-11 15:42:37,766 WARNING django.request Unauthorized: /v1/candidatos-notificacoes/
+2026-09-11 15:42:37,767 WARNING django.request Unauthorized: /v1/vagas-notificacoes/
+2026-09-11 15:42:37,815 WARNING django.request Unauthorized: /v1/candidatos-notificacoes/
+2026-09-11 15:42:37,816 WARNING django.request Unauthorized: /v1/vagas-notificacoes/
+2026-09-11 15:42:37,816 WARNING django.request Unauthorized: /v1/chat/nao-lidas/
+2026-09-11 15:42:57,758 WARNING django.request Unauthorized: /v1/vagas-notificacoes/
+2026-09-11 15:42:57,758 WARNING django.request Unauthorized: /v1/chat/nao-lidas/
+2026-09-11 15:42:57,770 WARNING django.request Unauthorized: /v1/candidatos-notificacoes/
+2026-09-11 15:42:57,826 WARNING django.request Unauthorized: /v1/vagas-notificacoes/
+2026-09-11 15:42:57,835 WARNING django.request Unauthorized: /v1/candidatos-notificacoes/
+2026-09-11 15:42:57,839 WARNING django.request Unauthorized: /v1/chat/nao-lidas/
+2026-09-11 15:43:02,418 INFO daphne.server Killed 0 pending application instances
+2026-09-11 15:43:07,192 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-11 15:43:07,193 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-11 15:43:07,194 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-11 15:43:07,196 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-11 15:43:12,198 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-11 15:43:12,238 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-11 15:43:12,265 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-11 15:43:12,296 WARNING django.request Unauthorized: /v1/auth/me/
+2026-09-11 15:46:50,413 WARNING django.request Bad Request: /v1/vagas/
+2026-09-11 15:47:47,059 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('172.19.0.4', 5672)
+2026-09-11 15:47:47,064 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40694), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,068 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f91a0980>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f91a0980> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>).
+2026-09-11 15:47:47,125 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f91a0980> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-11 15:47:47,127 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f91a0980> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-11 15:47:47,128 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f91a0980> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-11 15:47:47,129 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-11 15:47:47,157 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-11 15:47:47,158 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f91a0980> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>>
+2026-09-11 15:47:47,175 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f91a0980> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>>
+2026-09-11 15:47:47,177 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-11 15:47:47,179 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40694), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,180 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40694), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,181 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40694), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,182 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-11 15:47:47,183 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-11 15:47:47,184 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40694), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,185 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2026-09-11 15:47:47,304 INFO pika.adapters.utils.connection_workflow Pika version 1.4.4 connecting to ('172.19.0.4', 5672)
+2026-09-11 15:47:47,306 INFO pika.adapters.utils.io_services_utils Socket connected: <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40702), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,308 INFO pika.adapters.utils.connection_workflow Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f925ebd0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f925ebd0> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>).
+2026-09-11 15:47:47,313 INFO pika.adapters.utils.connection_workflow AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f925ebd0> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-11 15:47:47,314 INFO pika.adapters.utils.connection_workflow AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f925ebd0> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-11 15:47:47,316 INFO pika.adapters.blocking_connection Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f925ebd0> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>
+2026-09-11 15:47:47,317 INFO pika.adapters.blocking_connection Created channel=1
+2026-09-11 15:47:47,321 INFO pika.adapters.blocking_connection Closing connection (200): Normal shutdown
+2026-09-11 15:47:47,322 INFO pika.channel Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f925ebd0> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>>
+2026-09-11 15:47:47,324 INFO pika.channel Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x74f3f925ebd0> params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>>
+2026-09-11 15:47:47,325 INFO pika.connection Closing connection (200): 'Normal shutdown'
+2026-09-11 15:47:47,327 INFO pika.adapters.utils.io_services_utils Aborting transport connection: state=1; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40702), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,328 INFO pika.adapters.utils.io_services_utils _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40702), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,329 INFO pika.adapters.utils.io_services_utils Deactivating transport: state=1; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40702), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,330 INFO pika.connection AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-11 15:47:47,331 INFO pika.connection Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2026-09-11 15:47:47,332 INFO pika.adapters.utils.io_services_utils Closing transport socket and unlinking: state=3; <socket.socket fd=13, family=2, type=1, proto=6, laddr=('172.19.0.6', 40702), raddr=('172.19.0.4', 5672)>
+2026-09-11 15:47:47,332 INFO pika.adapters.blocking_connection User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=rabbitmq port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2026-09-11 16:32:58,737 WARNING django.request Not Found: /v1/vagas/abe3d5c4-bbbd-487c-8c93-1f57b2908d6b/
+2026-09-11 16:33:02,018 WARNING django.request Not Found: /v1/vagas/3d863dcc-ecf7-4126-873c-7f59eefd38d9/
+2026-09-11 16:33:04,122 WARNING django.request Bad Request: /v1/vagas/44880a4c-8b02-4fdb-9517-486d2914a6f8/recusar/
+2026-09-11 16:33:04,620 WARNING django.request Forbidden: /v1/vagas/2169bce5-1b9d-46d7-911e-7ae750f7d601/aprovar/
+2026-09-11 16:33:05,135 WARNING django.request Bad Request: /v1/vagas/21730c81-9937-4589-9b4d-9a76a81d8af2/transicionar/
+2026-09-11 16:33:08,043 WARNING django.request Bad Request: /v1/vagas/a1c288f8-3324-4763-a652-5b520074cc2b/cobrar/
+2026-09-11 16:33:08,617 WARNING django.request Not Found: /v1/vagas/6735b684-ddba-43c6-9281-5ffef27991ce/cobrar/
+2026-09-11 16:33:12,173 WARNING django.request Bad Request: /v1/vagas/dd16dba3-8e14-47e0-a51b-9846240bcef0/mover-etapa/
+2026-09-11 16:33:12,620 WARNING django.request Bad Request: /v1/vagas/c48af65e-a055-4abc-b268-5c730ca6d1fe/mover-etapa/
+2026-09-11 16:33:13,760 WARNING django.request Bad Request: /v1/vagas/6a3f5bb5-451e-426e-ae38-fb17b82fb697/candidaturas/
+2026-09-11 16:33:15,961 WARNING django.request Not Found: /v1/candidatos/3e4a9a2c-ccde-45b5-9b9c-3e13317ab9e9/curriculo-url/
+2026-09-11 16:33:16,623 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-11 16:33:18,783 WARNING django.request Forbidden: /v1/candidatos/57a68532-5219-4e6a-9b5a-815a2b333eff/mover-etapa/
+2026-09-11 16:33:24,079 WARNING django.request Not Found: /v1/candidatos/d1c9ef86-2b3b-4381-a868-9a3d0b3059b6/
+2026-09-11 16:33:24,974 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 95, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-11 16:33:25,468 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-11 16:46:34,248 WARNING django.request Not Found: /v1/vagas/49b1c17b-40bd-464a-996d-1ddc35d61856/
+2026-09-11 16:46:37,402 WARNING django.request Not Found: /v1/vagas/aa7cd103-4a6f-4bad-ab9b-ce50ef329e2b/
+2026-09-11 16:46:39,352 WARNING django.request Bad Request: /v1/vagas/0b91c736-e199-4947-9fdf-c1f8318aef52/recusar/
+2026-09-11 16:46:39,925 WARNING django.request Forbidden: /v1/vagas/6110530f-430d-4702-926c-82e179201718/aprovar/
+2026-09-11 16:46:40,473 WARNING django.request Bad Request: /v1/vagas/7a18cf15-891c-4ed3-ab62-7ba2a5206b56/transicionar/
+2026-09-11 16:46:42,967 WARNING django.request Bad Request: /v1/vagas/07639233-923c-4b0b-9da8-a4c3736af029/cobrar/
+2026-09-11 16:46:43,424 WARNING django.request Not Found: /v1/vagas/f653e02e-c28b-4df7-90b4-f9585224fc0c/cobrar/
+2026-09-11 16:46:46,211 WARNING django.request Bad Request: /v1/vagas/716f3684-8881-49cf-ac80-daab4844e6f3/mover-etapa/
+2026-09-11 16:46:46,803 WARNING django.request Bad Request: /v1/vagas/d82a6f75-34c5-4e61-8d83-63c16db3dc38/mover-etapa/
+2026-09-11 16:46:48,053 WARNING django.request Bad Request: /v1/vagas/8b70165e-972f-4b2f-be25-468328bba51c/candidaturas/
+2026-09-11 16:46:49,848 WARNING django.request Not Found: /v1/candidatos/487cb245-6102-4342-a871-f3c82cddb590/curriculo-url/
+2026-09-11 16:46:50,279 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-11 16:46:52,372 WARNING django.request Forbidden: /v1/candidatos/6096d9b1-da8c-458f-a1c1-5c339f3cdeae/mover-etapa/
+2026-09-11 16:46:57,363 WARNING django.request Not Found: /v1/candidatos/f3f7147f-03fd-4115-9ad2-8b99da3ad326/
+2026-09-11 16:46:58,263 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 95, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-11 16:46:58,855 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-11 16:47:02,166 WARNING django.request Forbidden: /v1/empresa/
+2026-09-11 16:47:03,478 WARNING django.request Bad Request: /v1/auth/senha/
+2026-09-11 16:47:04,495 WARNING django.request Forbidden: /v1/usuarios/
+2026-09-11 16:47:04,732 WARNING django.request Bad Request: /v1/usuarios/
+2026-09-11 16:47:05,654 WARNING django.request Bad Request: /v1/usuarios/51ec714e-5a67-4799-a1d1-1aaf1c3998e5/
+2026-09-11 16:47:08,890 WARNING django.request Forbidden: /v1/usuarios/ef08fb0d-a5ed-446f-8bc5-4cda940833e1/
+2026-09-11 16:59:23,140 WARNING django.request Not Found: /v1/vagas/9484fffa-2d6f-4c0a-a94f-0385e52b9129/
+2026-09-11 16:59:25,890 WARNING django.request Not Found: /v1/vagas/092ca1c6-29eb-4cf7-ac58-e195cefbc6f1/
+2026-09-11 16:59:28,311 WARNING django.request Bad Request: /v1/vagas/0520ecf2-4c98-460a-9358-4b8f38dfe0fb/recusar/
+2026-09-11 16:59:28,941 WARNING django.request Forbidden: /v1/vagas/835609d0-65a4-4462-907f-7fe45ca9a1d8/aprovar/
+2026-09-11 16:59:29,482 WARNING django.request Bad Request: /v1/vagas/e17b4a92-30e9-4780-af3e-68e383a5e43f/transicionar/
+2026-09-11 16:59:31,745 WARNING django.request Bad Request: /v1/vagas/04aae8b8-317b-413e-8b05-69dac6fcd478/cobrar/
+2026-09-11 16:59:32,369 WARNING django.request Not Found: /v1/vagas/3f6e4974-331b-406d-b0f5-a81270b351b9/cobrar/
+2026-09-11 16:59:35,477 WARNING django.request Bad Request: /v1/vagas/778642a6-5096-4cc9-b29d-ec499a357523/mover-etapa/
+2026-09-11 16:59:36,075 WARNING django.request Bad Request: /v1/vagas/1858cafe-1d81-4729-82c5-debfbf356033/mover-etapa/
+2026-09-11 16:59:37,236 WARNING django.request Bad Request: /v1/vagas/d1757610-e911-4cc8-b938-1938264005f4/candidaturas/
+2026-09-11 16:59:39,653 WARNING django.request Not Found: /v1/candidatos/e117fb9f-6496-488e-99ee-ecb3ec64973d/curriculo-url/
+2026-09-11 16:59:40,135 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-11 16:59:42,205 WARNING django.request Forbidden: /v1/candidatos/df8643b7-365b-4cd1-92c4-5e8eec3079ea/mover-etapa/
+2026-09-11 16:59:47,647 WARNING django.request Not Found: /v1/candidatos/883c390e-3277-42f7-a15f-aa71170b997a/
+2026-09-11 16:59:48,594 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 95, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-11 16:59:49,142 WARNING django.request Bad Request: /v1/candidatos/

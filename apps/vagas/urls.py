@@ -5,6 +5,7 @@ from .views import (
     EtapaKanbanViewSet,
     VagaNotificacaoListView,
     VagaNotificacaoMarcarLidasView,
+    VagaNotificacaoMarcarUmaView,
     VagaViewSet,
 )
 
@@ -23,5 +24,10 @@ urlpatterns = [
         "vagas-notificacoes/marcar-lidas/",
         VagaNotificacaoMarcarLidasView.as_view(),
         name="vaga-notificacoes-marcar-lidas",
+    ),
+    path(
+        "vagas-notificacoes/<uuid:pk>/marcar/",
+        VagaNotificacaoMarcarUmaView.as_view(),
+        name="vaga-notificacoes-marcar-uma",
     ),
 ]

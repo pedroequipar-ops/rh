@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     CandidatoNotificacaoListView,
     CandidatoNotificacaoMarcarLidasView,
+    CandidatoNotificacaoMarcarUmaView,
     CandidatoViewSet,
 )
 
@@ -21,5 +22,10 @@ urlpatterns = [
         "candidatos-notificacoes/marcar-lidas/",
         CandidatoNotificacaoMarcarLidasView.as_view(),
         name="candidato-notificacoes-marcar-lidas",
+    ),
+    path(
+        "candidatos-notificacoes/<uuid:pk>/marcar/",
+        CandidatoNotificacaoMarcarUmaView.as_view(),
+        name="candidato-notificacoes-marcar-uma",
     ),
 ]
