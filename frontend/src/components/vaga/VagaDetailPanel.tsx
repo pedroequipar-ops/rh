@@ -1,14 +1,14 @@
 import { useState, type FormEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { Bell, Flame, Upload, UserPlus, X } from 'lucide-react'
+import { ArrowRightCircle, Bell, CheckCircle2, Flame, Upload, UserPlus, X, XCircle } from 'lucide-react'
 import clsx from 'clsx'
 import { ActivityFeed } from '../atividade/ActivityFeed'
 import { BulkCurriculoDropzone } from '../candidato/BulkCurriculoDropzone'
 import { ChatPanel } from '../candidato/ChatPanel'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
 import { TarefasSection } from '../tarefas/TarefasSection'
-import { Badge, Button, InlineEdit, Select, Textarea, Tabs, TagInput } from '../ui'
+import { Badge, Button, IconAction, InlineEdit, Select, Textarea, Tabs, TagInput } from '../ui'
 import {
   useAprovarVaga,
   useCandidatosDaVaga,
@@ -54,6 +54,13 @@ const PRIORIDADE_OPCOES = [
   { value: '3', label: 'Alta' },
 ]
 
+/** Data "YYYY-MM-DD" (sem hora, sem fuso) -> "DD/MM/AAAA". */
+function fmtDataCurta(data: string | null): string {
+  if (!data) return 'Não informado'
+  const [ano, mes, dia] = data.split('-')
+  return `${dia}/${mes}/${ano}`
+}
+
 function fmtDataHora(iso: string): string {
   return new Date(iso).toLocaleString('pt-BR', {
     day: '2-digit',
@@ -93,7 +100,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const [mensagemCobranca, setMensagemCobranca] = useState('')
   const [aprovarPrioridade, setAprovarPrioridade] = useState<VagaPrioridade>(vaga.prioridade)
   const [aprovarUrgente, setAprovarUrgente] = useState(vaga.urgente)
-  const [aprovarDataAlvo, setAprovarDataAlvo] = useState(vaga.data_alvo_preenchimento ?? '')
 
   async function salvar(input: Partial<VagaInput>): Promise<void> {
     await updateVaga.mutateAsync({ id: vaga.id, input })
@@ -106,7 +112,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   function abrirAprovar() {
     setAprovarPrioridade(vaga.prioridade)
     setAprovarUrgente(vaga.urgente)
-    setAprovarDataAlvo(vaga.data_alvo_preenchimento ?? '')
     setAcaoPendente('aprovar')
   }
 
@@ -117,7 +122,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
       input: {
         prioridade: aprovarPrioridade,
         urgente: aprovarUrgente,
-        data_alvo_preenchimento: aprovarDataAlvo || null,
       },
     })
     setAcaoPendente(null)
@@ -216,6 +220,121 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
           onChange={(nomes) => updateVaga.mutate({ id: vaga.id, input: { tags: nomes } })}
           className="mt-2"
         />
+      </div>
+
+      <div className="shrink-0 border-b border-slate-200 px-4 py-2.5">
+        {acaoPendente === 'aprovar' ? (
+          <form onSubmit={handleAprovar} className="space-y-2">
+            <Select
+              value={aprovarPrioridade}
+              onChange={(e) => setAprovarPrioridade(Number(e.target.value) as VagaPrioridade)}
+            >
+              <option value={1}>Prioridade baixa</option>
+              <option value={2}>Prioridade média</option>
+              <option value={3}>Prioridade alta</option>
+            </Select>
+            <label className="flex items-center gap-2 text-sm text-slate-700">
+              <input
+                type="checkbox"
+                checked={aprovarUrgente}
+                onChange={(e) => setAprovarUrgente(e.target.checked)}
+              />
+              Urgente
+            </label>
+            <p className="text-xs text-slate-500">
+              Prazo p/ preencher (pedido pelo setor):{' '}
+              <span className="font-medium text-slate-700">
+                {fmtDataCurta(vaga.data_alvo_preenchimento)}
+              </span>
+            </p>
+            <div className="flex gap-2">
+              <Button type="submit" disabled={aprovar.isPending} className="flex-1">
+                Confirmar
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => setAcaoPendente(null)}>
+                Cancelar
+              </Button>
+            </div>
+          </form>
+        ) : acaoPendente === 'recusar' ? (
+          <form onSubmit={handleRecusar} className="space-y-2">
+            <Textarea
+              required
+              rows={3}
+              autoFocus
+              value={motivoRecusa}
+              onChange={(e) => setMotivoRecusa(e.target.value)}
+              placeholder="Motivo da recusa"
+            />
+            <div className="flex gap-2">
+              <Button type="submit" variant="danger" disabled={recusar.isPending} className="flex-1">
+                Recusar
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => setAcaoPendente(null)}>
+                Cancelar
+              </Button>
+            </div>
+          </form>
+        ) : acaoPendente === 'cobrar' ? (
+          <form onSubmit={handleCobrar} className="space-y-2">
+            <Textarea
+              rows={3}
+              autoFocus
+              value={mensagemCobranca}
+              onChange={(e) => setMensagemCobranca(e.target.value)}
+              placeholder="Mensagem da cobrança (opcional)"
+            />
+            <div className="flex gap-2">
+              <Button type="submit" disabled={cobrar.isPending} className="flex-1">
+                <Bell size={13} /> Cobrar
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  setAcaoPendente(null)
+                  setMensagemCobranca('')
+                }}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {podeAprovar && (
+              <IconAction icon={CheckCircle2} label="Aprovar" variant="success" onClick={abrirAprovar} />
+            )}
+            {podeRecusar && (
+              <IconAction
+                icon={XCircle}
+                label="Recusar"
+                variant="danger"
+                onClick={() => setAcaoPendente('recusar')}
+              />
+            )}
+            {acoes.map((destino) => {
+              const label =
+                vaga.status === 'CONGELADA' && destino === vaga.status_pre_congelamento
+                  ? 'Descongelar'
+                  : ACAO_LABEL[destino] ?? statusLabel(destino)
+              return (
+                <IconAction
+                  key={destino}
+                  icon={ArrowRightCircle}
+                  label={label}
+                  variant="primary"
+                  disabled={transicionar.isPending}
+                  onClick={() => transicionar.mutate({ id: vaga.id, para: destino })}
+                />
+              )
+            })}
+            <IconAction icon={Bell} label="Cobrar responsável" onClick={() => setAcaoPendente('cobrar')} />
+            {acoes.length === 0 && !podeAprovar && !podeRecusar && (
+              <p className="text-xs text-slate-400">Sem outras transições disponíveis.</p>
+            )}
+          </div>
+        )}
       </div>
 
       <Tabs
@@ -390,133 +509,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
             )}
           </div>
 
-          <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-            <div className="space-y-2">
-              <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">Ações</h3>
-
-              {acaoPendente === 'aprovar' ? (
-                <form onSubmit={handleAprovar} className="space-y-2">
-                  <Select
-                    value={aprovarPrioridade}
-                    onChange={(e) => setAprovarPrioridade(Number(e.target.value) as VagaPrioridade)}
-                  >
-                    <option value={1}>Prioridade baixa</option>
-                    <option value={2}>Prioridade média</option>
-                    <option value={3}>Prioridade alta</option>
-                  </Select>
-                  <label className="flex items-center gap-2 text-sm text-slate-700">
-                    <input
-                      type="checkbox"
-                      checked={aprovarUrgente}
-                      onChange={(e) => setAprovarUrgente(e.target.checked)}
-                    />
-                    Urgente
-                  </label>
-                  <input
-                    type="date"
-                    value={aprovarDataAlvo}
-                    onChange={(e) => setAprovarDataAlvo(e.target.value)}
-                    className="w-full rounded border border-slate-300 px-2 py-1.5 text-sm"
-                  />
-                  <div className="flex gap-2">
-                    <Button type="submit" disabled={aprovar.isPending} className="flex-1">
-                      Confirmar
-                    </Button>
-                    <Button type="button" variant="secondary" onClick={() => setAcaoPendente(null)}>
-                      Cancelar
-                    </Button>
-                  </div>
-                </form>
-              ) : acaoPendente === 'recusar' ? (
-                <form onSubmit={handleRecusar} className="space-y-2">
-                  <Textarea
-                    required
-                    rows={3}
-                    value={motivoRecusa}
-                    onChange={(e) => setMotivoRecusa(e.target.value)}
-                    placeholder="Motivo da recusa"
-                  />
-                  <div className="flex gap-2">
-                    <Button type="submit" variant="danger" disabled={recusar.isPending} className="flex-1">
-                      Recusar
-                    </Button>
-                    <Button type="button" variant="secondary" onClick={() => setAcaoPendente(null)}>
-                      Cancelar
-                    </Button>
-                  </div>
-                </form>
-              ) : acaoPendente === 'cobrar' ? (
-                <form onSubmit={handleCobrar} className="space-y-2">
-                  <Textarea
-                    rows={3}
-                    autoFocus
-                    value={mensagemCobranca}
-                    onChange={(e) => setMensagemCobranca(e.target.value)}
-                    placeholder="Mensagem da cobrança (opcional)"
-                  />
-                  <div className="flex gap-2">
-                    <Button type="submit" disabled={cobrar.isPending} className="flex-1">
-                      <Bell size={13} /> Cobrar
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={() => {
-                        setAcaoPendente(null)
-                        setMensagemCobranca('')
-                      }}
-                    >
-                      Cancelar
-                    </Button>
-                  </div>
-                </form>
-              ) : (
-                <div className="space-y-1.5">
-                  {podeAprovar && (
-                    <Button onClick={abrirAprovar} className="w-full">
-                      Aprovar
-                    </Button>
-                  )}
-                  {podeRecusar && (
-                    <Button variant="danger" onClick={() => setAcaoPendente('recusar')} className="w-full">
-                      Recusar
-                    </Button>
-                  )}
-                  {acoes.map((destino) => {
-                    const label =
-                      vaga.status === 'CONGELADA' && destino === vaga.status_pre_congelamento
-                        ? 'Descongelar'
-                        : ACAO_LABEL[destino] ?? statusLabel(destino)
-                    return (
-                      <Button
-                        key={destino}
-                        variant="secondary"
-                        disabled={transicionar.isPending}
-                        onClick={() => transicionar.mutate({ id: vaga.id, para: destino })}
-                        className="w-full"
-                      >
-                        {label}
-                      </Button>
-                    )
-                  })}
-                  <Button
-                    variant="secondary"
-                    onClick={() => setAcaoPendente('cobrar')}
-                    className="w-full"
-                  >
-                    <Bell size={13} /> Cobrar responsável
-                  </Button>
-                  {acoes.length === 0 && !podeAprovar && !podeRecusar && (
-                    <p className="text-xs text-slate-400">Sem transições disponíveis.</p>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="h-px bg-slate-200" />
-
-            <TarefasSection alvoTipo="VAGA" alvoId={vaga.id} embutido />
-          </div>
+          <TarefasSection alvoTipo="VAGA" alvoId={vaga.id} />
         </div>
       )}
 

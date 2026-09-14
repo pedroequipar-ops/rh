@@ -5,7 +5,7 @@ import { ActivityFeed } from '../atividade/ActivityFeed'
 import { ChatPanel } from './ChatPanel'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
 import { TarefasSection } from '../tarefas/TarefasSection'
-import { InlineEdit, Tabs, TagInput } from '../ui'
+import { IconAction, InlineEdit, Tabs, TagInput } from '../ui'
 import { useUpdateCandidato } from '../../api/hooks/useCandidatos'
 import { useUsuarios } from '../../api/hooks/useUsuarios'
 import { getCurriculoUrl } from '../../api/candidatos'
@@ -104,6 +104,17 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
           className="mt-2"
         />
       </div>
+
+      {candidato.curriculo_key && (
+        <div className="shrink-0 border-b border-slate-200 px-4 py-2.5">
+          <IconAction
+            icon={FileText}
+            label={loadingCurriculo ? 'Gerando link...' : 'Abrir currículo'}
+            disabled={loadingCurriculo}
+            onClick={handleAbrirCurriculo}
+          />
+        </div>
+      )}
 
       <Tabs
         className="shrink-0 px-4"
@@ -248,16 +259,6 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
             ))}
           </div>
 
-          {candidato.curriculo_key && (
-            <button
-              onClick={handleAbrirCurriculo}
-              disabled={loadingCurriculo}
-              className="flex items-center gap-2 rounded border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-            >
-              <FileText size={14} />
-              {loadingCurriculo ? 'Gerando link...' : 'Abrir currículo'}
-            </button>
-          )}
         </div>
       )}
 
