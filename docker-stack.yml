@@ -1,0 +1,235 @@
+# Deploy de producao numa VPS dedicada ao rh (Docker Swarm, nao Compose).
+#
+# IMPORTANTE: "docker stack deploy" NAO le ".env" do diretorio como o
+# "docker compose" le -- ele interpola as variaveis ${...} abaixo a partir
+# do ambiente do shell. Exporte o .env antes de rodar (ver DEPLOY.md):
+#   set -a; . ./.env; set +a
+#   docker stack deploy -c docker-stack.yml rh
+# Pra conferir que a interpolacao pegou antes de publicar de verdade (dry-run,
+# nao aplica nada -- mas a saida traz segredo em texto puro, nao cola em
+# lugar nenhum, so olha na tela e fecha):
+#   docker stack config -c docker-stack.yml | head -40
+#
+# Uso:
+#   docker build -t rh-backend:latest --build-arg REQUIREMENTS_FILE=requirements/production.txt .
+#   docker build -t rh-frontend:latest ./frontend
+#   set -a; . ./.env; set +a
+#   docker stack deploy -c docker-stack.yml rh
+#
+# So o servico "caddy" toca a internet (portas 80/443) -- todo o resto,
+# incluindo o "frontend", fica so na rede interna desta stack, sem porta
+# nenhuma publicada. O frontend (nginx) e quem decide o que e publico ou nao
+# dentro da API: ele so reexpoe /v1/, /ws/ e /docs/ (ver frontend/nginx.conf) --
+# o Django admin (/admin/) nao passa por esse proxy, so seria alcancavel
+# indo direto no container "backend", que nao tem porta publicada.
+x-django-env: &django-env
+  DJANGO_SETTINGS_MODULE: config.settings.production
+  DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+  DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
+  DJANGO_SECURE_SSL_REDIRECT: "False" # Caddy ja termina TLS na frente; backend so recebe HTTP interno
+  POSTGRES_DB: ${POSTGRES_DB}
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+  REDIS_URL: redis://redis:6379/0
+  REDIS_CHANNELS_URL: redis://redis:6379/1
+  RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+  MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+  MINIO_PUBLIC_ENDPOINT: ${MINIO_PUBLIC_ENDPOINT}
+  MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+  MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+  MINIO_BUCKET_CANDIDATOS_CURRICULOS: ${MINIO_BUCKET_CANDIDATOS_CURRICULOS}
+  CORS_ALLOW_ALL_ORIGINS: "False" # mesmo dominio (nginx do frontend reexpoe /v1 e /ws), nao precisa CORS
+  GROQ_API_KEY: ${GROQ_API_KEY}
+  GROQ_MODEL: ${GROQ_MODEL}
+  CURRICULO_EXTRACTOR_CLASS: ${CURRICULO_EXTRACTOR_CLASS}
+  TRIAGEM_IA_EXTRACTOR_CLASS: ${TRIAGEM_IA_EXTRACTOR_CLASS}
+  TRIAGEM_IA_ENCRYPTION_KEY: ${TRIAGEM_IA_ENCRYPTION_KEY}
+  GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
+  GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
+  GOOGLE_OAUTH_REDIRECT_URI: ${GOOGLE_OAUTH_REDIRECT_URI}
+  TRIAGEM_IA_FRONTEND_URL: ${TRIAGEM_IA_FRONTEND_URL}
+  TRIAGEM_IA_WEBHOOK_TOKEN: ${TRIAGEM_IA_WEBHOOK_TOKEN}
+  TRIAGEM_IA_WEBHOOK_COMPANY_ID: ${TRIAGEM_IA_WEBHOOK_COMPANY_ID}
+  CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS: ${CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS}
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 128M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 256M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  minio:
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  minio-init:
+    image: quay.io/minio/mc:latest
+    command: >
+      -c "mc alias set local http://minio:9000 ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY} &&
+      mc mb -p local/${MINIO_BUCKET_CANDIDATOS_CURRICULOS}"
+    entrypoint: ["/bin/sh"]
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none
+
+  backend:
+    image: rh-backend:latest
+    command: ["sh", "docker/entrypoint-web.sh"]
+    environment:
+      <<: *django-env
+    networks:
+      internal:
+        aliases:
+          - rh-backend # frontend/nginx.conf faz proxy_pass pra esse nome
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 512M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  triagem-ia-worker:
+    image: rh-backend:latest
+    command: ["sh", "-c", "while true; do python manage.py ingerir_emails_triagem; sleep 120; done"]
+    environment:
+      <<: *django-env
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 384M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  frontend:
+    image: rh-frontend:latest
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 128M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  caddy:
+    image: caddy:2-alpine
+    environment:
+      RH_DOMAIN: ${RH_DOMAIN}
+    configs:
+      - source: caddyfile
+        target: /etc/caddy/Caddyfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 128M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+configs:
+  caddyfile:
+    file: ./Caddyfile
+
+networks:
+  internal:
+    driver: overlay
+    attachable: true
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  minio_data:
+  caddy_data:
+  caddy_config:
