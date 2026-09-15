@@ -25,6 +25,7 @@ from .serializers import (
     AnalisarCurriculoRequestSerializer,
     AnalisarCurriculoResponseSerializer,
     BuscaIaRequestSerializer,
+    CandidatoCobrarSerializer,
     CandidatoMoverEtapaSerializer,
     CandidatoNotificacaoSerializer,
     CandidatoSerializer,
@@ -54,6 +55,7 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         "analisar_curriculo": "candidatos.analisar_curriculo",
         "curriculo_url": "candidatos.curriculo_url",
         "mover_etapa": "candidatos.mover_etapa",
+        "cobrar": "candidatos.cobrar",
         "restaurar": "candidatos.delete",
         "busca_ia": "candidatos.view",
         "sugerir_tags": "candidatos.view",
@@ -234,6 +236,14 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         services.notificar_mudanca_etapa(candidato, etapa, company_id, motivo)
         services.registrar_mudanca_etapa(candidato, etapa, request.user, motivo=motivo)
         return Response(CandidatoSerializer(candidato).data)
+
+    @action(detail=True, methods=["post"], url_path="cobrar")
+    def cobrar(self, request, pk=None):
+        candidato = self.get_object()
+        ser = CandidatoCobrarSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        services.cobrar_candidato(candidato, request.user, ser.validated_data.get("mensagem", ""))
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=["post"], url_path="busca-ia")
     def busca_ia(self, request):

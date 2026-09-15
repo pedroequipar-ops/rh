@@ -13,6 +13,7 @@ import re
 from email.utils import parseaddr
 
 from django.conf import settings
+from django.db import IntegrityError, transaction
 from django.utils import timezone
 from django.utils.module_loading import import_string
 from rest_framework.exceptions import ValidationError
@@ -136,6 +137,15 @@ def _notificar_lote_pronto(vaga: Vaga, quantidade: int):
     )
 
 
+def _extensao_para_content_type(content_type: str) -> str:
+    """Compartilhado entre a ingestão por e-mail e o webhook — uma única
+    fonte de verdade pra não divergir (já quase divergiu: as duas cópias
+    testavam o mesmo conjunto de tipos com expressões diferentes)."""
+    if content_type in candidatos_services.CONTENT_TYPES_DOCX:
+        return ".docx"
+    return ".pdf"
+
+
 def _processar_mensagem(caixa: CaixaEntradaEmail, mensagem, repo: TriagemIaRepository):
     """Cria (ou não, se duplicado) um ``CandidatoTriagemIA`` a partir da
     mensagem. Retorna a instância criada, ou ``None`` se era duplicado
@@ -167,7 +177,7 @@ def _processar_mensagem(caixa: CaixaEntradaEmail, mensagem, repo: TriagemIaRepos
         )
 
     filename, content_type, conteudo = anexos[0]
-    extensao = ".docx" if "wordprocessingml" in content_type or content_type == "application/msword" else ".pdf"
+    extensao = _extensao_para_content_type(content_type)
     hash_curto = hashlib.sha256(message_id.encode()).hexdigest()[:32]
     curriculo_key = f"triagem-ia/{caixa.company_id}/{hash_curto}{extensao}"
     MinioStorage().upload_file(_bucket(), curriculo_key, io.BytesIO(conteudo), content_type)
@@ -244,6 +254,79 @@ def ingerir_todas_caixas() -> int:
             if vaga:
                 _notificar_lote_pronto(vaga, quantidade)
     return total
+
+
+def processar_curriculo_webhook(
+    company_id,
+    *,
+    email_remetente: str,
+    nome_remetente: str,
+    assunto: str,
+    content_type: str,
+    conteudo: bytes,
+    message_id: str = "",
+) -> CandidatoTriagemIA:
+    """Entrada alternativa ao e-mail: um filtro externo já confiável (ex.: o
+    checkmail do Pedro) manda o currículo direto por webhook em vez da gente
+    ler a caixa de e-mail inteira. Mesmo pipeline dali pra frente — roteia
+    por tag ``[VAGA:codigo]`` no assunto, ou fica "não roteado" pro RH
+    escolher (ver ``rotear``). Idempotente: reenviar o mesmo ``message_id``
+    (ou o mesmo arquivo pro mesmo assunto, se não vier ``message_id``)
+    devolve o item já criado em vez de duplicar — importante pra retry de
+    webhook. A checagem de duplicado é best-effort (evita round-trip
+    desnecessário no caso comum); quem garante de verdade é a constraint
+    única no banco — uma corrida entre dois retries simultâneos cai no
+    ``except IntegrityError`` abaixo."""
+    repo = TriagemIaRepository()
+    if not message_id:
+        message_id = f"webhook-{hashlib.sha256(conteudo + (assunto or '').encode()).hexdigest()}"
+    existente = CandidatoTriagemIA.objects.filter(
+        company_id=company_id, message_id=message_id
+    ).first()
+    if existente:
+        return existente
+
+    if content_type not in candidatos_services.CONTENT_TYPES_DOCX and content_type != "application/pdf":
+        raise ValidationError({"arquivo": f"Tipo de anexo não suportado: {content_type}"})
+
+    vaga = None
+    m = _RE_TAG_ASSUNTO.search(assunto or "")
+    if m:
+        vaga = Vaga.objects.filter(
+            company_id=company_id, is_banco_talentos=False, codigo_email=m.group(1).lower()
+        ).first()
+
+    extensao = _extensao_para_content_type(content_type)
+    hash_curto = hashlib.sha256(message_id.encode()).hexdigest()[:32]
+    curriculo_key = f"triagem-ia/{company_id}/{hash_curto}{extensao}"
+    MinioStorage().upload_file(_bucket(), curriculo_key, io.BytesIO(conteudo), content_type)
+
+    try:
+        with transaction.atomic():
+            triagem = repo.create(
+                {
+                    "company_id": company_id,
+                    "vaga": vaga,
+                    "email_remetente": email_remetente,
+                    "nome_remetente": nome_remetente,
+                    "assunto_email": (assunto or "")[:500],
+                    "message_id": message_id,
+                    "curriculo_key": curriculo_key,
+                    "curriculo_content_type": content_type,
+                    "status": StatusTriagemIA.PENDENTE,
+                }
+            )
+    except IntegrityError:
+        # Corrida entre dois retries do mesmo webhook (checkmail reenviando
+        # após timeout, por exemplo) -- o outro já criou entre a checagem
+        # acima e agora. `atomic()` isola o erro num savepoint próprio, pra
+        # essa consulta abaixo não herdar uma transação já abortada.
+        # Devolve o existente em vez de propagar 500.
+        return CandidatoTriagemIA.objects.get(company_id=company_id, message_id=message_id)
+
+    if vaga is None:
+        return triagem
+    return _pontuar_triagem(triagem)
 
 
 def rotear(triagem: CandidatoTriagemIA, vaga: Vaga) -> CandidatoTriagemIA:

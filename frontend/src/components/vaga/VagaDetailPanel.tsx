@@ -1,7 +1,18 @@
 import { useState, type FormEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { ArrowRightCircle, Bell, CheckCircle2, Flame, Upload, UserPlus, X, XCircle } from 'lucide-react'
+import {
+  ArrowRightCircle,
+  Bell,
+  CheckCircle2,
+  Flame,
+  Trash2,
+  Upload,
+  UserCheck,
+  UserPlus,
+  X,
+  XCircle,
+} from 'lucide-react'
 import clsx from 'clsx'
 import { ActivityFeed } from '../atividade/ActivityFeed'
 import { BulkCurriculoDropzone } from '../candidato/BulkCurriculoDropzone'
@@ -14,6 +25,7 @@ import {
   useAprovarVaga,
   useCandidatosDaVaga,
   useCobrarVaga,
+  useMoverVagaEtapa,
   useRecusarVaga,
   useRegistrarCandidaturas,
   useSugerirTagsVaga,
@@ -21,8 +33,10 @@ import {
   useVagaHistorico,
   useUpdateVaga,
 } from '../../api/hooks/useVagas'
+import { useEtapas } from '../../api/hooks/useEtapas'
 import { useSetores } from '../../api/hooks/useSetores'
 import { useUsuarios } from '../../api/hooks/useUsuarios'
+import { ordenarEtapas } from '../kanban/etapaNav'
 import { queryKeys } from '../../api/queryKeys'
 import { useAuth } from '../../context/AuthContext'
 import { notificacaoHref } from '../../lib/notificacaoHref'
@@ -43,11 +57,14 @@ const ACAO_LABEL: Partial<Record<VagaStatus, string>> = {
   RECUSADA: 'Recusar',
 }
 
-/** Não viram botão aqui: já dá pra arrastar (chip Congelada, dock Lixeira do
- * board Vagas, dock Avançar/menu Cancelar do board Triagem). PREENCHIDA é só
+/** Não viram botão de transição genérico aqui: já dá pra arrastar (chip
+ * Congelada, dock Avançar/menu Cancelar do board Triagem). PREENCHIDA é só
  * arrastando de propósito — Publicada→Preenchida pulando Em Triagem é uma
  * ação grande demais pra um botão, só o dock Avançar (de Publicada ou de
- * Triagem) chega lá. */
+ * Triagem) chega lá. CANCELADA/ENCERRADA também ficam de fora do loop
+ * genérico, mas têm botão próprio (Lixeira, motivo obrigatório) — ver
+ * `statusLixeira` abaixo — pra não precisar abrir o board só pra descartar
+ * antes de publicar. */
 const ACOES_SO_POR_DRAG: VagaStatus[] = ['CONGELADA', 'ENCERRADA', 'CANCELADA', 'PREENCHIDA']
 
 const PRIORIDADE_OPCOES = [
@@ -91,18 +108,23 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const recusar = useRecusarVaga()
   const registrarCandidaturas = useRegistrarCandidaturas()
   const cobrar = useCobrarVaga()
+  const moverEtapa = useMoverVagaEtapa()
   const setoresQuery = useSetores(isRh)
   const usuariosQuery = useUsuarios(isRh)
   const candidatosQuery = useCandidatosDaVaga(vaga.id)
   const historicoQuery = useVagaHistorico(vaga.id)
+  const etapasQuery = useEtapas(isRh && vaga.status === 'EM_TRIAGEM')
 
   const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'triagem-ia' | 'chat' | 'atividade'>(
     'detalhes',
   )
-  const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | 'cobrar' | null>(null)
+  const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | 'cobrar' | 'lixeira' | null>(
+    null,
+  )
   const [importOpen, setImportOpen] = useState(false)
   const [motivoRecusa, setMotivoRecusa] = useState('')
   const [mensagemCobranca, setMensagemCobranca] = useState('')
+  const [motivoLixeira, setMotivoLixeira] = useState('')
   const [aprovarPrioridade, setAprovarPrioridade] = useState<VagaPrioridade>(vaga.prioridade)
   const [aprovarUrgente, setAprovarUrgente] = useState(vaga.urgente)
 
@@ -147,15 +169,79 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
     setMensagemCobranca('')
   }
 
+  async function handleLixeira(event: FormEvent) {
+    event.preventDefault()
+    if (!statusLixeira || !motivoLixeira.trim()) return
+    await transicionar.mutateAsync({ id: vaga.id, para: statusLixeira, observacao: motivoLixeira.trim() })
+    setAcaoPendente(null)
+    setMotivoLixeira('')
+  }
+
+  function handlePreencher() {
+    transicionar.mutate({ id: vaga.id, para: 'PREENCHIDA' })
+  }
+
+  function handleAvancarEtapa() {
+    if (proximaEtapaPreCadastro) {
+      moverEtapa.mutate({ id: vaga.id, etapaId: proximaEtapaPreCadastro.id })
+    } else if (naUltimaEtapaPreCadastro && etapaCadastroInicial) {
+      navigate(
+        `${isRh ? '/rh' : '/setor'}/triagem/novo-candidato?vagaId=${vaga.id}&etapaId=${etapaCadastroInicial.id}`,
+      )
+    }
+  }
+
   const statusMeta = VAGA_STATUS_META[vaga.status]
   const historicoCandidaturas = (historicoQuery.data ?? []).filter((h) =>
     h.observacao.startsWith('Candidaturas recebidas'),
   )
+  /** Publicada não mostra Recusar nem o arrow genérico pra Em Triagem — vira
+   * o botão dedicado Preenchida (podePreencherDireto), pulando a Triagem de
+   * propósito quando o candidato já foi decidido fora do funil. */
   const acoes = vaga.transicoes_disponiveis.filter(
-    (s) => s !== 'APROVADA' && s !== 'RECUSADA' && !ACOES_SO_POR_DRAG.includes(s),
+    (s) =>
+      s !== 'APROVADA' &&
+      s !== 'RECUSADA' &&
+      !ACOES_SO_POR_DRAG.includes(s) &&
+      !(vaga.status === 'PUBLICADA' && s === 'EM_TRIAGEM'),
   )
   const podeAprovar = vaga.transicoes_disponiveis.includes('APROVADA') && isRh
-  const podeRecusar = vaga.transicoes_disponiveis.includes('RECUSADA') && isRh
+  const podeRecusar =
+    vaga.transicoes_disponiveis.includes('RECUSADA') && isRh && vaga.status !== 'PUBLICADA'
+  const podePreencherDireto =
+    vaga.status === 'PUBLICADA' && vaga.transicoes_disponiveis.includes('PREENCHIDA') && isRh
+  /** Mesma prioridade do statusLixeiraDe do VagasBoard: ENCERRADA quando
+   * disponível (vaga já publicada/em andamento), senão CANCELADA. */
+  const statusLixeira = vaga.transicoes_disponiveis.includes('ENCERRADA')
+    ? 'ENCERRADA'
+    : vaga.transicoes_disponiveis.includes('CANCELADA')
+      ? 'CANCELADA'
+      : null
+  const podeLixeira = !!statusLixeira && isRh
+  /** Etapas pré-cadastro (aba Triagem) ordenadas — mesmo filtro do
+   * PessoasBoardPage pra soTriagem=true: sem exigir cadastro completo, sem
+   * ser a etapa de saída negativa (essa nunca é "próxima etapa" de avanço). */
+  const etapasPreCadastro = ordenarEtapas(
+    (etapasQuery.data ?? []).filter((e) => !e.exige_cadastro_completo && !e.is_saida_negativa),
+  )
+  const etapaCadastroInicial =
+    (etapasQuery.data ?? [])
+      .filter((e) => e.exige_cadastro_completo && !e.is_saida_negativa)
+      .sort((a, b) => a.ordem - b.ordem)[0] ?? null
+  const etapaAtualIndex =
+    vaga.status === 'EM_TRIAGEM'
+      ? etapasPreCadastro.findIndex((e) => e.id === vaga.etapa_atual?.id)
+      : -1
+  const proximaEtapaPreCadastro =
+    etapaAtualIndex >= 0 && etapaAtualIndex + 1 < etapasPreCadastro.length
+      ? etapasPreCadastro[etapaAtualIndex + 1]
+      : null
+  const naUltimaEtapaPreCadastro = etapaAtualIndex >= 0 && etapaAtualIndex === etapasPreCadastro.length - 1
+  /** Quando ainda tem etapa pré-cadastro seguinte, avança só o card (mesmo
+   * `onMoveVagaEtapa` do drag). Na última (ex.: Primeira Entrevista), avançar
+   * abre o cadastro completo do candidato — mesma ação do dock "Avançar". */
+  const podeAvancarEtapa =
+    isRh && vaga.status === 'EM_TRIAGEM' && (!!proximaEtapaPreCadastro || (naUltimaEtapaPreCadastro && !!etapaCadastroInicial))
   const emPessoas = pathname.includes('/pessoas/')
   const podeRegistrarCandidato =
     isRh &&
@@ -312,6 +398,32 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               </Button>
             </div>
           </form>
+        ) : acaoPendente === 'lixeira' ? (
+          <form onSubmit={handleLixeira} className="space-y-2">
+            <Textarea
+              required
+              rows={3}
+              autoFocus
+              value={motivoLixeira}
+              onChange={(e) => setMotivoLixeira(e.target.value)}
+              placeholder="Motivo do descarte"
+            />
+            <div className="flex gap-2">
+              <Button type="submit" variant="danger" disabled={transicionar.isPending} className="flex-1">
+                Mandar pra lixeira
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => {
+                  setAcaoPendente(null)
+                  setMotivoLixeira('')
+                }}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </form>
         ) : (
           <div className="flex flex-wrap items-center gap-1.5">
             {podeAprovar && (
@@ -323,6 +435,32 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
                 label="Recusar"
                 variant="danger"
                 onClick={() => setAcaoPendente('recusar')}
+              />
+            )}
+            {podeLixeira && (
+              <IconAction
+                icon={Trash2}
+                label="Lixeira"
+                variant="danger"
+                onClick={() => setAcaoPendente('lixeira')}
+              />
+            )}
+            {podePreencherDireto && (
+              <IconAction
+                icon={UserCheck}
+                label="Preenchida"
+                variant="success"
+                disabled={transicionar.isPending}
+                onClick={handlePreencher}
+              />
+            )}
+            {podeAvancarEtapa && (
+              <IconAction
+                icon={ArrowRightCircle}
+                label={proximaEtapaPreCadastro ? proximaEtapaPreCadastro.nome : 'Avançar'}
+                variant="primary"
+                disabled={moverEtapa.isPending}
+                onClick={handleAvancarEtapa}
               />
             )}
             {acoes.map((destino) => {
@@ -342,9 +480,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
               )
             })}
             <IconAction icon={Bell} label="Cobrar responsável" onClick={() => setAcaoPendente('cobrar')} />
-            {acoes.length === 0 && !podeAprovar && !podeRecusar && (
-              <p className="text-xs text-slate-400">Sem outras transições disponíveis.</p>
-            )}
           </div>
         )}
       </div>
@@ -535,7 +670,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
                 className="flex-1"
                 onClick={() =>
                   navigate(
-                    `${pathname.replace(/\/vaga\/[^/]+$/, '')}/novo-candidato?vaga=${vaga.id}`,
+                    `${pathname.replace(/\/vaga\/[^/]+$/, '')}/novo-candidato?vagaId=${vaga.id}`,
                   )
                 }
               >

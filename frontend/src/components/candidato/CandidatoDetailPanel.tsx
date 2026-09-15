@@ -1,13 +1,21 @@
-import { useState } from 'react'
-import { AlarmClock, Bell, FileText, Flame, X } from 'lucide-react'
+import { useState, type FormEvent } from 'react'
+import { AlarmClock, ArrowRightCircle, Bell, FileText, Flame, Trash2, X } from 'lucide-react'
 import clsx from 'clsx'
 import { ActivityFeed } from '../atividade/ActivityFeed'
 import { ChatPanel } from './ChatPanel'
 import { EmailReprovacaoPanel } from './EmailReprovacaoPanel'
+import { MotivoLixeiraModal } from '../board/MotivoLixeiraModal'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
 import { TarefasSection } from '../tarefas/TarefasSection'
-import { IconAction, InlineEdit, Tabs, TagInput, TagSuggestions } from '../ui'
-import { useSugerirTagsCandidato, useUpdateCandidato } from '../../api/hooks/useCandidatos'
+import { etapaSaidaNegativa, proximaEtapa } from '../kanban/etapaNav'
+import { Button, IconAction, InlineEdit, Tabs, TagInput, TagSuggestions, Textarea } from '../ui'
+import {
+  useCobrarCandidato,
+  useMoverEtapaCandidato,
+  useSugerirTagsCandidato,
+  useUpdateCandidato,
+} from '../../api/hooks/useCandidatos'
+import { useEtapas } from '../../api/hooks/useEtapas'
 import { useUsuarios } from '../../api/hooks/useUsuarios'
 import { getCurriculoUrl } from '../../api/candidatos'
 import { useAuth } from '../../context/AuthContext'
@@ -47,12 +55,38 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
   const isRh = me?.role === 'RH'
   const updateCandidato = useUpdateCandidato()
   const sugerirTagsCandidato = useSugerirTagsCandidato()
+  const moverEtapa = useMoverEtapaCandidato()
+  const cobrar = useCobrarCandidato()
   const usuariosQuery = useUsuarios(isRh)
+  const etapasQuery = useEtapas(isRh)
   const [aba, setAba] = useState<'perfil' | 'conversa' | 'atividade'>('perfil')
   const [loadingCurriculo, setLoadingCurriculo] = useState(false)
+  const [lixeiraAberta, setLixeiraAberta] = useState(false)
+  const [cobrancaAberta, setCobrancaAberta] = useState(false)
+  const [mensagemCobranca, setMensagemCobranca] = useState('')
+
+  /** Só etapas de cadastro completo (mesmo filtro do PessoasBoardPage com
+   * soTriagem=false) -- sem isso, a lista mistura com as etapas de
+   * pré-cadastro da aba Triagem (Triagem/Primeira Entrevista) e a "próxima
+   * etapa" calculada dava errado. */
+  const etapas = (etapasQuery.data ?? []).filter((e) => e.exige_cadastro_completo)
+  const proxima = isRh ? proximaEtapa(candidato, etapas) : null
+  const saida = isRh ? etapaSaidaNegativa(etapas) : null
+  const podeLixeira = !!saida && saida.id !== candidato.etapa_atual.id
 
   async function salvar(input: Partial<CandidatoInput>): Promise<void> {
     await updateCandidato.mutateAsync({ id: candidato.id, input })
+  }
+
+  function handleAvancarEtapa() {
+    if (proxima) moverEtapa.mutate({ id: candidato.id, etapaId: proxima.id })
+  }
+
+  async function handleCobrar(event: FormEvent) {
+    event.preventDefault()
+    await cobrar.mutateAsync({ id: candidato.id, mensagem: mensagemCobranca.trim() || undefined })
+    setCobrancaAberta(false)
+    setMensagemCobranca('')
   }
 
   async function handleAbrirCurriculo() {
@@ -114,15 +148,81 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
         </div>
       </div>
 
-      {candidato.curriculo_key && (
+      {(isRh || candidato.curriculo_key) && (
         <div className="shrink-0 border-b border-slate-200 px-4 py-2.5">
-          <IconAction
-            icon={FileText}
-            label={loadingCurriculo ? 'Gerando link...' : 'Abrir currículo'}
-            disabled={loadingCurriculo}
-            onClick={handleAbrirCurriculo}
-          />
+          {cobrancaAberta ? (
+            <form onSubmit={handleCobrar} className="space-y-2">
+              <Textarea
+                rows={3}
+                autoFocus
+                value={mensagemCobranca}
+                onChange={(e) => setMensagemCobranca(e.target.value)}
+                placeholder="Mensagem da cobrança (opcional)"
+              />
+              <div className="flex gap-2">
+                <Button type="submit" disabled={cobrar.isPending} className="flex-1">
+                  <Bell size={13} /> Cobrar
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => {
+                    setCobrancaAberta(false)
+                    setMensagemCobranca('')
+                  }}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <div className="flex flex-wrap items-center gap-1.5">
+              {podeLixeira && (
+                <IconAction
+                  icon={Trash2}
+                  label="Lixeira"
+                  variant="danger"
+                  onClick={() => setLixeiraAberta(true)}
+                />
+              )}
+              {proxima && (
+                <IconAction
+                  icon={ArrowRightCircle}
+                  label={proxima.nome}
+                  variant="primary"
+                  disabled={moverEtapa.isPending}
+                  onClick={handleAvancarEtapa}
+                />
+              )}
+              {isRh && (
+                <IconAction
+                  icon={Bell}
+                  label="Cobrar responsável"
+                  onClick={() => setCobrancaAberta(true)}
+                />
+              )}
+              {candidato.curriculo_key && (
+                <IconAction
+                  icon={FileText}
+                  label={loadingCurriculo ? 'Gerando link...' : 'Abrir currículo'}
+                  disabled={loadingCurriculo}
+                  onClick={handleAbrirCurriculo}
+                />
+              )}
+            </div>
+          )}
         </div>
+      )}
+
+      {lixeiraAberta && saida && (
+        <MotivoLixeiraModal
+          titulo={`Mandar "${candidato.nome}" pra lixeira?`}
+          onCancel={() => setLixeiraAberta(false)}
+          onConfirm={(motivo) => {
+            moverEtapa.mutate({ id: candidato.id, etapaId: saida.id, motivo })
+            setLixeiraAberta(false)
+          }}
+        />
       )}
 
       <Tabs

@@ -13,6 +13,10 @@ from utils.utils import capture_company_id
 from .models import Candidato, CandidatoNotificacao
 
 
+class CandidatoCobrarSerializer(serializers.Serializer):
+    mensagem = serializers.CharField(required=False, allow_blank=True, default="")
+
+
 class CandidatoSerializer(serializers.ModelSerializer):
     vaga_id = serializers.PrimaryKeyRelatedField(source="vaga", queryset=Vaga.objects.all())
     vaga_titulo = serializers.CharField(source="vaga.titulo", read_only=True)

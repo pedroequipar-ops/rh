@@ -7,6 +7,7 @@ from .views import (
     GoogleOAuthAuthorizeView,
     GoogleOAuthCallbackView,
     TriagemIaViewSet,
+    TriagemIaWebhookView,
 )
 
 router = DefaultRouter()
@@ -33,5 +34,10 @@ urlpatterns = [
         "triagem-ia-google/callback/",
         GoogleOAuthCallbackView.as_view(),
         name="triagem-ia-google-callback",
+    ),
+    path(
+        "triagem-ia-webhook/curriculo/",
+        TriagemIaWebhookView.as_view(),
+        name="triagem-ia-webhook-curriculo",
     ),
 ]

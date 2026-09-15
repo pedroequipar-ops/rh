@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AlertCircle, Mail, Trash2 } from 'lucide-react'
-import { Button, Card, Field, Input } from '../../components/ui'
+import { Button, Card, Field, Input, Select } from '../../components/ui'
 import {
   useAdicionarCaixaEntradaEmail,
   useCaixasEntradaEmail,
   useConectarGoogle,
   useRemoverCaixaEntradaEmail,
+  useRotearTriagemIa,
+  useTriagemIaNaoRoteados,
 } from '../../api/hooks/useTriagemIa'
+import { useVagas } from '../../api/hooks/useVagas'
 import { useToast } from '../../context/ToastContext'
-import type { CaixaEntradaEmail } from '../../types'
+import type { CaixaEntradaEmail, CandidatoTriagemIA, Vaga } from '../../types'
 
 function GoogleLogo() {
   return (
@@ -138,11 +141,51 @@ function FormularioImap({ onSalvo }: { onSalvo: () => void }) {
   )
 }
 
+function EmailNaoRoteadoRow({ item, vagas }: { item: CandidatoTriagemIA; vagas: Vaga[] }) {
+  const [vagaId, setVagaId] = useState('')
+  const rotear = useRotearTriagemIa()
+  const nome = item.nome_extraido || item.nome_remetente || item.email_remetente
+
+  return (
+    <div className="space-y-2 rounded border border-slate-200 bg-white p-3">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium text-slate-800">{nome}</p>
+        <p className="truncate text-xs text-slate-500">{item.assunto_email || item.email_remetente}</p>
+      </div>
+      <div className="flex gap-1.5">
+        <Select
+          className="flex-1"
+          value={vagaId}
+          onChange={(e) => setVagaId(e.target.value)}
+        >
+          <option value="" disabled>
+            Selecione a vaga
+          </option>
+          {vagas.map((vaga) => (
+            <option key={vaga.id} value={vaga.id}>
+              {vaga.titulo}
+            </option>
+          ))}
+        </Select>
+        <Button
+          variant="secondary"
+          disabled={!vagaId || rotear.isPending}
+          onClick={() => rotear.mutate({ id: item.id, vagaId })}
+        >
+          Rotear
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 export function TriagemIaConfig() {
   const [params, setParams] = useSearchParams()
   const { showToast } = useToast()
   const caixasQuery = useCaixasEntradaEmail()
   const conectarGoogle = useConectarGoogle()
+  const naoRoteadosQuery = useTriagemIaNaoRoteados()
+  const vagasQuery = useVagas()
   const [mostrarImap, setMostrarImap] = useState(false)
 
   useEffect(() => {
@@ -156,9 +199,30 @@ export function TriagemIaConfig() {
   }, [])
 
   const caixas = caixasQuery.data ?? []
+  const naoRoteados = naoRoteadosQuery.data ?? []
 
   return (
     <div className="mx-auto max-w-xl space-y-4">
+      {naoRoteados.length > 0 && (
+        <Card className="space-y-3 p-4">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={16} className="text-amber-500" />
+            <h2 className="text-sm font-semibold text-slate-800">
+              E-mails não roteados ({naoRoteados.length})
+            </h2>
+          </div>
+          <p className="text-xs text-slate-500">
+            A IA não conseguiu identificar a vaga desses e-mails (sem tag <code>+vaga@</code> nem{' '}
+            <code>[VAGA:codigo]</code> no assunto). Escolha a vaga certa pra pontuar o currículo.
+          </p>
+          <div className="space-y-2">
+            {naoRoteados.map((item) => (
+              <EmailNaoRoteadoRow key={item.id} item={item} vagas={vagasQuery.data ?? []} />
+            ))}
+          </div>
+        </Card>
+      )}
+
       <Card className="space-y-3 p-4">
         <div className="flex items-center gap-2">
           <Mail size={16} className="text-slate-400" />

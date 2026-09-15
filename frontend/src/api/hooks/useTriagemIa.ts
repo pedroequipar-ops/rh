@@ -63,6 +63,7 @@ export function useRotearTriagemIa() {
     mutationFn: ({ id, vagaId }: { id: string; vagaId: string }) => rotearTriagemIa(id, vagaId),
     onError: () => showToast('Não foi possível rotear o e-mail', 'error'),
     onSuccess: () => {
+      showToast('E-mail roteado, IA já vai pontuar')
       qc.invalidateQueries({ queryKey: queryKeys.triagemIaNaoRoteados })
       qc.invalidateQueries({ queryKey: queryKeys.triagemIa })
     },

@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.module_loading import import_string
 from docx import Document as DocxDocument
 from pypdf import PdfReader
+from rest_framework.exceptions import ValidationError
 
 from apps.accounts.models import User
 from apps.atividade import services as atividade_services
@@ -134,6 +135,35 @@ def etapa_inicial(company_id):
     if etapa is None:
         etapa = base.order_by("ordem").first()
     return etapa
+
+
+def cobrar_candidato(candidato, autor, mensagem=""):
+    """Cobra o responsável do candidato -- diferente de `vagas.cobrar_vaga`,
+    aqui o "responsável" é um usuário específico (`candidato.responsavel`),
+    não um papel/setor inteiro, então não tem a lógica bidirecional RH<->SETOR."""
+    from .models import CandidatoNotificacao
+
+    if not candidato.responsavel_id:
+        raise ValidationError({"detail": "Este candidato não tem responsável definido."})
+    if candidato.responsavel_id == autor.id and not autor.is_superuser:
+        raise ValidationError({"detail": "Você é o responsável; não há quem cobrar."})
+
+    texto = f'Cobrança sobre "{candidato.nome}"'
+    if mensagem:
+        texto += f": {mensagem}"
+
+    CandidatoNotificacao.objects.create(
+        company_id=candidato.company_id,
+        destinatario_id=candidato.responsavel_id,
+        candidato=candidato,
+        mensagem=texto,
+    )
+    publicar_notificacao(
+        candidato.responsavel_id,
+        "candidato",
+        {"mensagem": texto, "candidato_id": str(candidato.id)},
+    )
+    atividade_services.registrar(autor, "cobrou_responsavel", candidato, resumo="cobrou o responsável")
 
 
 def notificar_mudanca_etapa(candidato, etapa, company_id, motivo=""):

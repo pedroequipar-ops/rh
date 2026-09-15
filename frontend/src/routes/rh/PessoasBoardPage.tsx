@@ -69,7 +69,7 @@ export function PessoasBoardPage({ soTriagem = false }: PessoasBoardPageProps) {
   }
 
   function handleRegistrarCandidato(vaga: Vaga, etapa: EtapaKanban) {
-    navigate(`${base}/${rotaAtual}/novo-candidato?vaga=${vaga.id}&etapa=${etapa.id}`)
+    navigate(`${base}/${rotaAtual}/novo-candidato?vagaId=${vaga.id}&etapaId=${etapa.id}`)
   }
 
   function handleEtapasChange() {

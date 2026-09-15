@@ -56,6 +56,28 @@ class TriagemIaRotearSerializer(serializers.Serializer):
     vaga_id = serializers.UUIDField()
 
 
+MAX_ANEXO_WEBHOOK_BYTES = 15 * 1024 * 1024  # 15MB — generoso pra currículo, mas limita o pior caso
+
+
+class TriagemIaWebhookSerializer(serializers.Serializer):
+    arquivo = serializers.FileField()
+    email_remetente = serializers.EmailField()
+    nome_remetente = serializers.CharField(required=False, allow_blank=True, default="")
+    assunto = serializers.CharField(required=False, allow_blank=True, default="")
+    message_id = serializers.CharField(required=False, allow_blank=True, default="")
+
+    def validate_arquivo(self, value):
+        # Endpoint é autenticado só por token fixo (sem login de usuário) --
+        # barra tamanho antes de qualquer `.read()` pra não deixar um
+        # caller mal-comportado (ou token vazado) esgotar memória com um
+        # POST gigante.
+        if value.size > MAX_ANEXO_WEBHOOK_BYTES:
+            raise serializers.ValidationError(
+                f"Arquivo muito grande (máx. {MAX_ANEXO_WEBHOOK_BYTES // (1024 * 1024)}MB)."
+            )
+        return value
+
+
 class CaixaEntradaEmailSerializer(serializers.ModelSerializer):
     senha = serializers.CharField(write_only=True, required=False, allow_blank=True)
     host = serializers.CharField(required=False, allow_blank=True)

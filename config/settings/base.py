@@ -221,6 +221,15 @@ TRIAGEM_IA_FRONTEND_URL = env(
     "TRIAGEM_IA_FRONTEND_URL", default="http://localhost:5173/config/triagem-ia"
 )
 
+# Webhook pra receber currículo de um filtro externo (ex.: o "checkmail" do
+# Pedro, que já decide se o e-mail é candidatura de verdade antes de mandar
+# pra cá) em vez de conectar uma caixa de e-mail real na Triagem por IA. Só
+# uma empresa usa isso por enquanto — token fixo + company id fixo em vez de
+# um esquema multi-tenant. Em branco = endpoint responde 503 em vez de
+# aceitar sem autenticação.
+TRIAGEM_IA_WEBHOOK_TOKEN = env("TRIAGEM_IA_WEBHOOK_TOKEN", default="")
+TRIAGEM_IA_WEBHOOK_COMPANY_ID = env("TRIAGEM_IA_WEBHOOK_COMPANY_ID", default="")
+
 LOGS_DIR = BASE_DIR / "logs"
 LOGS_DIR.mkdir(exist_ok=True)
 

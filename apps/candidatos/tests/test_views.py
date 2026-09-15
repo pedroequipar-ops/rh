@@ -842,3 +842,40 @@ def test_gerar_email_reprovacao_falha_ia_retorna_erro_amigavel(
     response = client.post(f"/v1/candidatos/{candidato.id}/gerar-email-reprovacao/")
 
     assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_cobrar_notifica_responsavel(company_factory, user_factory, candidato_factory):
+    company = company_factory()
+    responsavel = user_factory(company=company, role=User.Role.RH)
+    candidato = candidato_factory(company=company, vaga__company=company, responsavel=responsavel)
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    response = client.post(f"/v1/candidatos/{candidato.id}/cobrar/", {"mensagem": "urgente"}, format="json")
+
+    assert response.status_code == 204
+    assert CandidatoNotificacao.objects.filter(destinatario=responsavel, candidato=candidato).exists()
+
+
+@pytest.mark.django_db
+def test_cobrar_sem_responsavel_retorna_400(company_factory, user_factory, candidato_factory):
+    candidato = candidato_factory(responsavel=None)
+    rh = user_factory(company=candidato.company, role=User.Role.RH)
+
+    client = _client_for(rh, candidato.company)
+    response = client.post(f"/v1/candidatos/{candidato.id}/cobrar/", {}, format="json")
+
+    assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_cobrar_pelo_proprio_responsavel_retorna_400(company_factory, user_factory, candidato_factory):
+    company = company_factory()
+    rh = user_factory(company=company, role=User.Role.RH)
+    candidato = candidato_factory(company=company, vaga__company=company, responsavel=rh)
+
+    client = _client_for(rh, company)
+    response = client.post(f"/v1/candidatos/{candidato.id}/cobrar/", {}, format="json")
+
+    assert response.status_code == 400

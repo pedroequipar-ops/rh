@@ -1,8 +1,11 @@
+import hmac
+
 from django.conf import settings
 from django.shortcuts import redirect
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,6 +27,7 @@ from .serializers import (
     CandidatoTriagemIASerializer,
     TriagemIaDecidirSerializer,
     TriagemIaRotearSerializer,
+    TriagemIaWebhookSerializer,
 )
 
 log = LoggerEngine(__name__)
@@ -194,6 +198,48 @@ class CaixaEntradaEmailDetailView(APIView):
         caixa = self._get_or_404(pk, company_id)
         CaixaEntradaRepository().delete(caixa)
         return Response(status=204)
+
+
+class TriagemIaWebhookView(APIView):
+    """Recebe currículo direto de um filtro externo já confiável (ex.: o
+    checkmail do Pedro, que decide se o e-mail é candidatura de verdade e
+    manda pra cá) — alternativa a conectar uma caixa de e-mail real na
+    Triagem por IA. Sem login: quem chama é outro sistema, não um usuário do
+    RH, por isso ``AllowAny`` e autenticação por token fixo no header
+    ``Authorization: Bearer <token>``."""
+
+    authentication_classes = []
+    permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request):
+        token_esperado = settings.TRIAGEM_IA_WEBHOOK_TOKEN
+        company_id = settings.TRIAGEM_IA_WEBHOOK_COMPANY_ID
+        if not token_esperado or not company_id:
+            return Response({"detail": "Webhook não configurado."}, status=503)
+
+        recebido = (request.headers.get("Authorization") or "").removeprefix("Bearer ").strip()
+        if not recebido or not hmac.compare_digest(recebido, token_esperado):
+            raise PermissionDenied("Token inválido.")
+
+        serializer = TriagemIaWebhookSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        dados = serializer.validated_data
+        arquivo = dados["arquivo"]
+
+        triagem = services.processar_curriculo_webhook(
+            company_id,
+            email_remetente=dados["email_remetente"],
+            nome_remetente=dados.get("nome_remetente", ""),
+            assunto=dados.get("assunto", ""),
+            content_type=arquivo.content_type or "",
+            conteudo=arquivo.read(),
+            message_id=dados.get("message_id", ""),
+        )
+        return Response(
+            {"id": str(triagem.id), "roteado": triagem.vaga_id is not None, "status": triagem.status},
+            status=201,
+        )
 
 
 class GoogleOAuthAuthorizeView(APIView):

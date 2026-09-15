@@ -26,8 +26,8 @@ export function CandidatoFormPage() {
   const { pathname } = useLocation()
   const { showToast } = useToast()
   const [searchParams] = useSearchParams()
-  const vagaPreselecionada = searchParams.get('vaga')
-  const etapaDestino = searchParams.get('etapa')
+  const vagaPreselecionada = searchParams.get('vagaId')
+  const etapaDestino = searchParams.get('etapaId')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [vagas, setVagas] = useState<Vaga[]>([])

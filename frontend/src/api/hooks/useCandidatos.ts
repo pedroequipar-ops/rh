@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query'
 import {
   buscarCandidatosComIa,
+  cobrarCandidato,
   createCandidato,
   deleteCandidato,
   gerarEmailReprovacao,
@@ -108,6 +109,19 @@ export function useMoverEtapaCandidato() {
       qc.invalidateQueries({ queryKey: queryKeys.candidato(id) })
       qc.invalidateQueries({ queryKey: queryKeys.vagasList })
     },
+  })
+}
+
+export function useCobrarCandidato() {
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: ({ id, mensagem }: { id: string; mensagem?: string }) => cobrarCandidato(id, mensagem),
+    onError: () =>
+      showToast(
+        'Não foi possível cobrar (candidato sem responsável definido, ou você é o responsável)',
+        'error',
+      ),
+    onSuccess: () => showToast('Cobrança enviada'),
   })
 }
 

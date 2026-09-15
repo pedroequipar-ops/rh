@@ -23,17 +23,29 @@ export function DetailPanel({ onClose, children, className }: DetailPanelProps) 
   const asideRef = useRef<HTMLElement>(null)
   const [visible, setVisible] = useState(false)
   const [closing, setClosing] = useState(false)
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => setVisible(true))
     return () => cancelAnimationFrame(frame)
   }, [])
 
+  // Se o componente desmontar antes dos 200ms (ex.: o usuário navegou pra
+  // outra tela por outro caminho enquanto o painel fechava), cancela o
+  // timeout -- sem isso, o `onClose` disparava "fantasma" com a `location`
+  // antiga já fechada sobre esse componente e navegava de volta pra tela
+  // velha, atropelando a navegação que o usuário acabou de fazer.
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
+    }
+  }, [])
+
   const requestClose = useCallback(() => {
     if (closing) return
     setClosing(true)
     setVisible(false)
-    setTimeout(onClose, CLOSE_DURATION_MS)
+    closeTimeoutRef.current = setTimeout(onClose, CLOSE_DURATION_MS)
   }, [closing, onClose])
 
   useEffect(() => {

@@ -90,6 +90,10 @@ export async function moverEtapa(id: string, etapaId: string, motivo?: string): 
   return data
 }
 
+export async function cobrarCandidato(id: string, mensagem?: string): Promise<void> {
+  await apiClient.post(`/candidatos/${id}/cobrar/`, { mensagem })
+}
+
 export interface SugestaoTags {
   tags: string[]
   interpretacao: string

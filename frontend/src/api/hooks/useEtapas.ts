@@ -2,6 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 import { listEtapas } from '../etapas'
 import { queryKeys } from '../queryKeys'
 
-export function useEtapas() {
-  return useQuery({ queryKey: queryKeys.etapas, queryFn: listEtapas })
+export function useEtapas(enabled = true) {
+  return useQuery({ queryKey: queryKeys.etapas, queryFn: listEtapas, enabled })
 }

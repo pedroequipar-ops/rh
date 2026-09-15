@@ -21,9 +21,14 @@ interface IconActionProps {
   type?: 'button' | 'submit'
 }
 
-/** Botão de ação compacto: só o ícone por padrão, expande mostrando o nome
- * completo ao passar o mouse (ou focar) — pra caber várias ações numa linha
- * só, sem virar uma parede de botões de texto. */
+/** Botão de ação compacto: só o ícone por padrão, o próprio quadrado estica
+ * pra mostrar o nome completo ao passar o mouse (ou focar) — pra caber várias
+ * ações numa linha só, sem virar uma parede de botões de texto. Cresce no
+ * fluxo normal (empurra o próximo botão pra direita, não cobre ele por cima
+ * -- cobrir foi tentado antes e ficava estranho). `delay-0` no grupo hover
+ * vs. `delay-75` fora dele: expande na hora, encolhe com um pequeno atraso —
+ * suaviza o "salto" de quem tá tentando alcançar o próximo botão logo depois
+ * deste. */
 export function IconAction({
   icon: Icon,
   label,
@@ -40,19 +45,19 @@ export function IconAction({
       title={label}
       className={cn(
         'group flex h-9 shrink-0 items-center justify-center overflow-hidden rounded-lg px-2.5',
-        'transition-all duration-200 ease-out hover:scale-[1.04] active:scale-100',
+        'transition-all duration-200 delay-75 ease-out hover:scale-[1.04] active:scale-100',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600',
         'disabled:cursor-not-allowed disabled:hover:scale-100',
         VARIANTS[variant],
       )}
     >
-      <Icon size={16} />
+      <Icon size={16} className="shrink-0" />
       <span
         className={cn(
           'max-w-0 overflow-hidden whitespace-nowrap text-xs font-semibold opacity-0',
-          'transition-all duration-200 ease-out',
-          'group-hover:ml-1.5 group-hover:max-w-[10rem] group-hover:opacity-100',
-          'group-focus-visible:ml-1.5 group-focus-visible:max-w-[10rem] group-focus-visible:opacity-100',
+          'transition-all duration-200 delay-75 ease-out',
+          'group-hover:ml-1.5 group-hover:max-w-[10rem] group-hover:opacity-100 group-hover:delay-0',
+          'group-focus-visible:ml-1.5 group-focus-visible:max-w-[10rem] group-focus-visible:opacity-100 group-focus-visible:delay-0',
         )}
       >
         {label}
