@@ -4,7 +4,6 @@ import {
   Ban,
   CheckCircle2,
   Clock,
-  Copy,
   Loader2,
   RotateCcw,
   UploadCloud,
@@ -21,7 +20,6 @@ const STATUS_META: Record<LinhaStatus, { label: string; icon: typeof Clock; clas
   analisando: { label: 'Analisando...', icon: Loader2, className: 'text-blue-500 animate-spin' },
   criando: { label: 'Cadastrando...', icon: Loader2, className: 'text-blue-500 animate-spin' },
   concluido: { label: 'Cadastrado', icon: CheckCircle2, className: 'text-emerald-500' },
-  duplicado: { label: 'CPF já cadastrado', icon: Copy, className: 'text-amber-500' },
   erro: { label: 'Falhou', icon: XCircle, className: 'text-red-500' },
   cancelado: { label: 'Cancelado', icon: Ban, className: 'text-slate-400' },
 }
@@ -51,18 +49,16 @@ function LinhaRow({ linha, onRetry }: { linha: LinhaImportacao; onRetry: (id: st
 interface BulkCurriculoDropzoneProps {
   vagaId: string
   etapaId?: string
-  cpfsExistentes: Set<string>
   onClose: () => void
   onCandidatoCriado?: () => void
 }
 
 /** Dropzone de importação em massa: arraste N PDFs, cada um passa por
- * upload → análise IA → checagem de CPF duplicado → cadastro, com no máx. 3
- * em paralelo. Fecha a qualquer momento — o que já processou fica salvo. */
+ * upload → análise IA → cadastro, com no máx. 30 em paralelo. Fecha a
+ * qualquer momento — o que já processou fica salvo. */
 export function BulkCurriculoDropzone({
   vagaId,
   etapaId,
-  cpfsExistentes,
   onClose,
   onCandidatoCriado,
 }: BulkCurriculoDropzoneProps) {
@@ -74,7 +70,6 @@ export function BulkCurriculoDropzone({
   const { linhas, iniciar, cancelar, retry, resumo } = useBulkImport({
     vagaId,
     etapaId,
-    cpfsExistentes,
     onCandidatoCriado,
   })
 
@@ -87,7 +82,6 @@ export function BulkCurriculoDropzone({
     if (resumoAvisadoRef.current) return
     resumoAvisadoRef.current = true
     const partes = [`${resumo.concluidos} cadastrado(s)`]
-    if (resumo.duplicados > 0) partes.push(`${resumo.duplicados} duplicado(s)`)
     if (resumo.erros > 0) partes.push(`${resumo.erros} com falha`)
     showToast(partes.join(' · '), resumo.erros > 0 ? 'error' : 'success')
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,7 +160,6 @@ export function BulkCurriculoDropzone({
               </div>
               <p className="mt-1 text-xs text-slate-400">
                 {resumo.total - resumo.emAndamento} de {resumo.total} processado(s)
-                {resumo.duplicados > 0 && ` · ${resumo.duplicados} duplicado(s)`}
                 {resumo.erros > 0 && ` · ${resumo.erros} com falha`}
               </p>
             </div>

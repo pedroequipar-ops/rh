@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -89,6 +89,7 @@ class VagaViewSet(viewsets.ModelViewSet):
         "recusar": "vagas.aprovar",
         "cobrar": "vagas.cobrar",
         "restaurar": "vagas.delete",
+        "sugerir_tags": "vagas.view",
     }
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
@@ -191,6 +192,18 @@ class VagaViewSet(viewsets.ModelViewSet):
         vaga = self.get_object()
         qs = vaga.historico_status.select_related("por")
         return Response(VagaHistoricoStatusSerializer(qs, many=True).data)
+
+    @action(detail=True, methods=["post"], url_path="sugerir-tags")
+    def sugerir_tags(self, request, pk=None):
+        vaga = self.get_object()
+        company_id = capture_company_id(request)
+        try:
+            dto = services.sugerir_tags_vaga(company_id, vaga)
+        except services.TagSugestaoError:
+            raise ValidationError(
+                {"detail": "Não foi possível sugerir tags agora, tenta de novo."}
+            )
+        return Response({"tags": dto.tags, "interpretacao": dto.interpretacao})
 
     @action(detail=True, methods=["post"], url_path="transicionar")
     def transicionar(self, request, pk=None):

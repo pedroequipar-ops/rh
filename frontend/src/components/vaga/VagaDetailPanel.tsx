@@ -9,13 +9,14 @@ import { ChatPanel } from '../candidato/ChatPanel'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
 import { TarefasSection } from '../tarefas/TarefasSection'
 import { TriagemIaPanel } from './TriagemIaPanel'
-import { Badge, Button, IconAction, InlineEdit, Select, Textarea, Tabs, TagInput } from '../ui'
+import { Badge, Button, IconAction, InlineEdit, Select, Textarea, Tabs, TagInput, TagSuggestions } from '../ui'
 import {
   useAprovarVaga,
   useCandidatosDaVaga,
   useCobrarVaga,
   useRecusarVaga,
   useRegistrarCandidaturas,
+  useSugerirTagsVaga,
   useTransicionarVaga,
   useVagaHistorico,
   useUpdateVaga,
@@ -84,6 +85,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const isRh = me?.role === 'RH'
 
   const updateVaga = useUpdateVaga()
+  const sugerirTagsVaga = useSugerirTagsVaga()
   const transicionar = useTransicionarVaga()
   const aprovar = useAprovarVaga()
   const recusar = useRecusarVaga()
@@ -223,6 +225,13 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
           onChange={(nomes) => updateVaga.mutate({ id: vaga.id, input: { tags: nomes } })}
           className="mt-2"
         />
+        <div className="mt-1.5">
+          <TagSuggestions
+            nomesAtuais={vaga.tags.map((t) => t.nome)}
+            onSugerir={() => sugerirTagsVaga.mutateAsync(vaga.id)}
+            onAplicar={(nomes) => updateVaga.mutate({ id: vaga.id, input: { tags: nomes } })}
+          />
+        </div>
       </div>
 
       <div className="shrink-0 border-b border-slate-200 px-4 py-2.5">
@@ -576,13 +585,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
       {importOpen && (
         <BulkCurriculoDropzone
           vagaId={vaga.id}
-          cpfsExistentes={
-            new Set(
-              (candidatosQuery.data ?? [])
-                .map((c) => c.cpf.replace(/\D/g, ''))
-                .filter(Boolean),
-            )
-          }
           onCandidatoCriado={() => {
             qc.invalidateQueries({ queryKey: queryKeys.vagaCandidatos(vaga.id) })
             qc.invalidateQueries({ queryKey: queryKeys.candidatosList })

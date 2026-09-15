@@ -3,10 +3,11 @@ import { AlarmClock, Bell, FileText, Flame, X } from 'lucide-react'
 import clsx from 'clsx'
 import { ActivityFeed } from '../atividade/ActivityFeed'
 import { ChatPanel } from './ChatPanel'
+import { EmailReprovacaoPanel } from './EmailReprovacaoPanel'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
 import { TarefasSection } from '../tarefas/TarefasSection'
-import { IconAction, InlineEdit, Tabs, TagInput } from '../ui'
-import { useUpdateCandidato } from '../../api/hooks/useCandidatos'
+import { IconAction, InlineEdit, Tabs, TagInput, TagSuggestions } from '../ui'
+import { useSugerirTagsCandidato, useUpdateCandidato } from '../../api/hooks/useCandidatos'
 import { useUsuarios } from '../../api/hooks/useUsuarios'
 import { getCurriculoUrl } from '../../api/candidatos'
 import { useAuth } from '../../context/AuthContext'
@@ -45,6 +46,7 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
   const { me } = useAuth()
   const isRh = me?.role === 'RH'
   const updateCandidato = useUpdateCandidato()
+  const sugerirTagsCandidato = useSugerirTagsCandidato()
   const usuariosQuery = useUsuarios(isRh)
   const [aba, setAba] = useState<'perfil' | 'conversa' | 'atividade'>('perfil')
   const [loadingCurriculo, setLoadingCurriculo] = useState(false)
@@ -103,6 +105,13 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
           onChange={(nomes) => updateCandidato.mutate({ id: candidato.id, input: { tags: nomes } })}
           className="mt-2"
         />
+        <div className="mt-1.5">
+          <TagSuggestions
+            nomesAtuais={candidato.tags.map((t) => t.nome)}
+            onSugerir={() => sugerirTagsCandidato.mutateAsync(candidato.id)}
+            onAplicar={(nomes) => updateCandidato.mutate({ id: candidato.id, input: { tags: nomes } })}
+          />
+        </div>
       </div>
 
       {candidato.curriculo_key && (
@@ -159,6 +168,13 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
               />
             </div>
           </div>
+
+          {candidato.reprovado_em && (
+            <EmailReprovacaoPanel
+              candidatoId={candidato.id}
+              motivoReprovacao={candidato.motivo_reprovacao}
+            />
+          )}
 
           <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">

@@ -7,16 +7,24 @@ dispara notificações. Espelha o padrão de ``apps/candidatos/services.py``.
 
 from datetime import timedelta
 
+from django.conf import settings
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.module_loading import import_string
 from django.utils.text import slugify
 from rest_framework.exceptions import PermissionDenied, ValidationError
 
 from apps.accounts.models import Setor, User
 from apps.atividade import services as atividade_services
+from apps.candidatos.interfaces.i_alerta_risco_extractor import AlertaRiscoDTO
+from apps.candidatos.interfaces.i_tag_extractor import TagsSugeridasDTO
+from apps.core.logger import LoggerEngine
 from apps.core.notificacoes_ws import publicar_notificacao
+from apps.tags.models import Tag
 
 from .models import EtapaKanban, Vaga, VagaCobranca, VagaHistoricoStatus, VagaNotificacao
+
+log = LoggerEngine(__name__)
 
 NOME_SETOR_BANCO_TALENTOS = "Banco de Talentos"
 NOME_VAGA_BANCO_TALENTOS = "Banco de Talentos"
@@ -144,6 +152,42 @@ def atrasada_q(hoje=None) -> Q:
     )
 
 
+def _mensagem_padrao_prazo_estourado(vaga) -> str:
+    return f'Vaga "{vaga.titulo}" passou do prazo de preenchimento/início.'
+
+
+def _dias_de_atraso(vaga, hoje) -> int:
+    candidatos_data = [
+        d for d in (vaga.data_alvo_preenchimento, vaga.data_inicio_prevista) if d and d < hoje
+    ]
+    return max((hoje - d).days for d in candidatos_data) if candidatos_data else 0
+
+
+def _redigir_alerta_risco(vaga, hoje) -> str:
+    """Mensagem do alerta de prazo estourado — tenta IA (cruza atraso, tempo
+    parado no status e volume de candidatos, IDEIAS_IA.md #6), cai pra
+    mensagem fixa em qualquer falha. É cron sem humano pra tentar de novo,
+    então uma instabilidade da IA nunca pode deixar de notificar."""
+    try:
+        ultimo_historico = vaga.historico_status.order_by("-created_at").first()
+        dias_parado = (
+            (timezone.now() - ultimo_historico.created_at).days if ultimo_historico else None
+        )
+        contexto = {
+            "vaga_titulo": vaga.titulo,
+            "status_atual": vaga.get_status_display(),
+            "dias_de_atraso_no_prazo": _dias_de_atraso(vaga, hoje),
+            "dias_parado_nesse_status": dias_parado,
+            "total_candidatos": vaga.candidatos.count(),
+        }
+        extractor_class = import_string(settings.VAGAS_ALERTA_RISCO_EXTRACTOR_CLASS)
+        dto: AlertaRiscoDTO = extractor_class().redigir(contexto)
+        return dto.mensagem or _mensagem_padrao_prazo_estourado(vaga)
+    except Exception as exc:
+        log.error("falha ao redigir alerta de risco por IA", vaga_id=str(vaga.id), erro=str(exc))
+        return _mensagem_padrao_prazo_estourado(vaga)
+
+
 def alertar_vagas_com_prazo_estourado():
     """Cria uma notificação (uma vez) para cada vaga ativa cujo prazo de
     preenchimento ou de início previsto já passou. Roda por cron do SO."""
@@ -165,7 +209,7 @@ def alertar_vagas_com_prazo_estourado():
                 company_id=vaga.company_id, role=User.Role.RH, is_active=True
             ),
             vaga,
-            f'Vaga "{vaga.titulo}" passou do prazo de preenchimento/início.',
+            _redigir_alerta_risco(vaga, hoje),
         )
         total += 1
     return total
@@ -462,3 +506,27 @@ def garantir_codigo_email(vaga) -> str:
     vaga.codigo_email = f"{base}-{sufixo}"
     vaga.save(update_fields=["codigo_email", "updated_at"])
     return vaga.codigo_email
+
+
+class TagSugestaoError(Exception):
+    pass
+
+
+def sugerir_tags_vaga(company_id: str, vaga) -> TagsSugeridasDTO:
+    """Sugere tags pra vaga via IA — IDEIAS_IA.md #14. Extractor mora em
+    apps/candidatos/extractors (mesma convenção da Triagem por IA, que
+    também vive lá mesmo sendo de outro app)."""
+    try:
+        tags_existentes = list(
+            Tag.objects.filter(company_id=company_id).values_list("nome", flat=True)
+        )
+        perfil = {
+            "titulo": vaga.titulo,
+            "descricao": vaga.descricao,
+            "requisitos": vaga.requisitos,
+        }
+        extractor_class = import_string(settings.VAGAS_TAG_EXTRACTOR_CLASS)
+        return extractor_class().sugerir(perfil, tags_existentes)
+    except Exception as exc:
+        log.error("falha ao sugerir tags de vaga", vaga_id=str(vaga.id), erro=str(exc))
+        raise TagSugestaoError(str(exc)) from exc

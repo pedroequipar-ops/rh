@@ -92,6 +92,16 @@ export async function getVagaHistorico(id: string): Promise<VagaHistorico[]> {
   return data
 }
 
+export interface SugestaoTags {
+  tags: string[]
+  interpretacao: string
+}
+
+export async function sugerirTagsVaga(id: string): Promise<SugestaoTags> {
+  const { data } = await apiClient.post<SugestaoTags>(`/vagas/${id}/sugerir-tags/`)
+  return data
+}
+
 export async function deleteVaga(id: string): Promise<void> {
   await apiClient.delete(`/vagas/${id}/`)
 }

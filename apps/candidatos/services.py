@@ -19,6 +19,8 @@ from utils.queue import QueueEngine
 from utils.storage import MinioStorage
 
 from .interfaces.i_curriculo_extractor import CandidatoExtraidoDTO
+from .interfaces.i_email_reprovacao_extractor import EmailReprovacaoDTO
+from .interfaces.i_tag_extractor import TagsSugeridasDTO
 from .repositories.candidato_repository import CandidatoRepository
 
 log = LoggerEngine(__name__)
@@ -215,6 +217,48 @@ def criar_candidato(
         },
     )
     return candidato
+
+
+class TagSugestaoError(Exception):
+    pass
+
+
+def sugerir_tags_candidato(company_id: str, candidato) -> TagsSugeridasDTO:
+    try:
+        tags_existentes = list(
+            Tag.objects.filter(company_id=company_id).values_list("nome", flat=True)
+        )
+        perfil = {
+            "nome": candidato.nome,
+            "vaga_titulo": candidato.vaga.titulo,
+            "perfil_formacao": candidato.perfil_formacao,
+            "perfil_experiencia": candidato.perfil_experiencia,
+            "perfil_habilidades": candidato.perfil_habilidades,
+            "perfil_certificacoes": candidato.perfil_certificacoes,
+        }
+        extractor_class = import_string(settings.CANDIDATOS_TAG_EXTRACTOR_CLASS)
+        return extractor_class().sugerir(perfil, tags_existentes)
+    except Exception as exc:
+        log.error("falha ao sugerir tags de candidato", candidato_id=str(candidato.id), erro=str(exc))
+        raise TagSugestaoError(str(exc)) from exc
+
+
+class EmailReprovacaoError(Exception):
+    pass
+
+
+def gerar_email_reprovacao(company_id: str, candidato) -> EmailReprovacaoDTO:
+    """Rascunho de e-mail de feedback pro candidato descartado — IDEIAS_IA.md #2.
+    Só gera o texto pro RH copiar; não existe envio de e-mail nesse sistema."""
+    try:
+        perfil = {"nome": candidato.nome, "vaga_titulo": candidato.vaga.titulo}
+        extractor_class = import_string(settings.CANDIDATOS_EMAIL_REPROVACAO_EXTRACTOR_CLASS)
+        return extractor_class().redigir(perfil, candidato.motivo_reprovacao)
+    except Exception as exc:
+        log.error(
+            "falha ao gerar e-mail de reprovação", candidato_id=str(candidato.id), erro=str(exc)
+        )
+        raise EmailReprovacaoError(str(exc)) from exc
 
 
 def extrair_dados_candidato(curriculo_key: str, company_id: str) -> CandidatoExtraidoDTO:

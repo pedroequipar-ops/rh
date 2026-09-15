@@ -8,10 +8,12 @@ import {
   buscarCandidatosComIa,
   createCandidato,
   deleteCandidato,
+  gerarEmailReprovacao,
   getCandidato,
   listCandidatos,
   moverEtapa,
   restaurarCandidato,
+  sugerirTagsCandidato,
   updateCandidato,
   type CandidatoInput,
 } from '../candidatos'
@@ -151,5 +153,21 @@ export function useDeleteCandidato() {
           ),
       }),
     onSettled: () => qc.invalidateQueries({ queryKey: queryKeys.candidatosList }),
+  })
+}
+
+export function useSugerirTagsCandidato() {
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: (id: string) => sugerirTagsCandidato(id),
+    onError: () => showToast('Não foi possível sugerir tags agora', 'error'),
+  })
+}
+
+export function useGerarEmailReprovacao() {
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: (id: string) => gerarEmailReprovacao(id),
+    onError: () => showToast('Não foi possível gerar o rascunho agora', 'error'),
   })
 }

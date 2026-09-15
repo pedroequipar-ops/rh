@@ -17,6 +17,7 @@ import {
   recusarVaga,
   registrarCandidaturas,
   restaurarVaga,
+  sugerirTagsVaga,
   transicionarVaga,
   updateVaga,
   type AprovarVagaInput,
@@ -269,5 +270,13 @@ export function useDeleteVaga() {
           restaurarVaga(id).finally(() => qc.invalidateQueries({ queryKey: queryKeys.vagasList })),
       }),
     onSettled: () => qc.invalidateQueries({ queryKey: queryKeys.vagasList }),
+  })
+}
+
+export function useSugerirTagsVaga() {
+  const { showToast } = useToast()
+  return useMutation({
+    mutationFn: (id: string) => sugerirTagsVaga(id),
+    onError: () => showToast('Não foi possível sugerir tags agora', 'error'),
   })
 }

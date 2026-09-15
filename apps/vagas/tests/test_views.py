@@ -1,7 +1,11 @@
+from unittest.mock import patch
+
 import pytest
 from rest_framework.test import APIClient
 
 from apps.accounts.models import User
+from apps.candidatos.interfaces.i_alerta_risco_extractor import AlertaRiscoDTO, IAlertaRiscoExtractor
+from apps.candidatos.interfaces.i_tag_extractor import ITagExtractor, TagsSugeridasDTO
 from apps.vagas.models import EtapaKanban, Vaga, VagaHistoricoStatus, VagaNotificacao
 
 
@@ -738,3 +742,143 @@ def test_alertar_prazo_estourado_notifica_rh_uma_vez(
     )
     vaga.refresh_from_db()
     assert vaga.prazo_alertado_em is None
+
+
+class FakeAlertaRiscoExtractor(IAlertaRiscoExtractor):
+    def redigir(self, contexto):
+        return AlertaRiscoDTO(mensagem=f"Risco alto: {contexto['total_candidatos']} candidatos.")
+
+
+class FakeAlertaRiscoExtractorFalha(IAlertaRiscoExtractor):
+    def redigir(self, contexto):
+        raise RuntimeError("IA indisponível")
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.vagas.services.settings.VAGAS_ALERTA_RISCO_EXTRACTOR_CLASS",
+    "apps.vagas.tests.test_views.FakeAlertaRiscoExtractor",
+)
+def test_alertar_prazo_usa_mensagem_da_ia_quando_disponivel(
+    company_factory, user_factory, vaga_factory
+):
+    from datetime import date
+
+    from apps.vagas import services
+    from apps.vagas.models import VagaNotificacao
+
+    company = company_factory()
+    rh = user_factory(company=company, role=User.Role.RH)
+    vaga = vaga_factory(
+        company=company, status=Vaga.Status.PUBLICADA, data_alvo_preenchimento=date(2020, 1, 1)
+    )
+
+    services.alertar_vagas_com_prazo_estourado()
+
+    notificacao = VagaNotificacao.objects.get(destinatario=rh, vaga=vaga)
+    assert notificacao.mensagem == "Risco alto: 0 candidatos."
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.vagas.services.settings.VAGAS_ALERTA_RISCO_EXTRACTOR_CLASS",
+    "apps.vagas.tests.test_views.FakeAlertaRiscoExtractorFalha",
+)
+def test_alertar_prazo_cai_para_mensagem_fixa_se_ia_falhar(
+    company_factory, user_factory, vaga_factory
+):
+    from datetime import date
+
+    from apps.vagas import services
+    from apps.vagas.models import VagaNotificacao
+
+    company = company_factory()
+    rh = user_factory(company=company, role=User.Role.RH)
+    vaga = vaga_factory(
+        company=company, status=Vaga.Status.PUBLICADA, data_alvo_preenchimento=date(2020, 1, 1)
+    )
+
+    total = services.alertar_vagas_com_prazo_estourado()
+
+    assert total == 1
+    notificacao = VagaNotificacao.objects.get(destinatario=rh, vaga=vaga)
+    assert notificacao.mensagem == f'Vaga "{vaga.titulo}" passou do prazo de preenchimento/início.'
+
+
+@pytest.mark.django_db
+def test_alertar_prazo_extractor_recebe_sinais_completos(
+    company_factory, user_factory, vaga_factory, candidato_factory, etapa_factory
+):
+    from datetime import date
+
+    from apps.vagas import services
+
+    company = company_factory()
+    user_factory(company=company, role=User.Role.RH)
+    vaga = vaga_factory(
+        company=company, status=Vaga.Status.PUBLICADA, data_alvo_preenchimento=date(2020, 1, 1)
+    )
+    etapa = etapa_factory(company=company)
+    candidato_factory(company=company, vaga=vaga, etapa_atual=etapa)
+
+    with patch(
+        "apps.candidatos.extractors.groq_alerta_risco_extractor.GroqAlertaRiscoExtractor.redigir"
+    ) as mock_redigir:
+        mock_redigir.return_value = AlertaRiscoDTO(mensagem="ok")
+        services.alertar_vagas_com_prazo_estourado()
+
+    (contexto,) = mock_redigir.call_args[0]
+    assert contexto["vaga_titulo"] == vaga.titulo
+    assert contexto["dias_de_atraso_no_prazo"] > 0
+    assert contexto["total_candidatos"] == 1
+
+
+class FakeVagaTagExtractor(ITagExtractor):
+    def sugerir(self, perfil, tags_existentes):
+        return TagsSugeridasDTO(tags=["urgente"], interpretacao="Vaga prioritária.")
+
+
+class FakeVagaTagExtractorFalha(ITagExtractor):
+    def sugerir(self, perfil, tags_existentes):
+        raise RuntimeError("IA indisponível")
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.vagas.services.settings.VAGAS_TAG_EXTRACTOR_CLASS",
+    "apps.vagas.tests.test_views.FakeVagaTagExtractor",
+)
+def test_sugerir_tags_vaga_retorna_sugestoes_sem_aplicar(
+    company_factory, setor_factory, user_factory, vaga_factory
+):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    vaga = vaga_factory(company=company, setor=setor)
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    response = client.post(f"/v1/vagas/{vaga.id}/sugerir-tags/")
+
+    assert response.status_code == 200
+    assert response.data["tags"] == ["urgente"]
+    vaga.refresh_from_db()
+    assert list(vaga.tags.all()) == []
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.vagas.services.settings.VAGAS_TAG_EXTRACTOR_CLASS",
+    "apps.vagas.tests.test_views.FakeVagaTagExtractorFalha",
+)
+def test_sugerir_tags_vaga_com_falha_da_ia_retorna_erro_amigavel(
+    company_factory, setor_factory, user_factory, vaga_factory
+):
+    company = company_factory()
+    setor = setor_factory(company=company)
+    vaga = vaga_factory(company=company, setor=setor)
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    response = client.post(f"/v1/vagas/{vaga.id}/sugerir-tags/")
+
+    assert response.status_code == 400

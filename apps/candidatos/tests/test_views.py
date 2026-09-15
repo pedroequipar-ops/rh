@@ -14,6 +14,11 @@ from apps.candidatos.interfaces.i_curriculo_extractor import (
     CandidatoExtraidoDTO,
     ICurriculoExtractor,
 )
+from apps.candidatos.interfaces.i_email_reprovacao_extractor import (
+    EmailReprovacaoDTO,
+    IEmailReprovacaoExtractor,
+)
+from apps.candidatos.interfaces.i_tag_extractor import ITagExtractor, TagsSugeridasDTO
 from apps.candidatos.models import Candidato, CandidatoNotificacao
 
 
@@ -695,5 +700,145 @@ def test_busca_ia_com_falha_da_ia_retorna_erro_amigavel(company_factory, user_fa
 
     client = _client_for(rh, company)
     response = client.post("/v1/candidatos/busca-ia/", {"frase": "qualquer coisa"})
+
+    assert response.status_code == 400
+
+
+class FakeTagExtractor(ITagExtractor):
+    def sugerir(self, perfil, tags_existentes):
+        return TagsSugeridasDTO(tags=["senior", "remoto"], interpretacao="Perfil experiente.")
+
+
+class FakeTagExtractorFalha(ITagExtractor):
+    def sugerir(self, perfil, tags_existentes):
+        raise RuntimeError("IA indisponível")
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.candidatos.services.settings.CANDIDATOS_TAG_EXTRACTOR_CLASS",
+    "apps.candidatos.tests.test_views.FakeTagExtractor",
+)
+def test_sugerir_tags_candidato_retorna_sugestoes_sem_aplicar(
+    company_factory, user_factory, candidato_factory
+):
+    company = company_factory()
+    candidato = candidato_factory(company=company, perfil_habilidades="Python, liderança")
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    response = client.post(f"/v1/candidatos/{candidato.id}/sugerir-tags/")
+
+    assert response.status_code == 200
+    assert response.data["tags"] == ["senior", "remoto"]
+    assert response.data["interpretacao"] == "Perfil experiente."
+    candidato.refresh_from_db()
+    assert list(candidato.tags.all()) == []
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.candidatos.services.settings.CANDIDATOS_TAG_EXTRACTOR_CLASS",
+    "apps.candidatos.tests.test_views.FakeTagExtractorFalha",
+)
+def test_sugerir_tags_candidato_com_falha_da_ia_retorna_erro_amigavel(
+    company_factory, user_factory, candidato_factory
+):
+    company = company_factory()
+    candidato = candidato_factory(company=company)
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    client = _client_for(rh, company)
+    response = client.post(f"/v1/candidatos/{candidato.id}/sugerir-tags/")
+
+    assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_sugerir_tags_candidato_passa_tags_existentes_da_empresa(
+    company_factory, user_factory, candidato_factory
+):
+    from apps.tags.models import Tag
+
+    company = company_factory()
+    candidato = candidato_factory(company=company)
+    Tag.objects.create(company=company, nome="senior")
+    rh = user_factory(company=company, role=User.Role.RH)
+
+    with patch(
+        "apps.candidatos.extractors.groq_tag_extractor.GroqTagExtractor.sugerir"
+    ) as mock_sugerir:
+        mock_sugerir.return_value = TagsSugeridasDTO(tags=["senior"], interpretacao="ok")
+        client = _client_for(rh, company)
+        response = client.post(f"/v1/candidatos/{candidato.id}/sugerir-tags/")
+
+    assert response.status_code == 200
+    _, chamada_tags_existentes = mock_sugerir.call_args[0]
+    assert "senior" in chamada_tags_existentes
+
+
+class FakeEmailReprovacaoExtractor(IEmailReprovacaoExtractor):
+    def redigir(self, candidato, motivo):
+        return EmailReprovacaoDTO(
+            assunto="Sobre sua candidatura",
+            corpo=f"Motivo usado: {motivo}",
+            interpretacao="Feedback educado.",
+        )
+
+
+class FakeEmailReprovacaoExtractorFalha(IEmailReprovacaoExtractor):
+    def redigir(self, candidato, motivo):
+        raise RuntimeError("IA indisponível")
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.candidatos.services.settings.CANDIDATOS_EMAIL_REPROVACAO_EXTRACTOR_CLASS",
+    "apps.candidatos.tests.test_views.FakeEmailReprovacaoExtractor",
+)
+def test_gerar_email_reprovacao_candidato_descartado_retorna_rascunho(
+    company_factory, user_factory, candidato_factory
+):
+    candidato = candidato_factory(
+        reprovado_em=timezone.now(), motivo_reprovacao="Não atendeu aos requisitos"
+    )
+    rh = user_factory(company=candidato.company, role=User.Role.RH)
+
+    client = _client_for(rh, candidato.company)
+    response = client.post(f"/v1/candidatos/{candidato.id}/gerar-email-reprovacao/")
+
+    assert response.status_code == 200
+    assert response.data["assunto"] == "Sobre sua candidatura"
+    assert "Não atendeu aos requisitos" in response.data["corpo"]
+    candidato.refresh_from_db()
+    assert candidato.motivo_reprovacao == "Não atendeu aos requisitos"
+
+
+@pytest.mark.django_db
+def test_gerar_email_reprovacao_candidato_nao_descartado_retorna_400(
+    company_factory, user_factory, candidato_factory
+):
+    candidato = candidato_factory(reprovado_em=None)
+    rh = user_factory(company=candidato.company, role=User.Role.RH)
+
+    client = _client_for(rh, candidato.company)
+    response = client.post(f"/v1/candidatos/{candidato.id}/gerar-email-reprovacao/")
+
+    assert response.status_code == 400
+
+
+@pytest.mark.django_db
+@patch(
+    "apps.candidatos.services.settings.CANDIDATOS_EMAIL_REPROVACAO_EXTRACTOR_CLASS",
+    "apps.candidatos.tests.test_views.FakeEmailReprovacaoExtractorFalha",
+)
+def test_gerar_email_reprovacao_falha_ia_retorna_erro_amigavel(
+    company_factory, user_factory, candidato_factory
+):
+    candidato = candidato_factory(reprovado_em=timezone.now())
+    rh = user_factory(company=candidato.company, role=User.Role.RH)
+
+    client = _client_for(rh, candidato.company)
+    response = client.post(f"/v1/candidatos/{candidato.id}/gerar-email-reprovacao/")
 
     assert response.status_code == 400

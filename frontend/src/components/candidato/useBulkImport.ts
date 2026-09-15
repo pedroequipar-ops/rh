@@ -13,7 +13,6 @@ export type LinhaStatus =
   | 'analisando'
   | 'criando'
   | 'concluido'
-  | 'duplicado'
   | 'erro'
   | 'cancelado'
 
@@ -29,23 +28,15 @@ export interface LinhaImportacao {
 interface UseBulkImportOptions {
   vagaId: string
   etapaId?: string
-  /** CPFs (só dígitos) já cadastrados na vaga — usado pro dedupe client-side. */
-  cpfsExistentes: Set<string>
   onCandidatoCriado?: () => void
-}
-
-function normalizarCpf(cpf: string): string {
-  return cpf.replace(/\D/g, '')
 }
 
 /** Orquestra o upload em massa de currículos: fila com concorrência limitada
  * (`pLimit`), máquina de estados por arquivo (fila → enviando → analisando →
- * criando → concluído/duplicado/erro), dedupe de CPF contra a vaga + o
- * próprio lote, e retry por linha. */
-export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCriado }: UseBulkImportOptions) {
+ * criando → concluído/erro), e retry por linha. */
+export function useBulkImport({ vagaId, etapaId, onCandidatoCriado }: UseBulkImportOptions) {
   const [linhas, setLinhas] = useState<LinhaImportacao[]>([])
   const canceladoRef = useRef(false)
-  const cpfsNoLoteRef = useRef(new Set<string>())
   const limitarRef = useRef(pLimit(CONCORRENCIA))
   const totalAdicionadosRef = useRef(0)
 
@@ -73,13 +64,6 @@ export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCria
           throw new Error('Não foi possível extrair os dados do currículo.')
         }
 
-        const cpf = normalizarCpf(extraido.cpf)
-        if (cpf && (cpfsExistentes.has(cpf) || cpfsNoLoteRef.current.has(cpf))) {
-          atualizar(linha.id, { status: 'duplicado', extraido })
-          return
-        }
-        if (cpf) cpfsNoLoteRef.current.add(cpf)
-
         if (canceladoRef.current) {
           atualizar(linha.id, { status: 'cancelado', extraido })
           return
@@ -100,7 +84,11 @@ export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCria
           vaga_id: vagaId,
           ...(etapaId ? { etapa_atual_id: etapaId } : {}),
         })
-        atualizar(linha.id, { status: 'concluido', candidatoId: candidato.id, extraido })
+        atualizar(linha.id, {
+          status: 'concluido',
+          candidatoId: candidato.id,
+          extraido,
+        })
         onCandidatoCriado?.()
       } catch (err) {
         atualizar(linha.id, {
@@ -110,7 +98,7 @@ export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCria
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [vagaId, etapaId, cpfsExistentes, onCandidatoCriado],
+    [vagaId, etapaId, onCandidatoCriado],
   )
 
   const iniciar = useCallback(
@@ -156,14 +144,12 @@ export function useBulkImport({ vagaId, etapaId, cpfsExistentes, onCandidatoCria
 
   function limpar() {
     setLinhas([])
-    cpfsNoLoteRef.current = new Set()
     totalAdicionadosRef.current = 0
   }
 
   const resumo = {
     total: linhas.length,
     concluidos: linhas.filter((l) => l.status === 'concluido').length,
-    duplicados: linhas.filter((l) => l.status === 'duplicado').length,
     erros: linhas.filter((l) => l.status === 'erro').length,
     cancelados: linhas.filter((l) => l.status === 'cancelado').length,
     emAndamento: linhas.filter((l) => ['fila', 'enviando', 'analisando', 'criando'].includes(l.status)).length,

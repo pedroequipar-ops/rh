@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from 'react'
-import { CheckCircle2, XCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, XCircle } from 'lucide-react'
 
-type ToastVariant = 'success' | 'error'
+type ToastVariant = 'success' | 'error' | 'warning'
 
 interface ToastActionConfig {
   actionLabel: string
@@ -55,11 +55,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               'flex items-center gap-2 rounded-lg border px-3.5 py-2.5 text-sm shadow-lg ' +
               (toast.variant === 'success'
                 ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                : 'border-red-200 bg-red-50 text-red-700')
+                : toast.variant === 'warning'
+                  ? 'border-amber-200 bg-amber-50 text-amber-800'
+                  : 'border-red-200 bg-red-50 text-red-700')
             }
           >
             {toast.variant === 'success' ? (
               <CheckCircle2 size={16} className="shrink-0 text-emerald-500" />
+            ) : toast.variant === 'warning' ? (
+              <AlertTriangle size={16} className="shrink-0 text-amber-500" />
             ) : (
               <XCircle size={16} className="shrink-0 text-red-500" />
             )}

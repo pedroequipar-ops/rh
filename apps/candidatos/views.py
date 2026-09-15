@@ -56,6 +56,8 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         "mover_etapa": "candidatos.mover_etapa",
         "restaurar": "candidatos.delete",
         "busca_ia": "candidatos.view",
+        "sugerir_tags": "candidatos.view",
+        "gerar_email_reprovacao": "candidatos.view",
     }
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
@@ -81,7 +83,8 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         curriculo_key = request.data.get("curriculo_key")
         if curriculo_key and not MinioStorage().head_object(_bucket(), curriculo_key):
             raise ValidationError({"curriculo_key": "Currículo não encontrado no storage."})
-        return super().create(request, *args, **kwargs)
+        response = super().create(request, *args, **kwargs)
+        return response
 
     def perform_create(self, serializer):
         company_id = capture_company_id(self.request)
@@ -227,7 +230,7 @@ class CandidatoViewSet(viewsets.ModelViewSet):
         if etapa.is_saida_negativa and not motivo:
             raise ValidationError({"motivo": "Informe o motivo."})
 
-        candidato = self.repo.mover_etapa(candidato, etapa)
+        candidato = self.repo.mover_etapa(candidato, etapa, motivo)
         services.notificar_mudanca_etapa(candidato, etapa, company_id, motivo)
         services.registrar_mudanca_etapa(candidato, etapa, request.user, motivo=motivo)
         return Response(CandidatoSerializer(candidato).data)
@@ -255,6 +258,32 @@ class CandidatoViewSet(viewsets.ModelViewSet):
                 ).data,
             }
         )
+
+    @action(detail=True, methods=["post"], url_path="sugerir-tags")
+    def sugerir_tags(self, request, pk=None):
+        candidato = self.get_object()
+        company_id = capture_company_id(request)
+        try:
+            dto = services.sugerir_tags_candidato(company_id, candidato)
+        except services.TagSugestaoError:
+            raise ValidationError(
+                {"detail": "Não foi possível sugerir tags agora, tenta de novo."}
+            )
+        return Response({"tags": dto.tags, "interpretacao": dto.interpretacao})
+
+    @action(detail=True, methods=["post"], url_path="gerar-email-reprovacao")
+    def gerar_email_reprovacao(self, request, pk=None):
+        candidato = self.get_object()
+        if not candidato.reprovado_em:
+            raise ValidationError({"detail": "Candidato não foi reprovado."})
+        company_id = capture_company_id(request)
+        try:
+            dto = services.gerar_email_reprovacao(company_id, candidato)
+        except services.EmailReprovacaoError:
+            raise ValidationError(
+                {"detail": "Não foi possível gerar o rascunho agora, tenta de novo."}
+            )
+        return Response({"assunto": dto.assunto, "corpo": dto.corpo, "interpretacao": dto.interpretacao})
 
 
 class CandidatoNotificacaoListView(generics.ListAPIView):

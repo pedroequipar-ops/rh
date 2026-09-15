@@ -15,10 +15,11 @@ Lista de recursos de IA propostos pro sistema, com o que já foi implementado e 
 
 - **2. Resposta automática a candidato descartado** — gerar e-mail de feedback usando o `motivo_reprovacao` já registrado no descarte.
 - **6. Alerta de vaga em risco em linguagem natural** — hoje `alertar_prazos_vagas` é regra fixa (cron); a ideia é a IA redigir o alerta cruzando prazo/tempo parado/volume de candidatos.
-- **8. Detecção de duplicidade de candidato** — ao chegar currículo novo (manual ou e-mail), avisar se a pessoa já está cadastrada em outra vaga.
 - **14. Tag automática de candidato/vaga** — IA sugere tag pronta (ex.: "sênior", "remoto", "urgente") a partir do perfil extraído; ainda sem desenho técnico.
 
 ## Descartadas / não mencionadas de novo
 
 Da primeira leva: assistente de redação de vaga, perguntas de entrevista sob medida, resumo de histórico do candidato, chat de dúvidas pro setor.
+
+- **8. Detecção de duplicidade de candidato** — implementada e removida de novo: CPF é campo opcional no cadastro e a IA nunca extrai CPF de currículo (não aparece no documento), então checagem por CPF nunca dispara na prática. Sem outro identificador confiável pra dedupe, a ideia não se sustenta.
 Da segunda leva: convite de entrevista automático, recomendação de banco de talentos pra vaga nova, checagem de viés na descrição, resumo de entrevista gravada, previsão de prazo de preenchimento, pergunta em linguagem natural sobre o painel.

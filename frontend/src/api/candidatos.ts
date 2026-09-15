@@ -90,6 +90,29 @@ export async function moverEtapa(id: string, etapaId: string, motivo?: string): 
   return data
 }
 
+export interface SugestaoTags {
+  tags: string[]
+  interpretacao: string
+}
+
+export async function sugerirTagsCandidato(id: string): Promise<SugestaoTags> {
+  const { data } = await apiClient.post<SugestaoTags>(`/candidatos/${id}/sugerir-tags/`)
+  return data
+}
+
+export interface EmailReprovacaoRascunho {
+  assunto: string
+  corpo: string
+  interpretacao: string
+}
+
+export async function gerarEmailReprovacao(id: string): Promise<EmailReprovacaoRascunho> {
+  const { data } = await apiClient.post<EmailReprovacaoRascunho>(
+    `/candidatos/${id}/gerar-email-reprovacao/`,
+  )
+  return data
+}
+
 export async function deleteCandidato(id: string): Promise<void> {
   await apiClient.delete(`/candidatos/${id}/`)
 }

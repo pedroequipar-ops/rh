@@ -169,6 +169,8 @@ export interface Candidato {
   tags: Tag[]
   responsavel: UsuarioResumo | null
   created_at?: string
+  reprovado_em: string | null
+  motivo_reprovacao: string
 }
 
 export interface CandidatoExtraido {
