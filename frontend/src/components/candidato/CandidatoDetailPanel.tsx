@@ -1,8 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { AlarmClock, ArrowRightCircle, Bell, FileText, Flame, Trash2, X } from 'lucide-react'
 import clsx from 'clsx'
-import { ActivityFeed } from '../atividade/ActivityFeed'
-import { ChatPanel } from './ChatPanel'
+import { AtividadeChatPanel } from '../atividade/AtividadeChatPanel'
 import { EmailReprovacaoPanel } from './EmailReprovacaoPanel'
 import { MotivoLixeiraModal } from '../board/MotivoLixeiraModal'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
@@ -59,7 +58,7 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
   const cobrar = useCobrarCandidato()
   const usuariosQuery = useUsuarios(isRh)
   const etapasQuery = useEtapas(isRh)
-  const [aba, setAba] = useState<'perfil' | 'conversa' | 'atividade'>('perfil')
+  const [aba, setAba] = useState<'perfil' | 'atividade'>('perfil')
   const [loadingCurriculo, setLoadingCurriculo] = useState(false)
   const [lixeiraAberta, setLixeiraAberta] = useState(false)
   const [cobrancaAberta, setCobrancaAberta] = useState(false)
@@ -231,7 +230,6 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
         onChange={(v) => setAba(v as typeof aba)}
         tabs={[
           { value: 'perfil', label: 'Perfil' },
-          { value: 'conversa', label: 'Conversa' },
           { value: 'atividade', label: 'Atividade' },
         ]}
       />
@@ -378,15 +376,9 @@ export function CandidatoDetailPanel({ candidato, onClose }: CandidatoDetailPane
         </div>
       )}
 
-      {aba === 'conversa' && (
-        <div className="min-h-0 flex-1 overflow-hidden">
-          <ChatPanel kind="candidato" id={candidato.id} />
-        </div>
-      )}
-
       {aba === 'atividade' && (
-        <div className="min-h-0 flex-1">
-          <ActivityFeed alvoTipo="candidato" alvoId={candidato.id} />
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <AtividadeChatPanel kind="candidato" id={candidato.id} />
         </div>
       )}
     </div>

@@ -14,9 +14,8 @@ import {
   XCircle,
 } from 'lucide-react'
 import clsx from 'clsx'
-import { ActivityFeed } from '../atividade/ActivityFeed'
+import { AtividadeChatPanel } from '../atividade/AtividadeChatPanel'
 import { BulkCurriculoDropzone } from '../candidato/BulkCurriculoDropzone'
-import { ChatPanel } from '../candidato/ChatPanel'
 import { ResponsavelPicker } from '../common/ResponsavelPicker'
 import { TarefasSection } from '../tarefas/TarefasSection'
 import { TriagemIaPanel } from './TriagemIaPanel'
@@ -115,7 +114,7 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
   const historicoQuery = useVagaHistorico(vaga.id)
   const etapasQuery = useEtapas(isRh && vaga.status === 'EM_TRIAGEM')
 
-  const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'triagem-ia' | 'chat' | 'atividade'>(
+  const [aba, setAba] = useState<'detalhes' | 'candidatos' | 'triagem-ia' | 'atividade'>(
     'detalhes',
   )
   const [acaoPendente, setAcaoPendente] = useState<'aprovar' | 'recusar' | 'cobrar' | 'lixeira' | null>(
@@ -492,7 +491,6 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
           { value: 'detalhes', label: 'Detalhes' },
           ...(emPessoas ? [{ value: 'candidatos', label: 'Candidatos' }] : []),
           ...(isRh ? [{ value: 'triagem-ia', label: 'Triagem IA' }] : []),
-          { value: 'chat', label: 'Chat' },
           { value: 'atividade', label: 'Atividade' },
         ]}
       />
@@ -705,15 +703,9 @@ export function VagaDetailPanel({ vaga, onClose }: VagaDetailPanelProps) {
         </div>
       )}
 
-      {aba === 'chat' && (
-        <div className="min-h-0 flex-1">
-          <ChatPanel kind="vaga" id={vaga.id} title={`Chat com ${vaga.setor.nome}`} />
-        </div>
-      )}
-
       {aba === 'atividade' && (
         <div className="min-h-0 flex-1">
-          <ActivityFeed alvoTipo="vaga" alvoId={vaga.id} />
+          <AtividadeChatPanel kind="vaga" id={vaga.id} title={`Atividade · ${vaga.setor.nome}`} />
         </div>
       )}
 

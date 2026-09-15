@@ -23,6 +23,7 @@ export interface Usuario {
   last_name: string
   role: Role
   setor: Setor | null
+  telefone: string
 }
 
 export interface UsuarioResumo {

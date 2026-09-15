@@ -45,6 +45,17 @@ class User(AbstractUser):
     setor = models.ForeignKey(
         Setor, on_delete=models.SET_NULL, related_name="users", null=True, blank=True
     )
+    # DDD + número, só dígitos, sem código de país (padrão brasileiro sem o
+    # 55 na frente) — mesmo formato que o whatsapp-bot espera (ver
+    # utils/whatsapp.py). Opcional: nem todo usuário recebe aviso por
+    # WhatsApp.
+    telefone = models.CharField(max_length=15, blank=True)
+    # Preenchido quando esse telefone manda a primeira mensagem pro bot —
+    # sem isso, notificar_whatsapp() não manda nada pra ele (ver
+    # apps/accounts/management/commands/consumir_confirmacoes_whatsapp.py).
+    # Evita mandar mensagem não solicitada pra número que nunca interagiu
+    # com o bot (risco de a sessão do WhatsApp ser sinalizada como spam).
+    whatsapp_confirmado_em = models.DateTimeField(null=True, blank=True)
 
     def clean(self):
         super().clean()

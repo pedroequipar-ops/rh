@@ -11,6 +11,10 @@ export function useAtividadeFeed(alvoTipo: AtividadeAlvoTipo, alvoId: string | u
     queryKey: feedKey(alvoTipo, alvoId ?? ''),
     queryFn: () => getAtividadeFeed(alvoTipo, alvoId as string),
     enabled: Boolean(alvoId),
+    // painel fica aberto junto do chat por bastante tempo; sem polling as
+    // atualizações de outros usuários (mudança de etapa etc.) só apareceriam
+    // reabrindo o painel
+    refetchInterval: 15000,
   })
 }
 

@@ -1,7 +1,10 @@
+from unittest.mock import patch
+
 import pytest
 from asgiref.sync import sync_to_async
 from channels.routing import URLRouter
 from channels.testing import WebsocketCommunicator
+from django.utils import timezone
 from rest_framework_simplejwt.tokens import AccessToken
 
 from apps.accounts.models import User
@@ -150,3 +153,54 @@ async def test_mensagem_enviada_e_persistida_e_retransmitida():
     assert exists
 
     await communicator.disconnect()
+
+
+@sync_to_async
+def _setup_vaga_com_responsavel():
+    company = CompanyFactory()
+    setor = SetorFactory(company=company)
+    responsavel = UserFactory(
+        company=company, telefone="98988255192", whatsapp_confirmado_em=timezone.now()
+    )
+    vaga = VagaFactory(company=company, setor=setor, responsavel=responsavel)
+    rh = UserFactory(company=company, role=User.Role.RH)
+    return company, vaga, rh, responsavel
+
+
+@pytest.mark.django_db(transaction=True)
+@pytest.mark.asyncio
+@patch("apps.chat.consumers.notificar_whatsapp")
+async def test_mensagem_de_chat_notifica_responsavel(mock_notificar):
+    company, vaga, rh, responsavel = await _setup_vaga_com_responsavel()
+
+    communicator = WebsocketCommunicator(application, _vaga_ws_path(vaga.id, rh, company.id))
+    connected, _ = await communicator.connect()
+    assert connected
+
+    await communicator.send_json_to({"texto": "Entrevista marcada"})
+    await communicator.receive_json_from()
+    await communicator.disconnect()
+
+    mock_notificar.assert_called_once()
+    args, kwargs = mock_notificar.call_args
+    assert args[0].id == responsavel.id
+    assert kwargs["texto"] == "Entrevista marcada"
+
+
+@pytest.mark.django_db(transaction=True)
+@pytest.mark.asyncio
+@patch("apps.chat.consumers.notificar_whatsapp")
+async def test_mensagem_de_chat_nao_notifica_quando_autor_e_o_responsavel(mock_notificar):
+    company, vaga, _rh, responsavel = await _setup_vaga_com_responsavel()
+
+    communicator = WebsocketCommunicator(
+        application, _vaga_ws_path(vaga.id, responsavel, company.id)
+    )
+    connected, _ = await communicator.connect()
+    assert connected
+
+    await communicator.send_json_to({"texto": "Publiquei a vaga"})
+    await communicator.receive_json_from()
+    await communicator.disconnect()
+
+    mock_notificar.assert_not_called()

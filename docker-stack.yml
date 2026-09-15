@@ -19,9 +19,10 @@
 # So o servico "caddy" toca a internet (portas 80/443) -- todo o resto,
 # incluindo o "frontend", fica so na rede interna desta stack, sem porta
 # nenhuma publicada. O frontend (nginx) e quem decide o que e publico ou nao
-# dentro da API: ele so reexpoe /v1/, /ws/ e /docs/ (ver frontend/nginx.conf) --
-# o Django admin (/admin/) nao passa por esse proxy, so seria alcancavel
-# indo direto no container "backend", que nao tem porta publicada.
+# dentro da API: ele so reexpoe /v1/, /ws/, /docs/ e /files/ (MinIO, ver
+# frontend/nginx.conf) -- o Django admin (/admin/) nao passa por esse proxy,
+# so seria alcancavel indo direto no container "backend", que nao tem porta
+# publicada.
 x-django-env: &django-env
   DJANGO_SETTINGS_MODULE: config.settings.production
   DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
@@ -53,6 +54,9 @@ x-django-env: &django-env
   TRIAGEM_IA_WEBHOOK_TOKEN: ${TRIAGEM_IA_WEBHOOK_TOKEN}
   TRIAGEM_IA_WEBHOOK_COMPANY_ID: ${TRIAGEM_IA_WEBHOOK_COMPANY_ID}
   CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS: ${CANDIDATOS_BUSCA_IA_EXTRACTOR_CLASS}
+  FRONTEND_BASE_URL: ${FRONTEND_BASE_URL}
+  QUEUE_WHATSAPP_NOTIFY: rh.whatsapp_notify
+  QUEUE_WHATSAPP_CONFIRM: rh.whatsapp_confirm
 
 services:
   postgres:
@@ -119,7 +123,9 @@ services:
     volumes:
       - minio_data:/data
     networks:
-      - internal
+      internal:
+        aliases:
+          - rh-minio # frontend/nginx.conf faz proxy_pass pra esse nome (rota /files/)
     healthcheck:
       test: ["CMD", "mc", "ready", "local"]
       interval: 10s
@@ -177,6 +183,40 @@ services:
       resources:
         limits:
           memory: 384M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  whatsapp-confirm-worker:
+    image: rh-backend:latest
+    command: ["sh", "-c", "while true; do python manage.py consumir_confirmacoes_whatsapp; sleep 20; done"]
+    environment:
+      <<: *django-env
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 256M
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  whatsapp-bot:
+    image: rh-whatsapp-bot:latest
+    environment:
+      WHATSAPP_POSTGRES_DSN: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+      RABBITMQ_URL: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+      WHATSAPP_NOTIFY_QUEUE: rh.whatsapp_notify
+      WHATSAPP_CONFIRM_QUEUE: rh.whatsapp_confirm
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 128M
       restart_policy:
         condition: any
         delay: 5s

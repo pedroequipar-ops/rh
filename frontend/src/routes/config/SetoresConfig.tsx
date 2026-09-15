@@ -28,6 +28,7 @@ export function SetoresConfig() {
   const [paraEditar, setParaEditar] = useState<Usuario | null>(null)
   const [editUsername, setEditUsername] = useState('')
   const [editSenha, setEditSenha] = useState('')
+  const [editTelefone, setEditTelefone] = useState('')
 
   const setores = setoresQuery.data ?? []
   const usuarios = usuariosQuery.data ?? []
@@ -54,6 +55,7 @@ export function SetoresConfig() {
     setParaEditar(usuario)
     setEditUsername(usuario.username)
     setEditSenha('')
+    setEditTelefone(usuario.telefone)
   }
 
   function handleSalvarEdicao(event: FormEvent) {
@@ -62,9 +64,10 @@ export function SetoresConfig() {
     if (!editUsername.trim()) return
     if (editSenha && editSenha.length < 8) return
 
-    const input: { username?: string; password?: string } = {}
+    const input: { username?: string; password?: string; telefone?: string } = {}
     if (editUsername.trim() !== paraEditar.username) input.username = editUsername.trim()
     if (editSenha) input.password = editSenha
+    if (editTelefone.trim() !== paraEditar.telefone) input.telefone = editTelefone.trim()
     if (Object.keys(input).length === 0) {
       setParaEditar(null)
       return
@@ -191,6 +194,15 @@ export function SetoresConfig() {
             placeholder="Nova senha (deixe em branco pra manter)"
             className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
           />
+          <input
+            value={editTelefone}
+            onChange={(e) => setEditTelefone(e.target.value)}
+            placeholder="WhatsApp (DDD + número, só dígitos)"
+            className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+          />
+          <p className="text-xs text-slate-400">
+            Avisos de chat/atividade só chegam depois de mandar uma mensagem pro número do bot uma vez.
+          </p>
           {editSenha && editSenha.length < 8 && (
             <p className="text-xs text-red-600">A senha precisa ter pelo menos 8 caracteres.</p>
           )}

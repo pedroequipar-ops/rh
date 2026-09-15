@@ -133,6 +133,57 @@ services:
       minio:
         condition: service_healthy
 
+  whatsapp-bot:
+    build:
+      context: ./whatsapp-bot
+    environment:
+      WHATSAPP_POSTGRES_DSN: "postgres://${POSTGRES_USER:-rh}:${POSTGRES_PASSWORD:-rh}@postgres:5432/${POSTGRES_DB:-rh}?sslmode=disable"
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      WHATSAPP_NOTIFY_QUEUE: rh.whatsapp_notify
+      WHATSAPP_CONFIRM_QUEUE: rh.whatsapp_confirm
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  whatsapp-confirm-worker:
+    build:
+      context: .
+      args:
+        REQUIREMENTS_FILE: requirements/development.txt
+    command: sh -c "while true; do python manage.py consumir_confirmacoes_whatsapp; sleep 20; done"
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      REDIS_URL: redis://redis:6379/0
+      REDIS_CHANNELS_URL: redis://redis:6379/1
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      MINIO_ENDPOINT: http://minio:9000
+      DJANGO_SETTINGS_MODULE: config.settings.development
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
   frontend:
     image: node:20-alpine
     working_dir: /app

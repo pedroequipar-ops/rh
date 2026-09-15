@@ -1,6 +1,7 @@
 import re
 
 from apps.accounts.models import User
+from utils.whatsapp import notificar_whatsapp
 
 from .models import AlvoTipo, Atividade, Comentario
 
@@ -20,15 +21,27 @@ def _alvo_tipo(alvo) -> str:
 
 def registrar(ator, verbo, alvo, *, resumo, **dados):
     """Grava uma entrada append-only de atividade pra `alvo` (Vaga ou Candidato)."""
+    alvo_tipo = _alvo_tipo(alvo)
     Atividade.objects.create(
         company_id=alvo.company_id,
         ator=ator if (ator and not ator.is_anonymous) else None,
         verbo=verbo,
-        alvo_tipo=_alvo_tipo(alvo),
+        alvo_tipo=alvo_tipo,
         alvo_id=alvo.id,
         resumo=resumo,
         dados=dados,
     )
+
+    responsavel = getattr(alvo, "responsavel", None)
+    if responsavel and (not ator or responsavel.id != ator.id):
+        notificar_whatsapp(
+            responsavel,
+            alvo_tipo=alvo_tipo.lower(),
+            alvo_id=alvo.id,
+            titulo="Atualização",
+            texto=resumo,
+            sender=getattr(ator, "username", "") if ator else "",
+        )
 
 
 def _notificar_mencoes(autor, mencionados, alvo, texto):

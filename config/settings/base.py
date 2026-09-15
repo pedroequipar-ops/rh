@@ -230,6 +230,19 @@ TRIAGEM_IA_FRONTEND_URL = env(
 TRIAGEM_IA_WEBHOOK_TOKEN = env("TRIAGEM_IA_WEBHOOK_TOKEN", default="")
 TRIAGEM_IA_WEBHOOK_COMPANY_ID = env("TRIAGEM_IA_WEBHOOK_COMPANY_ID", default="")
 
+# Base do frontend pra montar link "abrir no sistema" nos avisos de
+# WhatsApp (ver utils/whatsapp.py).
+FRONTEND_BASE_URL = env("FRONTEND_BASE_URL", default="http://localhost:5173")
+
+# Filas RabbitMQ que o serviço Go whatsapp-bot (whatsmeow) consome/publica —
+# nome precisa bater com WHATSAPP_NOTIFY_QUEUE/WHATSAPP_CONFIRM_QUEUE do
+# lado Go (ver whatsapp-bot/internal/config/config.go). Mesmo desenho do
+# email-monitor (sistema separado do Pedro): fila em vez de HTTP porque o
+# bot já está com uma conexão WhatsApp aberta o tempo todo, então só falta
+# consumir.
+QUEUE_WHATSAPP_NOTIFY = env("QUEUE_WHATSAPP_NOTIFY", default="rh.whatsapp_notify")
+QUEUE_WHATSAPP_CONFIRM = env("QUEUE_WHATSAPP_CONFIRM", default="rh.whatsapp_confirm")
+
 LOGS_DIR = BASE_DIR / "logs"
 LOGS_DIR.mkdir(exist_ok=True)
 

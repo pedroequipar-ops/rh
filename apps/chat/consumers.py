@@ -5,6 +5,7 @@ from apps.candidatos.models import Candidato
 from apps.candidatos.services import can_access_candidato
 from apps.vagas.models import Vaga
 from apps.vagas.services import can_access_vaga
+from utils.whatsapp import notificar_whatsapp
 
 from .models import ChatMensagem
 
@@ -68,12 +69,24 @@ class _ChatConsumerBase(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def _criar_mensagem(self, texto):
-        return ChatMensagem.objects.create(
+        autor = self.scope["user"]
+        mensagem = ChatMensagem.objects.create(
             company_id=self.obj.company_id,
-            autor=self.scope["user"],
+            autor=autor,
             texto=texto,
             **{self.campo: self.obj},
         )
+        responsavel = getattr(self.obj, "responsavel", None)
+        if responsavel and responsavel.id != autor.id:
+            notificar_whatsapp(
+                responsavel,
+                alvo_tipo=self.campo,
+                alvo_id=self.obj.id,
+                titulo="Nova mensagem no chat",
+                texto=texto,
+                sender=autor.username,
+            )
+        return mensagem
 
 
 class ChatConsumer(_ChatConsumerBase):

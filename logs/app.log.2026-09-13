@@ -1,0 +1,179 @@
+2026-09-13 00:12:08,853 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-13 00:12:08,854 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-13 00:12:08,854 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-13 00:12:08,855 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-13 00:14:04,574 ERROR django.request Internal Server Error: /v1/auth/token/
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+psycopg2.errors.UndefinedTable: relation "accounts_user" does not exist
+LINE 1: ...nts_user"."role", "accounts_user"."setor_id" FROM "accounts_...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/site-packages/asgiref/sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.12/site-packages/django/core/handlers/exception.py", line 42, in inner
+    response = await get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/asgiref/sync.py", line 577, in thread_handler
+    raise exc_info[1]
+  File "/usr/local/lib/python3.12/site-packages/django/core/handlers/base.py", line 253, in _get_response_async
+    response = await wrapped_callback(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/asgiref/sync.py", line 526, in __call__
+    ret = await asyncio.shield(exec_coro)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/asgiref/sync.py", line 581, in thread_handler
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/asgiref/sync.py", line 508, in func
+    return context.run(run_child)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/asgiref/sync.py", line 506, in run_child
+    return child()
+           ^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/serializers.py", line 223, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework/serializers.py", line 445, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 73, in validate
+    data = super().validate(attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 54, in validate
+    self.user = authenticate(**authenticate_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/views/decorators/debug.py", line 75, in sensitive_variables_wrapper
+    return func(*func_args, **func_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/contrib/auth/__init__.py", line 114, in authenticate
+    user = backend.authenticate(request, **credentials)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/contrib/auth/backends.py", line 65, in authenticate
+    user = UserModel._default_manager.get_by_natural_key(username)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/contrib/auth/base_user.py", line 37, in get_by_natural_key
+    return self.get(**{self.model.USERNAME_FIELD: username})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/query.py", line 631, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/query.py", line 368, in __len__
+    self._fetch_all()
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/query.py", line 1954, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/query.py", line 93, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1623, in execute_sql
+    cursor.execute(sql, params)
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/usr/local/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: relation "accounts_user" does not exist
+LINE 1: ...nts_user"."role", "accounts_user"."setor_id" FROM "accounts_...
+                                                             ^
+
+2026-09-13 00:57:28,054 WARNING django.request Not Found: /v1/vagas/780c5ac1-2589-4844-86b1-3ede791a21b0/
+2026-09-13 00:57:30,230 WARNING django.request Not Found: /v1/vagas/cfcaa27b-a739-4fc5-9950-de79e2d1c97e/
+2026-09-13 00:57:31,858 WARNING django.request Bad Request: /v1/vagas/51770c7d-e308-4d37-8c44-cb10218c579c/recusar/
+2026-09-13 00:57:32,233 WARNING django.request Forbidden: /v1/vagas/e1c8884e-e9e7-4c54-b3b3-aaf5f309c070/aprovar/
+2026-09-13 00:57:32,613 WARNING django.request Bad Request: /v1/vagas/d7f251c5-8151-4aec-83fd-b65f812ccb8a/transicionar/
+2026-09-13 00:57:34,405 WARNING django.request Bad Request: /v1/vagas/16703241-badb-48a6-a31a-c5e545523798/cobrar/
+2026-09-13 00:57:34,767 WARNING django.request Not Found: /v1/vagas/227e4786-1dd3-4d2d-947c-ec69da41b5c3/cobrar/
+2026-09-13 00:57:37,169 WARNING django.request Bad Request: /v1/vagas/a5d95972-1ac4-43db-b62f-aa5f6a616285/mover-etapa/
+2026-09-13 00:57:37,525 WARNING django.request Bad Request: /v1/vagas/6518b2e0-dc93-4c61-b258-b56fea8ea561/mover-etapa/
+2026-09-13 00:57:38,285 WARNING django.request Bad Request: /v1/vagas/7390c700-c250-43c0-813a-f663cc22157e/candidaturas/
+2026-09-13 00:59:44,290 INFO daphne.server Killed 0 pending application instances
+2026-09-13 00:59:47,507 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-13 00:59:47,508 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-13 00:59:47,508 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-13 00:59:47,509 INFO daphne.server Listening on TCP address 0.0.0.0:8000
+2026-09-13 01:25:20,257 WARNING django.request Not Found: /v1/candidatos/3d56101c-3a8c-491d-9303-927862358b17/curriculo-url/
+2026-09-13 01:25:20,679 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-13 01:25:22,494 WARNING django.request Forbidden: /v1/candidatos/04fa72d4-ea1f-4c03-afc4-27d2c254d908/mover-etapa/
+2026-09-13 01:25:24,024 WARNING django.request Bad Request: /v1/candidatos/ba639f45-f6ce-40b9-9303-87e3a4419839/mover-etapa/
+2026-09-13 01:25:27,485 WARNING django.request Not Found: /v1/candidatos/79837bc2-8ff9-480b-aa8e-33b24866aaf4/
+2026-09-13 01:25:28,222 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 95, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-13 01:25:28,605 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-13 01:26:06,039 WARNING django.request Not Found: /v1/candidatos/a007f06b-3343-440a-9601-edc915f69183/curriculo-url/
+2026-09-13 01:26:06,428 WARNING django.request Forbidden: /v1/candidatos/
+2026-09-13 01:26:08,374 WARNING django.request Forbidden: /v1/candidatos/68164ba7-f084-432e-8f73-2558552b34e5/mover-etapa/
+2026-09-13 01:26:10,502 WARNING django.request Bad Request: /v1/candidatos/e8a156e4-b8de-4fde-b8c1-cdbf2f6235e2/mover-etapa/
+2026-09-13 01:26:12,842 WARNING django.request Not Found: /v1/candidatos/9834695e-57b6-46f5-85c5-781bc8248ae2/
+2026-09-13 01:26:13,807 ERROR apps.candidatos.services falha ao analisar currículo com IA
+Traceback (most recent call last):
+  File "/app/apps/candidatos/services.py", line 95, in extrair_dados_candidato
+    return extractor.extrair(texto, vagas_payload)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/apps/candidatos/tests/test_views.py", line 39, in extrair
+    raise RuntimeError("IA indisponível")
+RuntimeError: IA indisponível
+2026-09-13 01:26:14,215 WARNING django.request Bad Request: /v1/candidatos/
+2026-09-13 01:26:19,413 WARNING django.request Not Found: /v1/vagas/827d30e9-67fd-4cf1-9c92-4876f1eb8a8d/
+2026-09-13 01:26:21,552 WARNING django.request Not Found: /v1/vagas/e82e4abc-27f8-4d2d-9d9a-83fbf0ddd2d2/
+2026-09-13 01:26:23,204 WARNING django.request Bad Request: /v1/vagas/af069cb4-a48e-4317-bdd9-fbe1f150f112/recusar/
+2026-09-13 01:26:23,594 WARNING django.request Forbidden: /v1/vagas/249ece54-b599-4c71-a72b-8abfa9f29ac0/aprovar/
+2026-09-13 01:26:23,985 WARNING django.request Bad Request: /v1/vagas/cfa66726-b6fb-4a96-abaa-669b634a9673/transicionar/
+2026-09-13 01:26:25,980 WARNING django.request Bad Request: /v1/vagas/67a0fbc0-a184-461b-b2c5-791788b18ab0/cobrar/
+2026-09-13 01:26:26,357 WARNING django.request Not Found: /v1/vagas/18fe4ea1-2c32-4908-8c24-05621e04d9d2/cobrar/
+2026-09-13 01:26:28,724 WARNING django.request Bad Request: /v1/vagas/64d96a04-5e51-42b3-8ba9-2bbfa00fc76f/mover-etapa/
+2026-09-13 01:26:29,091 WARNING django.request Bad Request: /v1/vagas/d582fca9-7464-4ea4-af1c-223841aadbfe/mover-etapa/
+2026-09-13 01:26:29,924 WARNING django.request Bad Request: /v1/vagas/9b8d4f4b-eee2-4881-bb68-715c76aedc02/candidaturas/
+2026-09-13 01:26:47,887 INFO daphne.server Killed 0 pending application instances
+2026-09-13 01:26:51,071 INFO daphne.cli Starting server at tcp:port=8000:interface=0.0.0.0
+2026-09-13 01:26:51,072 INFO daphne.server HTTP/2 support not enabled (install the http2 and tls Twisted extras)
+2026-09-13 01:26:51,072 INFO daphne.server Configuring endpoint tcp:port=8000:interface=0.0.0.0
+2026-09-13 01:26:51,073 INFO daphne.server Listening on TCP address 0.0.0.0:8000

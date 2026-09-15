@@ -31,7 +31,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "password", "email", "first_name", "last_name", "setor_id"]
+        fields = [
+            "id",
+            "username",
+            "password",
+            "email",
+            "first_name",
+            "last_name",
+            "setor_id",
+            "telefone",
+        ]
         read_only_fields = ["id"]
 
     def create(self, validated_data):
@@ -50,7 +59,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "password", "setor_id"]
+        fields = ["id", "username", "password", "setor_id", "telefone"]
         read_only_fields = ["id"]
 
     def update(self, instance, validated_data):
@@ -68,7 +77,7 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "first_name", "last_name", "role", "setor"]
+        fields = ["id", "username", "first_name", "last_name", "role", "setor", "telefone"]
 
 
 class AlterarSenhaSerializer(serializers.Serializer):

@@ -38,6 +38,7 @@ export interface UsuarioInput {
   username: string
   password: string
   setor_id: string
+  telefone?: string
 }
 
 export async function createUsuario(input: UsuarioInput): Promise<void> {
@@ -48,6 +49,7 @@ export interface UsuarioUpdateInput {
   username?: string
   password?: string
   setor_id?: string
+  telefone?: string
 }
 
 export async function updateUsuario(id: string, input: UsuarioUpdateInput): Promise<void> {
